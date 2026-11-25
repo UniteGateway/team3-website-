@@ -906,3 +906,5 @@ h2.h3{font-size:clamp(21px,2vw,26px);line-height:1.2;font-weight:700;letter-spac
 .inline-fig{margin:40px 0 8px}
 .inline-fig img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--r)}
 .inline-fig figcaption{margin-top:12px;font-size:14.5px;color:var(--muted);line-height:1.5}
+.btn.wa{--bg:#1A7F4B;--fg:#fff;margin-top:6px}
+.btn.wa:hover{--bg:#146A3E}

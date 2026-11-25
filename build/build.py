@@ -26,7 +26,7 @@ SITE = {
     'email': 'info@team3solutions.in',
     'phone': '+91 90522 70203',
     'phones': ['+91 90522 70203', '+91 96676 60773'],
-    'whatsapp': '',         # digits only with country code, e.g. '919800000000'
+    'whatsapp': '919667660773',
     # Form backend: any endpoint that accepts a POST of form fields (Formspree, Getform,
     # Basin, a CRM webhook, or your own API). Leave empty to use the offline fallback
     # (opens an email if 'email' is set, otherwise copies the enquiry to the clipboard).
@@ -148,6 +148,8 @@ def footer_contact():
         bits.append(f'<a href="mailto:{E(SITE["email"])}" style="color:#fff">{E(SITE["email"])}</a>')
     if SITE['phones']:
         bits.append(' · '.join(f'<a href="tel:{E(ph.replace(" ", ""))}" style="color:#fff">{E(ph)}</a>' for ph in SITE['phones']))
+    if SITE['whatsapp']:
+        bits.append(f'<a href="https://wa.me/{E(SITE["whatsapp"])}" rel="noopener" style="color:#fff">WhatsApp: +{E(SITE["whatsapp"][:2])} {E(SITE["whatsapp"][2:7])} {E(SITE["whatsapp"][7:])}</a>')
     if 'vercel.app' not in SITE['url']:
         bits.append(f'<a href="{SITE["url"]}" style="color:#fff">{E(SITE["url"].split("//")[1])}</a>')
     return '<br>'.join(bits)
@@ -160,7 +162,7 @@ def contact_lines(dark=False):
     for ph in SITE['phones']:
         out.append(f'<p><a class="link" href="tel:{E(ph.replace(" ", ""))}">{E(ph)}</a></p>')
     if SITE['whatsapp']:
-        out.append(f'<p><a class="link" href="https://wa.me/{E(SITE["whatsapp"])}" rel="noopener">WhatsApp us</a></p>')
+        out.append(f'<p><a class="btn sm wa" href="https://wa.me/{E(SITE["whatsapp"])}?text={quote("Hello TEAM3, I would like to discuss a project.")}" rel="noopener">WhatsApp us · +{E(SITE["whatsapp"][:2])} {E(SITE["whatsapp"][2:7])} {E(SITE["whatsapp"][7:])}</a></p>')
     if 'vercel.app' not in SITE['url']:
         out.append(f'<p><a class="link" href="{SITE["url"]}">{E(SITE["url"].split("//")[1])}{ARROW}</a></p>')
     return ''.join(out)
