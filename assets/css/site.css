@@ -1045,3 +1045,19 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 @media (max-width:640px){.people{grid-template-columns:1fr 1fr;gap:12px}.person{padding:20px 12px}.person .foot{max-width:110px}.bio{font-size:13px}.foot-row{justify-content:flex-start}.foot-row .foot{max-width:96px}.foot-row .foot:nth-child(2){max-width:112px}}
 .stack{align-content:start}
 .pillar h3{margin-top:0}
+
+/* ================= Client logo wall ================= */
+.clwall{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.cl{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:150px;padding:20px 14px;border-radius:18px;background:#fff;border:1px solid var(--line);text-align:center;transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .3s}
+.cl:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:transparent}
+.cl.hide{display:none}
+.cl img{max-width:150px;max-height:60px;object-fit:contain;filter:grayscale(1);opacity:.85;transition:all .3s}
+.cl:hover img{filter:none;opacity:1}
+.cl .mono{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--c);color:#fff;font:800 16px/1 var(--h);letter-spacing:.02em}
+.cl b{font:700 15.5px/1.25 var(--h);letter-spacing:-.015em;color:var(--ink)}
+.cl small{font-size:12px;color:var(--muted);line-height:1.3}
+.cl.more{background:var(--black);border-color:var(--black)}.cl.more b{font:800 40px/1 var(--h);color:#fff;letter-spacing:-.04em}.cl.more small{color:#A1A1A6}
+.cl.join{border-style:dashed;background:transparent}.cl.join small{color:var(--red-ui);font-weight:600}
+@media (max-width:1100px){.clwall{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:860px){.clwall{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:640px){.clwall{grid-template-columns:1fr 1fr;gap:10px}.cl{min-height:130px}}

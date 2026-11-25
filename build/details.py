@@ -136,3 +136,38 @@ ADVISORS = [
     ('Advisor Name', 'Healthcare Advisor', 'Brings healthcare industry insight for digital health and membership platforms.', 'team/placeholder-5.webp', '#F0606A', {}),
     ('Advisor Name', 'Legal & Governance Advisor', 'Advises on corporate governance, compliance and responsible-AI policy.', 'team/placeholder-4.webp', '#D2D2D6', {}),
 ]
+
+# Client logo wall. (name, sector, market). To show a real logo, add a file named after the
+# client's slug to assets/img/clients/ (e.g. yashoda-hospitals.svg / .png / .webp) and rebuild.
+CLIENT_SECTORS = ['Government & Institutions', 'Healthcare & Life Sciences', 'Infrastructure & Engineering',
+                  'Corporate & Technology', 'Agriculture & Education', 'Collabiz & Unite Group']
+CLIENT_LOGOS = [
+    ('Government of Andhra Pradesh', 'Government & Institutions', 'India'),
+    ('Beti Bachao Beti Padhao', 'Government & Institutions', 'India'),
+    ('NIRD', 'Government & Institutions', 'National Institute of Rural Development'),
+    ('Asian Development Bank (ADB)', 'Government & Institutions', 'International'),
+    ('ICRISAT', 'Government & Institutions', 'International'),
+    ('CRIDA, Hyderabad', 'Government & Institutions', 'ICAR'),
+    ('Air India', 'Government & Institutions', 'India'),
+    ('Yashoda Hospitals', 'Healthcare & Life Sciences', 'India'),
+    ('Maxivision Hospitals', 'Healthcare & Life Sciences', 'India'),
+    ('Mythri Hospitals', 'Healthcare & Life Sciences', 'India'),
+    ('Indian Immunologicals Limited', 'Healthcare & Life Sciences', 'India'),
+    ('Dr. Reddy’s', 'Healthcare & Life Sciences', 'India'),
+    ('Hetero Drugs', 'Healthcare & Life Sciences', 'India'),
+    ('Voris Life Sciences', 'Healthcare & Life Sciences', 'India'),
+    ('Rachem Pharma', 'Healthcare & Life Sciences', 'India'),
+    ('GMR Airports', 'Infrastructure & Engineering', 'India'),
+    ('GVK', 'Infrastructure & Engineering', 'India'),
+    ('Madhucon Projects Limited', 'Infrastructure & Engineering', 'India'),
+    ('Ahlada Engineers', 'Infrastructure & Engineering', 'India'),
+    ('Sanjay Technicals', 'Infrastructure & Engineering', 'India'),
+    ('CAMP Systems', 'Infrastructure & Engineering', 'India'),
+    ('Accenture', 'Corporate & Technology', 'USA'),
+    ('Pi Metrics Inc.', 'Corporate & Technology', 'USA'),
+    ('Impress International LLC', 'Corporate & Technology', 'Canada'),
+    ('Vanguard', 'Corporate & Technology', 'India'),
+    ('JNTU Hyderabad', 'Agriculture & Education', 'India'),
+    ('Vibha Seeds', 'Agriculture & Education', 'India'),
+    ('Ethames Graduate School', 'Agriculture & Education', 'India'),
+]

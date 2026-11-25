@@ -543,7 +543,7 @@ def page_article(a):
 
 
 def client_marquee():
-    items = ''.join(f'<div class="client"><b>{E(n)}</b><span>{E(m)}</span></div>' for n, m in [(g[0], 'Group') for g in GROUP] + CLIENTS + [(f[0], 'Film') for f in FILM_CLIENTS])
+    items = ''.join(f'<div class="client"><b>{E(n)}</b><span>{E(sec.split(" & ")[0])}</span></div>' for n, sec, _ in all_clients())
     dup = items.replace('<div class="client">', '<div class="client" aria-hidden="true">')
     return f'<div class="marquee" aria-label="Selected historical clientele"><div class="marquee-track">{items}{dup}</div></div>'
 
@@ -1191,11 +1191,18 @@ def page_products():
 
 def page_clients():
     group = ''.join(f'<a class="gclient rv d{n%4}" href="{product_href(next(p[0] for p in PRODUCTS if p[1] == nm))}"><span class="mono">{E(nm[:1])}</span><b>{E(nm)}</b><span class="d">{E(ds)}</span><span class="tag">Group client</span></a>' for n, (nm, ds, _) in enumerate(GROUP))
-    heritage = ''.join(f'<div class="row rv"><b>{E(n)}</b><span>{E(m)}</span><i>{i+1:02d}</i></div>' for i, (n, m) in enumerate(CLIENTS))
     films = ''.join(gallery_tile(g, n) for n, g in enumerate(x for x in GALLERY if x[1] == 'films'))
     body = f"""
 {page_hero("Clients", "Our Clients", "Trusted by more than <span class='grad'>300 organisations.</span>", "Our clientele spans sectors from national to international level — from the Collabiz and Unite Group businesses to government institutions, healthcare, pharma, aviation and global technology companies.")}
-{subnav([("group","Collabiz & Unite Group"),("institutions","Institutions"),("heritage","Heritage clientele"),("films","Film clients")])}
+{subnav([("all-clients","All clients"),("group","Collabiz & Unite Group"),("institutions","Institutions"),("films","Film clients")])}
+<section class="section" id="all-clients"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow">Our clients</span><h2 style="margin-top:16px">Twenty years. <span class="grad">Top clients.</span></h2></div>
+<p class="lead rv d1">Government, healthcare, infrastructure, technology, education and agriculture leaders — national and international — who have trusted TEAM3 since 2004.</p></div>
+<div class="filters rv" role="group" aria-label="Filter clients by sector"><button type="button" data-f="all" data-target=".cl" aria-pressed="true">All sectors</button>{"".join(f'<button type="button" data-f="{slugify(sec)}" data-target=".cl" aria-pressed="false">{E(sec)}</button>' for sec in CLIENT_SECTORS)}</div>
+<div class="clwall">{"".join(client_tile(n, sec, mk, i) for i, (n, sec, mk) in enumerate(all_clients()))}
+<div class="cl more rv"><b>300+</b><small>clients since 2004</small></div>
+<a class="cl join rv" href="contact.html"><b>Your organisation?</b><small>Become our next client →</small></a></div>
+</div></section>
 <section class="section" id="group"><div class="wrap">
 {head("Collabiz & Unite Group", "Group businesses <span class='grad'>we build for.</span>", "TEAM3 is the branding, technology and AI partner to the Collabiz and Unite Group businesses — from strategy and identity to platforms, apps and intelligent automation.")}
 <p class="rv" style="margin:-36px 0 36px">{link("Explore these products", "products.html")}</p>
@@ -1206,11 +1213,6 @@ def page_clients():
 <p class="lead rv d1">TEAM3 designed NIRD’s Technology Bank — inaugurated by former President of India Shri A.P.J. Abdul Kalam in 2008 — and NIRD’s Vision and Souvenir, inaugurated by President Smt. Pratibha Patil in 2009, along with programme literature and publications.</p></div>
 <div class="arch two">{"".join(gallery_tile(g, n, True) for n, g in enumerate(GALLERY[:2]))}</div>
 <div class="actions">{btn("Open the gallery", "gallery.html", "light")}</div>
-</div></section>
-<section class="section bg-grey" id="heritage"><div class="wrap">
-<div class="head split"><div class="rv"><span class="eyebrow">Heritage clientele</span><h2 style="margin-top:16px">National to international.</h2></div>
-<p class="lead rv d1">A few of our prestigious clients from more than 300 organisations served since 2004.</p></div>
-<div class="rows">{heritage}</div>
 </div></section>
 <section class="section" id="films"><div class="wrap">
 {head("Film clients", "Few of our corporate films.")}
@@ -1508,8 +1510,32 @@ def page_agent(name):
 LOGO_STYLE = ['ls1', 'ls2', 'ls3', 'ls4', 'ls5', 'ls6']
 
 
+SECTOR_COL = {'Government & Institutions': '#1D4E89', 'Healthcare & Life Sciences': '#0F8A7E', 'Infrastructure & Engineering': '#8A5A00',
+              'Corporate & Technology': '#5B3FA8', 'Agriculture & Education': '#2F7D32', 'Collabiz & Unite Group': '#DA1220'}
+
+
+def all_clients():
+    return CLIENT_LOGOS + [(g[0], 'Collabiz & Unite Group', 'Group business') for g in GROUP]
+
+
+def _initials(n):
+    w = [x for x in re.sub(r'[()’.,]', ' ', n).split() if x.lower() not in ('of', 'the', 'and', '&')]
+    return (w[0][0] + (w[1][0] if len(w) > 1 else (w[0][1] if len(w[0]) > 1 else ''))).upper()
+
+
+def client_tile(name, sector, market, i=0):
+    slug = slugify(name)
+    for ext in ('svg', 'png', 'webp'):
+        if os.path.exists(os.path.join(ROOT, 'assets', 'img', 'clients', f'{slug}.{ext}')):
+            inner = f'<img src="assets/img/clients/{slug}.{ext}" alt="{E(name)}" loading="lazy"><b class="sr-only">{E(name)}</b>'
+            break
+    else:
+        inner = f'<span class="mono" style="--c:{SECTOR_COL[sector]}">{E(_initials(name))}</span><b>{E(name)}</b>'
+    return f'<div class="cl rv d{i % 4}" data-cat="{slugify(sector)}">{inner}<small>{E(market)}</small></div>'
+
+
 def logo_strip():
-    names = [g[0] for g in GROUP] + [n for n, _ in CLIENTS] + [f[0] for f in FILM_CLIENTS]
+    names = [c[0] for c in all_clients()]
     items = ''.join(f'<span class="lg {LOGO_STYLE[i % len(LOGO_STYLE)]}">{E(n)}</span>' for i, n in enumerate(names))
     dup = items.replace('<span class="lg', '<span aria-hidden="true" class="lg')
     return (f'<section class="logobar" aria-label="Our clients"><div class="wrap lb-head"><span class="eyebrow">Trusted by 300+ clients</span>{link("Our clients", "clients.html")}</div>'
@@ -1576,7 +1602,7 @@ def footer():
 
 
 # --------------------------------------------------------------------------- footprint photo shape (from the TEAM3 presentation)
-from details import TEAM, ADVISORS  # noqa: E402
+from details import TEAM, ADVISORS, CLIENT_LOGOS, CLIENT_SECTORS  # noqa: E402
 
 
 def foot(img, dot='#E9AC16', cls='', alt=''):
