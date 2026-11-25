@@ -9,7 +9,7 @@ ARTICLES = [
         'slug': 'insight-ai-agents-business-operations',
         'cat': 'ARTIFICIAL INTELLIGENCE',
         'title': 'How AI agents are transforming business operations',
-        'cover': 'art-red',
+        'cover': 'art-red', 'photo': 'robot_pepper', 'photo2': ('team_office', 'Agents take on repetitive work so teams can focus on judgement and relationships.'),
         'mins': 6,
         'lead': 'Chatbots answer questions. AI agents get work done. Here is what changes when software can research, decide and act — and how to adopt it without losing control.',
         'body': [
@@ -45,7 +45,7 @@ ARTICLES = [
         'slug': 'insight-brand-strategy',
         'cat': 'BRANDING',
         'title': 'Why every business needs a strong brand strategy',
-        'cover': 'art-gold',
+        'cover': 'art-gold', 'photo': 'palette', 'photo2': ('whiteboard', 'Strategy first: positioning workshops turn insight into a clear brand direction.'),
         'mins': 5,
         'lead': 'A logo is a signature. A brand is a reputation. Strategy is what connects the two — and it matters as much to a five-person startup as to an established enterprise.',
         'body': [
@@ -79,7 +79,7 @@ ARTICLES = [
         'slug': 'insight-idea-to-digital-product',
         'cat': 'TECHNOLOGY',
         'title': 'From business idea to scalable digital product',
-        'cover': 'art-mesh',
+        'cover': 'art-mesh', 'photo': 'wireframe_tablet', 'photo2': ('ux_sketch', 'Sketches and prototypes test the idea with real users before code is written.'),
         'mins': 6,
         'lead': 'Most failed apps were not badly built — they were built before the idea was tested. A disciplined product process reduces risk at every stage, from first sketch to scale.',
         'body': [
@@ -114,7 +114,7 @@ ARTICLES = [
         'slug': 'insight-ai-customer-acquisition',
         'cat': 'DIGITAL MARKETING',
         'title': 'The future of AI-powered customer acquisition',
-        'cover': 'art-ink',
+        'cover': 'art-ink', 'photo': 'dm_tiles', 'photo2': ('analytics_laptop', 'Faster learning loops: campaigns measured and improved against real conversion data.'),
         'mins': 5,
         'lead': 'AI is changing how customers search, discover and decide. The businesses that win will combine automation with genuine relevance — and respect for the customer’s attention and consent.',
         'body': [

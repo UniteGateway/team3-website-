@@ -204,9 +204,9 @@ HERO_PHOTOS = {'About Us': 'team_office', 'Branding': 'palette', 'Technology': '
                'Insights': 'open_office', 'Contact': 'office_glass'}
 
 
-def page_hero(crumb, eyebrow, title, lead, buttons=''):
+def page_hero(crumb, eyebrow, title, lead, buttons='', photo=None):
     acts = f'<div class="actions">{buttons}</div>' if buttons else ''
-    ph = HERO_PHOTOS.get(crumb)
+    ph = photo or HERO_PHOTOS.get(crumb)
     art = (f'<img class="hero-photo" src="assets/img/photos/{ph}.webp" alt="" fetchpriority="high" decoding="async"><div class="hero-shade"></div>'
            if ph else '<img class="sym-bg" src="assets/img/symbol.webp" alt="" width="382" height="540">')
     return f'''<section class="hero page-hero{' has-photo' if ph else ''}"><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
@@ -494,7 +494,7 @@ def ind_cards(items, ids=False):
 
 
 def insight_cards(exclude=None):
-    return ''.join(f'<a class="post rv d{n}" href="{a["slug"]}.html"><div class="cover"><span class="{a["cover"]}"></span></div><div class="body"><small>{E(a["cat"])} · {a["mins"]} MIN READ</small><h3>{E(a["title"])}</h3><span class="link">Read article{ARROW}</span></div></a>'
+    return ''.join(f'<a class="post rv d{n}" href="{a["slug"]}.html"><div class="cover"><img src="assets/img/photos/{a["photo"]}-t.webp" alt="" width="480" height="300" loading="lazy"></div><div class="body"><small>{E(a["cat"])} · {a["mins"]} MIN READ</small><h3>{E(a["title"])}</h3><span class="link">Read article{ARROW}</span></div></a>'
                    for n, a in enumerate(x for x in ARTICLES if x['slug'] != exclude))
 
 
@@ -508,11 +508,22 @@ def render_blocks(paras):
     return out
 
 
+def secs_with_fig(a):
+    out = ''
+    for n, (h, ps) in enumerate(a['body']):
+        out += f'<h2>{E(h)}</h2>{render_blocks(ps)}'
+        if n == 1:
+            k, cap_ = a['photo2']
+            out += f'<figure class="inline-fig"><img src="assets/img/photos/{k}.webp" alt="" loading="lazy"><figcaption>{E(cap_)}</figcaption></figure>'
+    return out
+
+
 def page_article(a):
     secs = ''.join(f'<h2>{E(h)}</h2>{render_blocks(ps)}' for h, ps in a['body'])
     body = f'''
-{page_hero("Insights", a["cat"].title() + " · " + str(a["mins"]) + " min read", E(a["title"]), E(a["lead"]))}
-<article class="section prose-wrap"><div class="wrap"><div class="prose rv">{secs}
+{page_hero("Insights", a["cat"].title() + " · " + str(a["mins"]) + " min read", E(a["title"]), E(a["lead"]), photo=a["photo"])}
+<article class="section prose-wrap"><div class="wrap">
+<div class="prose rv">{secs_with_fig(a)}
 <div class="byline"><img src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><div><b>TEAM3 Insights</b><span>TEAM3 WEBLOGICS · Hyderabad</span></div></div>
 </div></div></article>
 <section class="section bg-grey"><div class="wrap">{head("Keep reading", "More ideas worth exploring.")}<div class="grid g3">{insight_cards(a["slug"])}</div></div></section>
