@@ -116,25 +116,25 @@ AGENT_PHOTO = {k: v[0] for k, v in AGENT_DETAIL.items()}
 # photo (assets/img/team/...) and social URLs with real details before promoting these pages.
 # (name, role, bio, photo, dot colour, {social: url})
 TEAM = [
-    ('Dr. Ravi Chandra', 'Founder & Managing Director', 'Founded TEAM3 in 2004 with a vision to bring creative communication and information technology together under one roof. Leads strategy, partnerships and the TEAM3 relaunch.', 'team/placeholder-5.webp', '#F0606A', {}),
-    ('Name Surname', 'Chief Technology Officer', 'Leads software engineering, cloud architecture and the TEAM3 product platforms, from enterprise systems to mobile apps.', 'team/placeholder-3.webp', '#8FCFDD', {}),
-    ('Name Surname', 'Head of Branding & Creative', 'Guides brand strategy, identity design, advertising and the creative studio across every client engagement.', 'team/placeholder-2.webp', '#F5A06B', {}),
-    ('Name Surname', 'Head of AI & Data', 'Designs AI strategies, agents and data platforms, with responsible-AI governance built in from day one.', 'team/placeholder-7.webp', '#A9B8E6', {}),
-    ('Name Surname', 'Head of Consulting', 'Leads business strategy, transformation and interior design consulting — from diagnosis to delivery.', 'team/placeholder-4.webp', '#D2D2D6', {}),
-    ('Name Surname', 'Head of Digital Marketing', 'Runs SEO, performance, social and AI-powered marketing programmes measured against real business outcomes.', 'team/placeholder-6.webp', '#F2C25A', {}),
-    ('Name Surname', 'Head of Product', 'Owns the roadmap for COLLABIZ, LeadDNA, BIZO and the other TEAM3 platforms, working closely with customers.', 'team/placeholder-1.webp', '#E6DAB0', {}),
-    ('Name Surname', 'Head of TEAM3 Academy', 'Builds AI and digital learning programmes for students, professionals, enterprises and institutions.', 'team/placeholder-8.webp', '#A9D2AE', {}),
+    ('Dr. Ravi Chandra', 'Founder & Managing Director', 'Founded TEAM3 in 2004 to bring creative communication and information technology together under one roof. Two decades of building brands, platforms and partnerships — now leading TEAM3’s relaunch as a branding, technology and AI company.', 'team/team-1.webp', '#F0606A', {'linkedin': '#', 'x': '#', 'email': 'mailto:info@team3solutions.in'}),
+    ('Arjun Mehta', 'Chief Technology Officer', '18 years in enterprise software and cloud architecture. Leads engineering for TEAM3’s client platforms and products, from ERP systems to mobile apps used by thousands every day.', 'team/team-2.webp', '#8FCFDD', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Ananya Rao', 'Head of Branding & Creative', 'Award-winning brand strategist who has shaped identities for healthcare, real-estate and consumer brands. Believes every great brand starts with one clear idea.', 'team/team-3.webp', '#F5A06B', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Daniel Brooks', 'Head of AI & Data', 'Designs AI agents, data platforms and analytics for enterprises in India, the US and the UK — with responsible-AI governance built in from day one.', 'team/team-4.webp', '#A9B8E6', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Vikram Shetty', 'Head of Consulting', 'Former management consultant leading TEAM3’s strategy, digital transformation and interior design practices — taking clients from diagnosis to delivery.', 'team/team-5.webp', '#D2D2D6', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Sarah Thompson', 'Head of Digital Marketing', 'Performance marketer with 12 years in SEO, paid media and marketing automation. Measures every campaign against leads and revenue, not likes.', 'team/team-6.webp', '#F2C25A', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Rahul Verma', 'Head of Product', 'Owns the roadmap for COLLABIZ, LeadDNA, BIZO and the other TEAM3 platforms. Spends half his week with customers, turning feedback into features.', 'team/team-7.webp', '#E6DAB0', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Meera Iyer', 'Head of TEAM3 Academy', 'Educator and learning designer who has trained 5,000+ students and professionals in AI and digital skills through workshops, colleges and corporate programmes.', 'team/team-8.webp', '#A9D2AE', {'linkedin': '#', 'x': '#', 'email': '#'}),
 ]
 
 ADVISORS = [
-    ('Advisor Name', 'Technology & AI Advisor', 'Advises on technology strategy, AI adoption and product engineering.', 'team/placeholder-3.webp', '#8FCFDD', {}),
-    ('Advisor Name', 'Branding & Marketing Advisor', 'Brings experience in brand building, advertising and go-to-market strategy.', 'team/placeholder-2.webp', '#F5A06B', {}),
-    ('Advisor Name', 'Finance & Investment Advisor', 'Guides financial planning, fundraising readiness and investor relations.', 'team/placeholder-6.webp', '#F2C25A', {}),
-    ('Advisor Name', 'International Business Advisor', 'Supports international expansion, trade and partnerships across the US, UK and beyond.', 'team/placeholder-7.webp', '#A9B8E6', {}),
-    ('Advisor Name', 'Education & Skills Advisor', 'Shapes TEAM3 Academy programmes and partnerships with educational institutions.', 'team/placeholder-8.webp', '#A9D2AE', {}),
-    ('Advisor Name', 'Sustainability & Energy Advisor', 'Advises on ESG, renewable energy and the SOLBID and SUNGATE platforms.', 'team/placeholder-1.webp', '#E6DAB0', {}),
-    ('Advisor Name', 'Healthcare Advisor', 'Brings healthcare industry insight for digital health and membership platforms.', 'team/placeholder-5.webp', '#F0606A', {}),
-    ('Advisor Name', 'Legal & Governance Advisor', 'Advises on corporate governance, compliance and responsible-AI policy.', 'team/placeholder-4.webp', '#D2D2D6', {}),
+    ('Richard Hale', 'Technology & AI Advisor', 'Former CTO of a global software company. Advises on technology strategy, AI adoption and scaling engineering teams.', 'team/adv-1.webp', '#8FCFDD', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Karthik Subramanian', 'Branding & Marketing Advisor', '25 years in advertising and brand building across India and Southeast Asia, including leadership roles at leading agencies.', 'team/adv-2.webp', '#F5A06B', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Elena Novak', 'Finance & Investment Advisor', 'Investment professional who guides financial planning, fundraising readiness and investor relations for growth companies.', 'team/adv-3.webp', '#F2C25A', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('James Carter', 'International Business Advisor', 'Built and led businesses in the US and UK. Supports TEAM3’s international expansion, partnerships and trade initiatives.', 'team/adv-4.webp', '#A9B8E6', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Dr. Lakshmi Prasad', 'Education & Skills Advisor', 'Academic leader and former dean who shapes TEAM3 Academy programmes and partnerships with universities and colleges.', 'team/adv-5.webp', '#A9D2AE', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Sanjay Kapoor', 'Sustainability & Energy Advisor', 'Renewable-energy entrepreneur advising on ESG strategy and the SOLBID and SUNGATE energy platforms.', 'team/adv-6.webp', '#E6DAB0', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Dr. Nisha Reddy', 'Healthcare Advisor', 'Physician and healthcare administrator bringing clinical and hospital-management insight to TEAM3’s digital health work.', 'team/adv-7.webp', '#F0606A', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Michael Fernandes', 'Legal & Governance Advisor', 'Corporate lawyer advising on governance, contracts, data privacy and TEAM3’s Responsible AI policy.', 'team/adv-8.webp', '#D2D2D6', {'linkedin': '#', 'x': '#', 'email': '#'}),
 ]
 
 # Client logo wall. (name, sector, market). To show a real logo, add a file named after the

@@ -1021,7 +1021,7 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 .foot .fd{position:absolute;inset:0;background:var(--dot,#E9AC16);-webkit-mask:url(../img/shape-dots.png) center/100% 100% no-repeat;mask:url(../img/shape-dots.png) center/100% 100% no-repeat}
 .foot::after{content:"";position:absolute;left:12%;right:12%;bottom:-6%;height:7%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.28),transparent);z-index:-1}
 .bg-black .foot::after,.pillar .foot::after{background:radial-gradient(closest-side,rgba(255,255,255,.12),transparent)}
-.foot.sm{max-width:200px}.foot.md{max-width:280px;margin-top:36px}.foot.lg{max-width:400px;margin-inline:auto}
+.foot.sm{max-width:200px}.foot.md{max-width:280px;margin-top:36px}.foot.xl{max-width:400px;margin-inline:auto}
 .pillar .foot{max-width:170px;margin-bottom:24px}
 .pillar .big{position:absolute;top:28px;right:30px;font-size:84px}
 .pillar{min-height:0}
@@ -1067,3 +1067,6 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 .client:hover img{filter:none;opacity:1}
 .cl img{max-height:56px}
 .cl img{width:170px;height:64px;max-width:100%;max-height:none;object-fit:contain}
+.sample-note{display:inline-block;margin-bottom:28px;padding:8px 14px;border-radius:999px;background:#FFF8E6;border:1px solid #F5DFA3;color:#5c4400;font-size:13.5px;font-weight:600}
+.person .foot .fp img{object-position:center 20%}
+.founder>.foot{width:min(100%,400px);height:auto;justify-self:center}

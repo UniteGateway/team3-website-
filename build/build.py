@@ -771,7 +771,7 @@ def page_about():
 </div></section>
 
 <section class="section" id="founder"><div class="wrap founder">
-<div class="rv">{foot(TEAM[0][3], TEAM[0][4], "lg", "Dr. Ravi Chandra, Founder & Managing Director")}</div>
+<div class="rv">{foot(TEAM[0][3], TEAM[0][4], "xl", "Dr. Ravi Chandra, Founder & Managing Director")}</div>
 <div class="rv d1"><span class="eyebrow">Our founder</span>
 <blockquote style="margin-top:24px">TEAM3 was founded with an entrepreneurial vision to integrate creative design, advertising, information technology and business innovation.</blockquote>
 <p class="lead" style="margin-top:26px">With experience spanning creative communication, technology architecture, digital platforms and business development, the founder’s vision is to transform TEAM3 into a next-generation global creative and technology enterprise.</p>
@@ -1643,12 +1643,13 @@ def page_team():
     body = f"""
 {page_hero("Our Team", "Our Team", "The people behind <span class='grad'>TEAM3.</span>", "Strategists, designers, engineers and AI specialists working as one team — the “Team” in TEAM3.", btn("Join our team", "careers.html", "red") + btn("Advisory board", "advisory.html", "ghost", False), photo='team_laptops', parent=('about.html', 'About'))}
 <section class="section"><div class="wrap founder">
-{foot(f[3], f[4], "lg", f[0] + ", " + f[1])}
+{foot(f[3], f[4], "xl", f[0] + ", " + f[1])}
 <div class="rv d1"><span class="eyebrow">Leadership</span><h2 style="margin-top:16px">{E(f[0])}</h2><p class="role big">{E(f[1])}</p>
 <p class="lead" style="margin-top:18px">{E(f[2])}</p>{person_social(f[0], f[5])}
 <div class="actions">{btn("Our story", "about.html#story", "ghost", False)}</div></div>
 </div></section>
 <section class="section bg-grey"><div class="wrap">
+<p class="sample-note rv">Preview: sample names, photos and profiles shown for layout. Real team details coming soon.</p>
 {head("Leadership team", "Eight leaders. <span class='grad'>One integrated team.</span>", "Branding, technology, AI, consulting, marketing, products and learning — led by specialists who work side by side.")}
 {people_grid(TEAM)}
 </div></section>
@@ -1661,6 +1662,7 @@ def page_advisory():
     body = f"""
 {page_hero("Advisory Board", "Advisory Board", "Guided by <span class='grad'>experience.</span>", "Our advisory board brings senior expertise in technology, branding, finance, international business, education, sustainability, healthcare and governance.", btn("Meet the board", "#board", "red") + btn("Our team", "team.html", "ghost", False), photo='boardroom', parent=('about.html', 'About'))}
 <section class="section" id="board"><div class="wrap">
+<p class="sample-note rv">Preview: sample names, photos and profiles shown for layout. Real advisory board details coming soon.</p>
 {head("Advisory board", "Eight advisors. <span class='grad'>Eight perspectives.</span>", "Independent advice that keeps TEAM3 focused on long-term value for clients, partners and teams.")}
 {people_grid(ADVISORS)}
 </div></section>
