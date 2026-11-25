@@ -22,7 +22,7 @@ SITE = {
     'url': 'https://www.team3weblogics.com',
     'company': 'TEAM3 WEBLOGICS PVT. LTD.',
     'address': '6-3-569, 3rd Floor, Above BMW Showroom, Khairatabad Road, Hyderabad, India',
-    'email': '',            # e.g. 'hello@team3weblogics.com'
+    'email': 'info@team3solutions.in',
     'phone': '+91 90522 70203',
     'whatsapp': '',         # digits only with country code, e.g. '919800000000'
     # Form backend: any endpoint that accepts a POST of form fields (Formspree, Getform,
