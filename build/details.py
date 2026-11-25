@@ -111,3 +111,28 @@ AGENT_DETAIL = {
 }
 
 AGENT_PHOTO = {k: v[0] for k, v in AGENT_DETAIL.items()}
+
+# Team & Advisory Board. Names marked PLACEHOLDER are dummy profiles: replace name, role, bio,
+# photo (assets/img/team/...) and social URLs with real details before promoting these pages.
+# (name, role, bio, photo, dot colour, {social: url})
+TEAM = [
+    ('Dr. Ravi Chandra', 'Founder & Managing Director', 'Founded TEAM3 in 2004 with a vision to bring creative communication and information technology together under one roof. Leads strategy, partnerships and the TEAM3 relaunch.', 'team/placeholder-5.webp', '#F0606A', {}),
+    ('Name Surname', 'Chief Technology Officer', 'Leads software engineering, cloud architecture and the TEAM3 product platforms, from enterprise systems to mobile apps.', 'team/placeholder-3.webp', '#8FCFDD', {}),
+    ('Name Surname', 'Head of Branding & Creative', 'Guides brand strategy, identity design, advertising and the creative studio across every client engagement.', 'team/placeholder-2.webp', '#F5A06B', {}),
+    ('Name Surname', 'Head of AI & Data', 'Designs AI strategies, agents and data platforms, with responsible-AI governance built in from day one.', 'team/placeholder-7.webp', '#A9B8E6', {}),
+    ('Name Surname', 'Head of Consulting', 'Leads business strategy, transformation and interior design consulting — from diagnosis to delivery.', 'team/placeholder-4.webp', '#D2D2D6', {}),
+    ('Name Surname', 'Head of Digital Marketing', 'Runs SEO, performance, social and AI-powered marketing programmes measured against real business outcomes.', 'team/placeholder-6.webp', '#F2C25A', {}),
+    ('Name Surname', 'Head of Product', 'Owns the roadmap for COLLABIZ, LeadDNA, BIZO and the other TEAM3 platforms, working closely with customers.', 'team/placeholder-1.webp', '#E6DAB0', {}),
+    ('Name Surname', 'Head of TEAM3 Academy', 'Builds AI and digital learning programmes for students, professionals, enterprises and institutions.', 'team/placeholder-8.webp', '#A9D2AE', {}),
+]
+
+ADVISORS = [
+    ('Advisor Name', 'Technology & AI Advisor', 'Advises on technology strategy, AI adoption and product engineering.', 'team/placeholder-3.webp', '#8FCFDD', {}),
+    ('Advisor Name', 'Branding & Marketing Advisor', 'Brings experience in brand building, advertising and go-to-market strategy.', 'team/placeholder-2.webp', '#F5A06B', {}),
+    ('Advisor Name', 'Finance & Investment Advisor', 'Guides financial planning, fundraising readiness and investor relations.', 'team/placeholder-6.webp', '#F2C25A', {}),
+    ('Advisor Name', 'International Business Advisor', 'Supports international expansion, trade and partnerships across the US, UK and beyond.', 'team/placeholder-7.webp', '#A9B8E6', {}),
+    ('Advisor Name', 'Education & Skills Advisor', 'Shapes TEAM3 Academy programmes and partnerships with educational institutions.', 'team/placeholder-8.webp', '#A9D2AE', {}),
+    ('Advisor Name', 'Sustainability & Energy Advisor', 'Advises on ESG, renewable energy and the SOLBID and SUNGATE platforms.', 'team/placeholder-1.webp', '#E6DAB0', {}),
+    ('Advisor Name', 'Healthcare Advisor', 'Brings healthcare industry insight for digital health and membership platforms.', 'team/placeholder-5.webp', '#F0606A', {}),
+    ('Advisor Name', 'Legal & Governance Advisor', 'Advises on corporate governance, compliance and responsible-AI policy.', 'team/placeholder-4.webp', '#D2D2D6', {}),
+]

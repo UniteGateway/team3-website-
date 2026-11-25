@@ -206,7 +206,7 @@ def cta_band(title, lead, buttons):
 HERO_PHOTOS = {'About Us': 'team_office', 'Branding': 'palette', 'Technology': 'code_laptop', 'Artificial Intelligence': 'ai_letters',
                'Products': 'laptop_dark', 'Digital Marketing': 'dm_tiles', 'Academy': 'students_laptop', 'Our Work': 'flatlay',
                'Clients': 'handshake', 'Industries': 'engineer_factory', 'Careers': 'friends_laptops', 'Partners': 'hands_stack',
-               'Insights': 'open_office', 'Contact': 'office_glass', 'Consulting': 'boardroom'}
+               'Insights': 'open_office', 'Contact': 'office_glass', 'Consulting': 'boardroom', 'Our Team': 'team_laptops', 'Advisory Board': 'boardroom'}
 
 
 def page_hero(crumb, eyebrow, title, lead, buttons='', photo=None, parent=None):
@@ -234,10 +234,10 @@ MENUS = [
     ('about.html', 'About', 'Imagination is where everything begins.', 'Founded in 2004 to bring creative communication and information technology together under one roof.', [
         ('about.html#story', 'Our story', 'Two decades of creativity and code', _ph('presentation')),
         ('about.html#meaning', 'The meaning of 3', 'Clients · Team · Management', _ph('hands_stack')),
-        ('about.html#vision', 'Vision & mission', 'Where we are going', _ph('highfive')),
+        ('team.html', 'Our team', 'The people behind TEAM3', 'team/placeholder-5.webp'),
         ('about.html#founder', 'Our founder', 'Dr. Ravi Chandra', _ph('office_glass')),
         ('about.html#journey', 'Our journey', '2004 to the intelligent era', _ph('earth_night')),
-        ('index.html#global', 'Global presence', 'India · US · UK · Canada', _ph('london')),
+        ('advisory.html', 'Advisory board', 'Guided by experience', _ph('boardroom')),
     ]),
     ('branding.html', 'Branding', 'We don’t just design logos. We build brands.', 'Strategy, identity, advertising and film — a complete brand-to-market solution.', [
         ('branding.html#strategy', 'Brand strategy', 'Positioning, naming, architecture', _ph('whiteboard')),
@@ -352,6 +352,10 @@ ASSISTANT = '''<div class="asst" id="asst">
 </div></div>'''
 
 
+# Pages with placeholder content are kept out of search results until real details are added.
+NOINDEX_PAGES = {'team.html', 'advisory.html'}
+
+
 def layout(fname, title, desc, body, og_type='website'):
     full_title = 'TEAM3 Solutions — Branding, Technology & Artificial Intelligence' if fname == 'index.html' else f'{title} | TEAM3 Solutions'
     canon = SITE['url'] + '/' + ('' if fname == 'index.html' else fname)
@@ -363,7 +367,7 @@ def layout(fname, title, desc, body, og_type='website'):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{E(full_title)}</title>
 <meta name="description" content="{E(desc)}">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#000000">{'<meta name="robots" content="noindex">' if fname in NOINDEX_PAGES else ''}
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="format-detection" content="telephone=no">
 <link rel="alternate" hreflang="en" href="{canon}">
@@ -560,9 +564,12 @@ PILLARS = [('Our Clients', 'Every engagement starts and ends with the client. We
            ('Our Management', 'Leadership that believes in teamwork, good client relationships and good employee relationships.')]
 
 
+PILLAR_FEET = [('handshake', '#E6DAB0'), ('team_laptops', '#8FCFDD'), ('boardroom', '#D2D2D6')]
+
+
 def pillars_block():
     return '<div class="pillars">' + ''.join(
-        f'<div class="pillar rv d{n}"><span class="dot"></span><span class="big">{n+1}</span><h3>{E(t)}</h3><p>{E(p)}</p></div>' for n, (t, p) in enumerate(PILLARS)) + '</div>'
+        f'<div class="pillar rv d{n}">{foot(*PILLAR_FEET[n])}<span class="big">{n+1}</span><h3>{E(t)}</h3><p>{E(p)}</p></div>' for n, (t, p) in enumerate(PILLARS)) + '</div>'
 
 
 # --------------------------------------------------------------------------- infographics
@@ -741,7 +748,7 @@ def page_about():
 {page_hero("About Us", "About TEAM3", "Imagination is where <span class='grad'>everything begins.</span>", "Founded in 2004, TEAM3 began with a vision to bring creative communication and information technology together under one roof.")}
 {subnav([("story","Our story"),("meaning","The meaning of 3"),("vision","Vision & mission"),("values","Values"),("founder","Founder"),("journey","Journey")])}
 <section class="section" id="story"><div class="wrap"><div class="cap" style="border:0;padding:0">
-<div class="rv"><span class="eyebrow">Our story</span><h2 style="margin-top:16px">Two decades of creativity and code.</h2></div>
+<div class="rv"><span class="eyebrow">Our story</span><h2 style="margin-top:16px">Two decades of creativity and code.</h2>{foot("whiteboard", "#F5A06B", "md")}</div>
 <div class="stack rv d1" style="gap:22px;font-size:19px;line-height:1.6">
 <p>Over the years, TEAM3 developed capabilities across advertising, branding, software development, web technologies, corporate communication, digital marketing and smart systems.</p>
 <p class="muted">Our earlier corporate office was at 6-3-569, Khairatabad Road, Hyderabad. Today TEAM3 Solutions works from Ashoka Capitol, Banjara Hills, Hyderabad.</p>
@@ -764,7 +771,7 @@ def page_about():
 </div></section>
 
 <section class="section" id="founder"><div class="wrap founder">
-<figure class="portrait rv"><img src="assets/img/symbol.webp" alt="" width="382" height="540" loading="lazy"><figcaption><span>Founder &amp; Managing Director</span><b>Dr. Ravi Chandra</b></figcaption></figure>
+<div class="rv">{foot(TEAM[0][3], TEAM[0][4], "lg", "Dr. Ravi Chandra, Founder & Managing Director")}</div>
 <div class="rv d1"><span class="eyebrow">Our founder</span>
 <blockquote style="margin-top:24px">TEAM3 was founded with an entrepreneurial vision to integrate creative design, advertising, information technology and business innovation.</blockquote>
 <p class="lead" style="margin-top:26px">With experience spanning creative communication, technology architecture, digital platforms and business development, the founder’s vision is to transform TEAM3 into a next-generation global creative and technology enterprise.</p>
@@ -1078,7 +1085,7 @@ def page_careers():
     body = f'''
 {page_hero("Careers", "Careers", "Come imagine <span class='grad'>the future with us.</span>", "At TEAM3, creativity and technology come together to solve meaningful challenges. We are building a culture where designers, developers, AI engineers, strategists and entrepreneurs can collaborate, learn and create.", btn("Submit Your Profile", "#apply", "red") + btn("Partner with us", "partners.html", "ghost", False))}
 <section class="section" id="talent"><div class="wrap">
-{head("Talent communities", "Two communities. One team.")}
+<div class="head split"><div class="rv"><span class="eyebrow">Talent communities</span><h2 style="margin-top:16px">Two communities. One team.</h2><p class="lead" style="margin-top:16px">Meet the <a class="red" href="team.html">people behind TEAM3</a> and the <a class="red" href="advisory.html">advisory board</a>.</p></div><div class="rv d1 foot-row">{foot("friends_laptops", "#8FCFDD", "sm")}{foot("coders_pair", "#F5A06B", "sm")}{foot("highfive", "#E6DAB0", "sm")}</div></div>
 <div class="grid g2">
 <div class="card rv"><span class="ic">{ic("pen")}</span><h3>Creative &amp; marketing</h3><ul class="bullets" style="margin-top:18px">{"".join(f"<li>{E(r)}</li>" for r in creative)}</ul></div>
 <div class="card rv d1"><span class="ic">{ic("code")}</span><h3>Technology &amp; AI</h3><ul class="bullets" style="margin-top:18px">{"".join(f"<li>{E(r)}</li>" for r in tech)}</ul></div>
@@ -1540,7 +1547,7 @@ def social_links():
 def footer():
     col = lambda t, links: f'<div class="f-col"><h2 class="h5">{E(t)}</h2>' + ''.join(f'<a href="{h}">{E(l)}</a>' for h, l in links) + '</div>'
     cols = ''.join([
-        col('Company', [('about.html', 'About Us'), ('about.html#journey', 'Our Journey'), ('clients.html', 'Clients'), ('gallery.html', 'Gallery'), ('careers.html', 'Careers'), ('partners.html', 'Partners'), ('contact.html', 'Contact')]),
+        col('Company', [('about.html', 'About Us'), ('team.html', 'Our Team'), ('advisory.html', 'Advisory Board'), ('clients.html', 'Clients'), ('gallery.html', 'Gallery'), ('careers.html', 'Careers'), ('partners.html', 'Partners'), ('contact.html', 'Contact')]),
         col('Services', [('branding.html', 'Branding'), ('branding.html#advertising', 'Advertising'), ('technology.html', 'Technology'), ('technology.html#apps', 'Mobile Apps'), ('ai.html', 'Artificial Intelligence'), ('marketing.html', 'Digital Marketing'), ('branding.html#media', 'Media & Film')]),
         col('Consulting', [(consulting_href(c[0]), c[2]) for c in CONSULTING[:7]]),
         col('Products', [(product_href(p[0]), p[1]) for p in PRODUCTS[:7]]),
@@ -1566,6 +1573,71 @@ def footer():
 <div class="f-bot"><span>© <span id="yr">2026</span> {E(SITE["company"])}. All rights reserved.</span><span class="f-legal"><a href="legal.html#privacy">Privacy</a><a href="legal.html#terms">Terms</a><a href="legal.html#cookies">Cookies</a><a href="sitemap.xml">Sitemap</a></span><span class="tag">Step beyond imagination. · Established 2004</span></div>
 <div class="f-big" aria-hidden="true"></div>
 </div></footer>'''
+
+
+# --------------------------------------------------------------------------- footprint photo shape (from the TEAM3 presentation)
+from details import TEAM, ADVISORS  # noqa: E402
+
+
+def foot(img, dot='#E9AC16', cls='', alt=''):
+    src = img if '/' in img else f'photos/{img}.webp'
+    return (f'<figure class="foot {cls}" style="--dot:{dot}"><span class="fp"><img src="assets/img/{src}" alt="{E(alt)}" loading="lazy"></span>'
+            f'<span class="fd" aria-hidden="true"></span></figure>')
+
+
+def person_social(name, links):
+    out = ''
+    for k in ['linkedin', 'x', 'email']:
+        svg = f'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">{SOCIAL_ICONS[k]}</svg>'
+        label = f'{name} on {SOCIAL_NAMES[k]}'
+        if links.get(k):
+            out += f'<a class="soc sm" href="{E(links[k])}" rel="noopener" aria-label="{E(label)}">{svg}</a>'
+        else:
+            out += f'<span class="soc sm soon" role="img" aria-label="{E(label)} (coming soon)" title="Coming soon">{svg}</span>'
+    return f'<div class="socials">{out}</div>'
+
+
+def people_grid(people):
+    return '<div class="people">' + ''.join(
+        f'<article class="person rv d{i % 4}">{foot(img, dot, "sm", name + ", " + role)}'
+        f'<div class="p-body"><h3>{E(name)}</h3><p class="role">{E(role)}</p><p class="bio">{E(bio)}</p>{person_social(name, soc)}</div></article>'
+        for i, (name, role, bio, img, dot, soc) in enumerate(people)) + '</div>'
+
+
+def page_team():
+    f = TEAM[0]
+    body = f"""
+{page_hero("Our Team", "Our Team", "The people behind <span class='grad'>TEAM3.</span>", "Strategists, designers, engineers and AI specialists working as one team — the “Team” in TEAM3.", btn("Join our team", "careers.html", "red") + btn("Advisory board", "advisory.html", "ghost", False), photo='team_laptops', parent=('about.html', 'About'))}
+<section class="section"><div class="wrap founder">
+{foot(f[3], f[4], "lg", f[0] + ", " + f[1])}
+<div class="rv d1"><span class="eyebrow">Leadership</span><h2 style="margin-top:16px">{E(f[0])}</h2><p class="role big">{E(f[1])}</p>
+<p class="lead" style="margin-top:18px">{E(f[2])}</p>{person_social(f[0], f[5])}
+<div class="actions">{btn("Our story", "about.html#story", "ghost", False)}</div></div>
+</div></section>
+<section class="section bg-grey"><div class="wrap">
+{head("Leadership team", "Eight leaders. <span class='grad'>One integrated team.</span>", "Branding, technology, AI, consulting, marketing, products and learning — led by specialists who work side by side.")}
+{people_grid(TEAM)}
+</div></section>
+{cta_band("Come imagine the future with us.", "We’re building a team of designers, developers, AI engineers and strategists.", btn("See careers", "careers.html", "red") + btn("Submit your profile", "careers.html#apply", "ghost", False))}
+"""
+    return layout('team.html', 'Our Team', 'Meet the TEAM3 Solutions leadership team: founder Dr. Ravi Chandra and the heads of technology, branding, AI, consulting, marketing, products and Academy.', body)
+
+
+def page_advisory():
+    body = f"""
+{page_hero("Advisory Board", "Advisory Board", "Guided by <span class='grad'>experience.</span>", "Our advisory board brings senior expertise in technology, branding, finance, international business, education, sustainability, healthcare and governance.", btn("Meet the board", "#board", "red") + btn("Our team", "team.html", "ghost", False), photo='boardroom', parent=('about.html', 'About'))}
+<section class="section" id="board"><div class="wrap">
+{head("Advisory board", "Eight advisors. <span class='grad'>Eight perspectives.</span>", "Independent advice that keeps TEAM3 focused on long-term value for clients, partners and teams.")}
+{people_grid(ADVISORS)}
+</div></section>
+<section class="section bg-black"><div class="wrap"><div class="cap" style="border:0;padding:0">
+<div class="rv">{foot("handshake", "#E9AC16", "md")}</div>
+<div class="rv d1"><span class="eyebrow gold">Join the board</span><h2 style="margin-top:16px">Share your experience with the next generation of TEAM3.</h2>
+<p class="lead" style="margin-top:18px">We welcome senior leaders who want to help shape branding, technology and AI businesses.</p>
+<div class="actions">{btn("Express interest", "contact.html?service=Partnership&msg=" + quote("Advisory board interest") + "#enquiry", "red")}</div></div>
+</div></div></section>
+"""
+    return layout('advisory.html', 'Advisory Board', 'The TEAM3 Solutions advisory board: senior advisors in technology and AI, branding, finance, international business, education, sustainability, healthcare and governance.', body)
 
 
 def page_insights():
@@ -1701,7 +1773,7 @@ def security_headers():
 
 
 def write_extras(names):
-    urls = ''.join(f'<url><loc>{SITE["url"]}/{"" if n == "index.html" else n}</loc></url>' for n in names if n != '404.html')
+    urls = ''.join(f'<url><loc>{SITE["url"]}/{"" if n == "index.html" else n}</loc></url>' for n in names if n != '404.html' and n not in NOINDEX_PAGES)
     files = {
         'sitemap.xml': f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n',
         'robots.txt': f'User-agent: *\nAllow: /\nSitemap: {SITE["url"]}/sitemap.xml\n',
@@ -1740,7 +1812,7 @@ PAGES = {
     'industries.html': page_industries, 'careers.html': page_careers, 'insights.html': page_insights,
     'contact.html': page_contact, 'legal.html': page_legal, '404.html': page_404,
     'gallery.html': page_gallery, 'clients.html': page_clients, 'partners.html': page_partners,
-    'products.html': page_products, 'consulting.html': page_consulting,
+    'products.html': page_products, 'consulting.html': page_consulting, 'team.html': page_team, 'advisory.html': page_advisory,
 }
 for _p in PRODUCTS:
     PAGES[product_href(_p[0])] = (lambda p=_p: page_product(p))

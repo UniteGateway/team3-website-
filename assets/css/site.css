@@ -1012,3 +1012,36 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 .site-footer h2.h5{margin:0 0 6px;font:700 12px/1 var(--b);letter-spacing:.16em;text-transform:uppercase;color:#fff}
 .relgrid.c5{grid-template-columns:repeat(5,1fr)}.relgrid.c3{grid-template-columns:repeat(3,1fr)}
 @media (max-width:1100px){.relgrid.c5,.relgrid.c3{grid-template-columns:repeat(2,1fr)}}
+
+/* ================= Footprint photo shape (TEAM3 presentation style) ================= */
+.foot{position:relative;margin:0;aspect-ratio:764/1080;width:100%;max-width:340px;isolation:isolate}
+.foot .fp{position:absolute;inset:0;-webkit-mask:url(../img/shape-blob.png) center/100% 100% no-repeat;mask:url(../img/shape-blob.png) center/100% 100% no-repeat;background:var(--grey-2)}
+.foot .fp img{width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
+.foot:hover .fp img{transform:scale(1.06)}
+.foot .fd{position:absolute;inset:0;background:var(--dot,#E9AC16);-webkit-mask:url(../img/shape-dots.png) center/100% 100% no-repeat;mask:url(../img/shape-dots.png) center/100% 100% no-repeat}
+.foot::after{content:"";position:absolute;left:12%;right:12%;bottom:-6%;height:7%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.28),transparent);z-index:-1}
+.bg-black .foot::after,.pillar .foot::after{background:radial-gradient(closest-side,rgba(255,255,255,.12),transparent)}
+.foot.sm{max-width:200px}.foot.md{max-width:280px;margin-top:36px}.foot.lg{max-width:400px;margin-inline:auto}
+.pillar .foot{max-width:170px;margin-bottom:24px}
+.pillar .big{position:absolute;top:28px;right:30px;font-size:84px}
+.pillar{min-height:0}
+.foot-row{display:flex;gap:18px;align-items:flex-end;justify-content:flex-end}
+.foot-row .foot{max-width:150px}.foot-row .foot:nth-child(2){max-width:180px}
+/* People (team & advisory) */
+.people{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.person{background:#fff;border-radius:var(--r);padding:28px 22px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;transition:box-shadow .45s var(--ease),transform .45s var(--ease)}
+.person:hover{box-shadow:var(--shadow);transform:translateY(-4px)}
+.person .foot{max-width:150px;margin-bottom:22px}
+.person h3{font-size:19px}
+.role{color:var(--red-ui);font-weight:600;font-size:14px;margin-top:6px}
+.role.big{font-size:17px;margin-top:8px}
+.bio{color:var(--muted);font-size:14px;line-height:1.55;margin-top:10px}
+.person .socials{justify-content:center;margin-top:auto;padding-top:18px}
+.soc.sm{width:36px;height:36px;background:var(--grey);border-color:var(--line);color:var(--ink)}
+.soc.sm svg{width:16px;height:16px}
+.soc.sm.soon{opacity:.5}
+.founder .socials .soc.sm{background:var(--grey)}
+@media (max-width:1100px){.people{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.people{grid-template-columns:1fr 1fr;gap:12px}.person{padding:20px 12px}.person .foot{max-width:110px}.bio{font-size:13px}.foot-row{justify-content:flex-start}.foot-row .foot{max-width:96px}.foot-row .foot:nth-child(2){max-width:112px}}
+.stack{align-content:start}
+.pillar h3{margin-top:0}

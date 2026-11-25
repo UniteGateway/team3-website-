@@ -17,6 +17,7 @@ or deploy the repository root to any static host (GitHub Pages, Netlify, Vercel,
 | `academy.html` | TEAM3 Academy programmes and formats |
 | `work.html` | Filterable portfolio with heritage project images and group businesses |
 | `product-*.html`, `consulting-*.html`, `industry-*.html`, `programme-*.html`, `agent-*.html` | 65 inner pages generated from `build/content.py` and `build/details.py` |
+| `team.html`, `advisory.html` | Team and Advisory Board (placeholder profiles in `build/details.py` → `TEAM`, `ADVISORS`; kept out of search results via `NOINDEX_PAGES` until real details are added) |
 | `consulting.html` | TEAM3 Consulting: 15 practices in 5 groups (data in `build/content.py` → `CONSULTING`) |
 | `products.html` | Our Products: COLLABIZ, LeadDNA, SOLBID, ADBUZ, UNITE EXIM, BIZO, SUNGATE, PRIZO, HNW, BEYOU (data in `build/content.py` → `PRODUCTS`) |
 | `gallery.html` | Archive gallery (events, publications, print, films, campaigns) with lightbox |
