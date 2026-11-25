@@ -11,7 +11,7 @@ import html
 from urllib.parse import quote
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from content import ARTICLES, LEGAL, PRODUCTS  # noqa: E402
+from content import ARTICLES, LEGAL, PRODUCTS, CONSULTING, CONSULTING_GROUPS  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 E = html.escape
@@ -204,7 +204,7 @@ def cta_band(title, lead, buttons):
 HERO_PHOTOS = {'About Us': 'team_office', 'Branding': 'palette', 'Technology': 'code_laptop', 'Artificial Intelligence': 'ai_letters',
                'Products': 'laptop_dark', 'Digital Marketing': 'dm_tiles', 'Academy': 'students_laptop', 'Our Work': 'flatlay',
                'Clients': 'handshake', 'Industries': 'engineer_factory', 'Careers': 'friends_laptops', 'Partners': 'hands_stack',
-               'Insights': 'open_office', 'Contact': 'office_glass'}
+               'Insights': 'open_office', 'Contact': 'office_glass', 'Consulting': 'boardroom'}
 
 
 def page_hero(crumb, eyebrow, title, lead, buttons='', photo=None):
@@ -286,13 +286,13 @@ MENUS = [
         ('work.html#heritage', 'Heritage projects', 'Since 2004', 'gallery/print-works.webp'),
         ('insights.html', 'Insights', 'Ideas worth exploring', _ph('open_office')),
     ]),
-    ('industries.html', 'Industries', 'Industry knowledge. Technology without boundaries.', 'Fourteen sectors, plus business consulting and innovation as a service.', [
-        ('industries.html#ind-manufacturing', 'Manufacturing', 'ERP, automation, B2B branding', _ph('engineer_factory')),
-        ('industries.html#ind-renewable-energy', 'Renewable energy', 'Platforms, monitoring, leads', _ph('solar')),
-        ('industries.html#ind-healthcare', 'Healthcare', 'Apps and digital engagement', _ph('doctor_phone')),
-        ('industries.html#ind-real-estate', 'Real estate', 'Branding, portals, CRM', _ph('towers')),
-        ('industries.html#ind-logistics', 'Logistics', 'Tracking and supply chain', _ph('warehouse')),
-        ('industries.html#consulting', 'Business consulting', 'Feasibility to go-to-market', _ph('planning')),
+    ('consulting.html', 'Consulting', 'Strategy to execution. One partner.', 'Fifteen consulting practices — from business strategy and AI to campaigns and interior design.', [
+        ('consulting.html#business-strategy', 'Business strategy', 'Growth, markets, business models', _ph('workshop')),
+        ('consulting.html#digital-transformation', 'Digital transformation', 'Roadmaps, ERP, cloud, change', _ph('dashboard')),
+        ('consulting.html#ai-data', 'AI & data strategy', 'Use cases, governance, CoE', _ph('ai_letters')),
+        ('consulting.html#campaign-design', 'Campaign design', 'Big ideas, launches, media', _ph('event_stage')),
+        ('consulting.html#interior-design', 'Interior design', 'Offices, showrooms, homes', _ph('interior_office')),
+        ('industries.html', 'Industries we serve', '14 sectors, one partner', _ph('engineer_factory')),
     ]),
     ('careers.html', 'Careers', 'Come imagine the future with us.', 'Designers, developers, AI engineers, strategists and entrepreneurs — build what’s next.', [
         ('careers.html#talent', 'Talent communities', 'Creative, marketing, tech & AI', _ph('friends_laptops')),
@@ -332,7 +332,7 @@ FOOTER = '''<footer class="site-footer"><div class="wrap">
 <p>An integrated creative and technology company. Established in 2004. Building intelligent solutions for the future.</p>
 <p style="margin-top:18px">__FOOTCONTACT__</p></div>
 <div class="f-col"><h2 class="h5">Company</h2><a href="about.html">About Us</a><a href="about.html#journey">Our Journey</a><a href="work.html">Our Work</a><a href="gallery.html">Gallery</a><a href="clients.html">Clients</a><a href="careers.html">Careers</a><a href="contact.html">Contact</a></div>
-<div class="f-col"><h2 class="h5">Services</h2><a href="branding.html">Branding</a><a href="branding.html#advertising">Advertising</a><a href="technology.html">IT &amp; Apps</a><a href="ai.html#agents">AI Agents</a><a href="marketing.html">Digital Marketing</a></div>
+<div class="f-col"><h2 class="h5">Services</h2><a href="branding.html">Branding</a><a href="branding.html#advertising">Advertising</a><a href="technology.html">IT &amp; Apps</a><a href="ai.html#agents">AI Agents</a><a href="marketing.html">Digital Marketing</a><a href="consulting.html">Consulting</a><a href="consulting.html#interior-design">Interior Design</a></div>
 <div class="f-col"><h2 class="h5">Explore</h2><a href="products.html">Our Products</a><a href="academy.html">AI Academy</a><a href="partners.html">Partner Network</a><a href="industries.html">Industries</a><a href="insights.html">Insights</a><a href="industries.html#innovation">Innovation</a></div>
 <div class="f-col"><h2 class="h5">Legal</h2><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Use</a><a href="legal.html#cookies">Cookie Policy</a><a href="legal.html#responsible-ai">Responsible AI Policy</a></div>
 </div>
@@ -408,7 +408,7 @@ SERVICES = [
     ('chart', 'Digital Marketing', 'SEO, performance, social and AI-powered marketing that converts.', 'marketing.html'),
     ('cap', 'AI Learning & Training', 'TEAM3 Academy programmes for people and enterprises.', 'academy.html'),
     ('film', 'Media & Film Production', 'Corporate films, commercials, animation and AI video.', 'branding.html#media'),
-    ('compass', 'Business Consulting', 'Feasibility, business models and go-to-market strategy.', 'industries.html#consulting'),
+    ('compass', 'Business Consulting', 'Strategy, transformation, campaigns and interior design consulting.', 'consulting.html'),
     ('cloud', 'Cloud & Cybersecurity', 'Cloud architecture, DevOps, data and protective security.', 'technology.html#cloud'),
     ('bulb', 'Product Innovation', 'Research, design and engineering to bring new products to market.', 'industries.html#innovation'),
 ]
@@ -1057,6 +1057,7 @@ def page_industries():
 <section class="section bg-grey"><div class="wrap">{ind_cards(INDUSTRIES, True)}</div></section>
 <section class="section" id="consulting"><div class="wrap">
 {head("Business consulting & product innovation", "Turning ideas <span class='grad'>into enterprises.</span>", "TEAM3 helps entrepreneurs and established businesses identify new opportunities, develop innovative products and bring commercially viable solutions to market.")}
+<p class="rv" style="margin:-36px 0 40px">{link("Explore all 15 consulting practices", "consulting.html")}</p>
 {cap("Business consulting services", "", checks(["Business concept development","Market feasibility studies","Business model design","Competitive intelligence","Commercial strategy","Go-to-market planning","Franchise model development","Investor presentation design","Business process transformation","Technology adoption strategy","International market development"], True))}
 </div></section>
 <section class="section tight" id="innovation"><div class="wrap"><div class="panel rv" style="min-height:460px"><div class="art art-gold"></div><div class="art art-lines"></div>
@@ -1264,6 +1265,67 @@ def steps_mini(items):
     return '<ol class="msteps">' + ''.join(f'<li><span>{n+1}</span>{E(t)}</li>' for n, t in enumerate(items)) + '</ol>'
 
 
+def page_consulting():
+    feat_slugs = ['business-strategy', 'campaign-design', 'interior-design']
+    by = {c[0]: c for c in CONSULTING}
+    idx = ''.join(f'<a class="pidx" href="#{c[0]}"><img src="assets/img/photos/{c[4]}-t.webp" alt="" width="480" height="300" loading="lazy"><b>{E(c[2])}</b><span>{E(c[1])}</span></a>' for c in CONSULTING)
+    feats = ''
+    for n, sl in enumerate(feat_slugs):
+        slug, grp, title, icon, photo, intro, offers = by[sl]
+        svc = {'business-strategy': 'Strategy', 'campaign-design': 'Campaigns', 'interior-design': 'Interior'}[sl]
+        feats += f"""<article class="prod rv{' rev' if n % 2 else ''}" id="{slug}">
+<figure class="cphoto"><img src="assets/img/photos/{photo}.webp" alt="" loading="lazy"><figcaption><span class="ic">{ic(icon)}</span>{E(grp)}</figcaption></figure>
+<div class="pbody"><span class="eyebrow">Featured practice</span><h2>{E(title)}</h2><p class="lead">{E(intro)}</p>
+<div style="margin-top:26px">{checks(offers, True)}</div>
+<div class="actions" style="margin-top:28px">{btn("Talk to a consultant", f"contact.html?service={svc}#enquiry", "red")}{btn("Book a discovery call", "contact.html#meeting", "ghost", False)}</div></div>
+</article>"""
+    if True:
+        # extra imagery for interior design
+        feats = feats.replace('<div class="actions" style="margin-top:28px">{0}'.format(btn("Talk to a consultant", "contact.html?service=Interior#enquiry", "red")),
+                              '<div class="mini-gal">' + ''.join(f'<img src="assets/img/photos/{k}-t.webp" alt="" loading="lazy">' for k in ['interior_lounge', 'interior_living', 'boardroom', 'interior_home']) +
+                              '</div><div class="actions" style="margin-top:28px">' + btn("Talk to a consultant", "contact.html?service=Interior#enquiry", "red"))
+    groups = ''
+    for g in CONSULTING_GROUPS:
+        items = [c for c in CONSULTING if c[1] == g and c[0] not in feat_slugs]
+        if not items:
+            continue
+        cards = ''.join(f"""<article class="ccard rv d{i % 3}" id="{slug}"><div class="cc-img"><img src="assets/img/photos/{photo}-t.webp" alt="" width="480" height="300" loading="lazy"><span class="ic">{ic(icon)}</span></div>
+<div class="cc-body"><h3>{E(title)}</h3><p>{E(intro)}</p><ul class="bullets">{''.join(f'<li>{E(o)}</li>' for o in offers)}</ul></div></article>"""
+                        for i, (slug, grp, title, icon, photo, intro, offers) in enumerate(items))
+        cols = {4: 'g4', 2: 'g2', 1: 'g2'}.get(len(items), 'g3')
+        groups += f'<div class="cgroup"><h2 class="cg-t rv">{E(g)}</h2><div class="grid {cols}">{cards}</div></div>'
+    approach = [('Discover', 'Listen to leadership, customers and teams; gather the facts.'), ('Diagnose', 'Benchmark, analyse and find the real constraints and opportunities.'),
+                ('Design', 'Shape the strategy, concept or solution — with options and trade-offs.'), ('Deliver', 'Build, launch and implement with your team, not just a report.'),
+                ('Sustain', 'Measure results, train people and keep improving.')]
+    models = [('Advisory sprint', 'A focused 2–6 week engagement to answer one big question, with a clear recommendation.'),
+              ('Transformation programme', 'Multi-month strategy-to-execution programme with a dedicated TEAM3 team.'),
+              ('Fractional leadership', 'Part-time CMO, CTO or Chief AI Officer to lead initiatives alongside your team.'),
+              ('Retainer advisory', 'Ongoing access to strategists, designers and technologists every month.')]
+    body = f"""
+{page_hero("Consulting", "TEAM3 Consulting", "Strategy to execution. <span class='grad'>One partner.</span>", "Business strategy, digital and AI transformation, campaigns, interiors and more — consulting that doesn’t stop at the slide deck, because TEAM3 can also design, build and launch what we recommend.", btn("Talk to a consultant", "contact.html?service=Consulting#enquiry", "red") + btn("Explore practices", "#practices", "ghost", False))}
+<section class="section tight" id="practices"><div class="wrap">
+{head("Consulting practices", "Fifteen practices. <span class='grad'>Five areas of expertise.</span>", "From boardroom strategy to the design of the room itself.")}
+<div class="pindex cidx">{idx}</div>
+</div></section>
+<section class="section bg-grey"><div class="wrap">
+{head("How we work", "From first conversation to lasting results.")}
+<ol class="roadmap light five">{"".join(f'<li class="rv d{i % 4}"><span class="rm-n">{i + 1:02d}</span><b>{E(t)}</b><p>{E(d)}</p></li>' for i, (t, d) in enumerate(approach))}</ol>
+</div></section>
+<section class="section"><div class="wrap prods">{feats}</div></section>
+<section class="section bg-grey"><div class="wrap">{groups}</div></section>
+<section class="section bg-black"><div class="wrap">
+{head("Engagement models", "Consulting, <span class='grad'>your way.</span>", "Choose the depth of support that fits the problem — and scale up or down as you go.", gold=True)}
+<div class="grid g4">{"".join(f'<div class="card rv d{i}"><span class="num">{i + 1:02d}</span><h3 style="margin-top:28px;font-size:21px">{E(t)}</h3><p>{E(d)}</p></div>' for i, (t, d) in enumerate(models))}</div>
+</div></section>
+<section class="section tight"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow">Industry expertise</span><h2 style="margin-top:16px">Consulting across fourteen industries.</h2></div><div class="rv d1">{link("Industries we serve", "industries.html")}</div></div>
+{ind_cards(INDUSTRIES[:4])}
+</div></section>
+{cta_band("Let’s solve your next big challenge.", "Tell us what you’re facing — growth, transformation, a campaign or a new space — and we’ll propose the right team.", btn("Talk to a consultant", "contact.html?service=Consulting#enquiry", "red") + btn("Book a discovery call", "contact.html#meeting", "ghost", False))}
+"""
+    return layout('consulting.html', 'Consulting', 'TEAM3 Consulting: business strategy, digital transformation, AI and data, campaign design, interior design, brand and CX, operations, people, ESG and international expansion.', body)
+
+
 def page_insights():
     cats = ['Product innovation', 'Entrepreneurship', 'Software engineering', 'Business intelligence', 'Cybersecurity', 'AI learning', 'International business']
     body = f'''
@@ -1279,10 +1341,10 @@ def page_insights():
 
 
 def page_contact():
-    services = ['Branding', 'Advertising', 'Media', 'Technology', 'Web', 'Apps', 'AI', 'Marketing', 'Cloud', 'IoT', 'Consulting', 'Academy', 'Partnership', 'Careers']
+    services = ['Branding', 'Advertising', 'Media', 'Technology', 'Web', 'Apps', 'AI', 'Marketing', 'Cloud', 'IoT', 'Consulting', 'Strategy', 'Campaigns', 'Interior', 'Academy', 'Partnership', 'Careers']
     labels = {'Branding': 'Branding & Strategy', 'Advertising': 'Advertising & Creative', 'Media': 'Media & Film Production', 'Technology': 'Information Technology',
               'Web': 'Web Design & Development', 'Apps': 'Mobile App & Product Development', 'AI': 'Artificial Intelligence & AI Agents', 'Marketing': 'Digital Marketing',
-              'Cloud': 'Cloud, Data & Cybersecurity', 'IoT': 'Smart Technology & IoT', 'Consulting': 'Business Consulting & Innovation', 'Academy': 'TEAM3 Academy / Training',
+              'Cloud': 'Cloud, Data & Cybersecurity', 'IoT': 'Smart Technology & IoT', 'Consulting': 'Consulting (general)', 'Strategy': 'Business Strategy Consulting', 'Campaigns': 'Campaign Design', 'Interior': 'Interior Design', 'Academy': 'TEAM3 Academy / Training',
               'Partnership': 'Partnership opportunity', 'Careers': 'Careers / Profile submission'}
     eng = [('Project-Based Engagement', 'Defined scope, agreed deliverables and milestone-based execution.'), ('Monthly Retainership', 'Continuous creative, marketing, consulting or technical support.'),
            ('Dedicated Development Team', 'Specialised technology resources aligned with your business.'), ('AI as a Service', 'Managed AI agents, integrations and ongoing optimisation.'),
@@ -1436,7 +1498,7 @@ PAGES = {
     'industries.html': page_industries, 'careers.html': page_careers, 'insights.html': page_insights,
     'contact.html': page_contact, 'legal.html': page_legal, '404.html': page_404,
     'gallery.html': page_gallery, 'clients.html': page_clients, 'partners.html': page_partners,
-    'products.html': page_products,
+    'products.html': page_products, 'consulting.html': page_consulting,
 }
 for _a in ARTICLES:
     PAGES[_a['slug'] + '.html'] = (lambda a=_a: page_article(a))
