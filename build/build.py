@@ -1395,6 +1395,19 @@ def write_extras(names):
         '<IfModule mod_headers.c>\n' + ''.join(f'  Header always set {k} "{v}"\n' for k, v in security_headers().items()) +
         '  <FilesMatch "\\.(css|js|woff2)$">\n    Header set Cache-Control "public, max-age=31536000, immutable"\n  </FilesMatch>\n  <FilesMatch "\\.(webp|png|jpg|svg)$">\n    Header set Cache-Control "public, max-age=2592000"\n  </FilesMatch>\n</IfModule>\n'
         '<IfModule mod_deflate.c>\n  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml application/manifest+json\n</IfModule>\n')
+    import json
+    hdrs = [{'key': k, 'value': v} for k, v in security_headers().items()]
+    files['vercel.json'] = json.dumps({
+        '$schema': 'https://openapi.vercel.sh/vercel.json',
+        'cleanUrls': False,
+        'trailingSlash': False,
+        'headers': [
+            {'source': '/(.*)', 'headers': hdrs},
+            {'source': '/assets/(css|js|fonts)/(.*)', 'headers': [{'key': 'Cache-Control', 'value': 'public, max-age=31536000, immutable'}]},
+            {'source': '/assets/img/(.*)', 'headers': [{'key': 'Cache-Control', 'value': 'public, max-age=2592000'}]},
+        ],
+    }, indent=2) + '\n'
+    files['.vercelignore'] = 'build/\nREADME.md\n.htaccess\n_headers\n.gitignore\n'
     for n, c in files.items():
         with open(os.path.join(ROOT, n), 'w', encoding='utf-8') as f:
             f.write(c)
