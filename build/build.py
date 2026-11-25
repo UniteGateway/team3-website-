@@ -22,7 +22,7 @@ SITE = {
     # Live address. Change to the custom domain (e.g. 'https://www.team3solutions.in') once it is registered and connected in Vercel.
     'url': 'https://team3solutions.vercel.app',
     'company': 'TEAM3 Solutions',
-    'address': 'Ashoka Capitol, Road No. 2, Banjara Hills, Hyderabad, Telangana, India',
+    'address': '2nd Floor, Ashoka Capitol, Road No. 2, Opp. KBR Park, Park View Enclave, Banjara Hills, Hyderabad, Telangana 500034, India',
     'email': 'info@team3solutions.in',
     'phone': '+91 90522 70203',
     'whatsapp': '',         # digits only with country code, e.g. '919800000000'
@@ -112,7 +112,7 @@ def org_schema():
     d = {"@context": "https://schema.org", "@type": "Organization", "name": SITE['company'], "alternateName": "TEAM3",
          "url": SITE['url'], "logo": SITE['url'] + "/assets/img/logo-full.jpg", "foundingDate": "2004",
          "slogan": "Step beyond imagination.", "founder": {"@type": "Person", "name": "Dr. Ravi Chandra", "jobTitle": "Founder & Managing Director"},
-         "address": {"@type": "PostalAddress", "streetAddress": "Ashoka Capitol, Road No. 2, Banjara Hills",
+         "address": {"@type": "PostalAddress", "streetAddress": "2nd Floor, Ashoka Capitol, Road No. 2, Opp. KBR Park, Park View Enclave, Banjara Hills", "postalCode": "500034",
                      "addressLocality": "Hyderabad", "addressRegion": "Telangana", "addressCountry": "IN"},
          "areaServed": ["IN", "US", "GB", "CA", "Worldwide"],
          "knowsAbout": ["Branding", "Advertising", "Software development", "Mobile apps", "Artificial intelligence", "AI agents", "Digital marketing", "Film production"]}
