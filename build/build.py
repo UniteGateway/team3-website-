@@ -21,7 +21,7 @@ SITE = {
     'company': 'TEAM3 WEBLOGICS PVT. LTD.',
     'address': '6-3-569, 3rd Floor, Above BMW Showroom, Khairatabad Road, Hyderabad, India',
     'email': '',            # e.g. 'hello@team3weblogics.com'
-    'phone': '+91 905 227 0203',
+    'phone': '+91 90522 70203',
     'whatsapp': '',         # digits only with country code, e.g. '919800000000'
     # Form backend: any endpoint that accepts a POST of form fields (Formspree, Getform,
     # Basin, a CRM webhook, or your own API). Leave empty to use the offline fallback
@@ -98,6 +98,46 @@ def form_note():
     return '<p class="note">Your details are copied so you can paste them into an email or WhatsApp message to TEAM3.</p>'
 
 
+def asset_v(path):
+    import hashlib
+    with open(os.path.join(ROOT, path), 'rb') as f:
+        return hashlib.sha1(f.read()).hexdigest()[:8]
+
+
+def org_schema():
+    import json
+    d = {"@context": "https://schema.org", "@type": "Organization", "name": SITE['company'], "alternateName": "TEAM3",
+         "url": SITE['url'], "logo": SITE['url'] + "/assets/img/logo-full.jpg", "foundingDate": "2004",
+         "slogan": "Step beyond imagination.", "founder": {"@type": "Person", "name": "Dr. Ravi Chandra", "jobTitle": "Founder & Managing Director"},
+         "address": {"@type": "PostalAddress", "streetAddress": "6-3-569, 3rd Floor, Above BMW Showroom, Khairatabad Road",
+                     "addressLocality": "Hyderabad", "addressRegion": "Telangana", "addressCountry": "IN"},
+         "areaServed": ["IN", "US", "CA", "Worldwide"],
+         "knowsAbout": ["Branding", "Advertising", "Software development", "Mobile apps", "Artificial intelligence", "AI agents", "Digital marketing", "Film production"]}
+    cp = {"@type": "ContactPoint", "contactType": "sales", "availableLanguage": ["English"], "areaServed": "Worldwide"}
+    if SITE['phone']:
+        d["telephone"] = SITE['phone'].replace(' ', ''); cp["telephone"] = d["telephone"]
+    if SITE['email']:
+        d["email"] = SITE['email']; cp["email"] = SITE['email']
+    d["contactPoint"] = cp
+    return json.dumps(d, ensure_ascii=False).replace('</', '<\\/')
+
+
+GLOBAL = """<section class="section global"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow">Global presence</span><h2 style="margin-top:16px">Rooted in Hyderabad. <span class="grad">Working with the world.</span></h2></div>
+<p class="lead rv d1">Since 2004 we have served clients in India, the USA and Canada. Today we work with organisations wherever they are, across time zones, in English.</p></div>
+<div class="globe-grid">
+<div class="hq rv"><span class="pin" aria-hidden="true"></span><small>Headquarters</small><b>Hyderabad, India</b><span>TEAM3 WEBLOGICS PVT. LTD.</span>
+<div class="clock"><span class="t" data-tz="Asia/Kolkata">--:--</span><span class="z">IST · UTC+5:30</span></div></div>
+<div class="mkts">
+<div class="mkt rv d1"><span class="cc">IN</span><b>India</b><span>Headquarters &amp; delivery centre</span></div>
+<div class="mkt rv d2"><span class="cc">US</span><b>United States</b><span>Heritage clients since 2004</span></div>
+<div class="mkt rv d3"><span class="cc">CA</span><b>Canada</b><span>Heritage clients since 2004</span></div>
+<div class="mkt rv d4 any"><span class="cc">🌐</span><b>Worldwide</b><span>Remote delivery &amp; international partners</span></div>
+</div></div>
+<p class="yourtime rv" hidden>Your local time: <b class="t" data-tz="local">--:--</b> <span class="ovl"></span></p>
+</div></section>"""
+
+
 def footer_contact():
     bits = [E(SITE['company']), E(SITE['address'])]
     if SITE['email']:
@@ -142,12 +182,12 @@ def head(eyebrow, title, lead='', cls='', gold=False):
 
 def cap(title, intro, body):
     intro_html = f'<p class="muted">{intro}</p>' if intro else ''
-    return f'<div class="cap rv"><div><h3>{title}</h3>{intro_html}</div><div>{body}</div></div>'
+    return f'<div class="cap rv"><div><h2 class="cap-t">{title}</h2>{intro_html}</div><div>{body}</div></div>'
 
 
 def cta_band(title, lead, buttons):
     return f'''<section class="section tight"><div class="wrap"><div class="cta-band rv">
-<img class="sym" src="assets/img/symbol.png" alt="" width="382" height="540" loading="lazy">
+<img class="sym" src="assets/img/symbol.webp" alt="" width="382" height="540" loading="lazy">
 <span class="eyebrow gold">Step beyond imagination.</span>
 <h2 style="margin-top:18px">{title}</h2><p class="lead">{lead}</p>
 <div class="actions">{buttons}</div></div></div></section>'''
@@ -156,7 +196,7 @@ def cta_band(title, lead, buttons):
 def page_hero(crumb, eyebrow, title, lead, buttons=''):
     acts = f'<div class="actions">{buttons}</div>' if buttons else ''
     return f'''<section class="hero page-hero"><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
-<img class="sym-bg" src="assets/img/symbol.png" alt="" width="382" height="540">
+<img class="sym-bg" src="assets/img/symbol.webp" alt="" width="382" height="540">
 <div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span>{E(crumb)}</span></nav>
 <span class="eyebrow gold rv">{E(eyebrow)}</span><h1 class="rv d1">{title}</h1><p class="lead rv d2">{lead}</p>{acts}</div></section>'''
 
@@ -233,7 +273,7 @@ def header(active):
         if mega:
             cols, feat = MEGA[mega]
             colhtml = ''.join(
-                f'<div><h5>{E(t)}</h5>' + ''.join(f'<a class="mi" href="{h}">{E(a)}<span>{E(s)}</span></a>' for h, a, s in links) + '</div>'
+                f'<div><p class="h5">{E(t)}</p>' + ''.join(f'<a class="mi" href="{h}">{E(a)}<span>{E(s)}</span></a>' for h, a, s in links) + '</div>'
                 for t, links in cols)
             fh = f'<a class="mega-feature" href="{feat[2]}"><b>{E(feat[0])}</b><p>{E(feat[1])}</p></a>'
             curcls = ' style="opacity:1;box-shadow:inset 0 -2px 0 var(--red)"' if active in [href] + [h.split('#')[0] for _, ls in cols for h, _, _ in ls if not h.startswith('careers') and not h.startswith('partners')] else ''
@@ -243,7 +283,7 @@ def header(active):
             lis += f'<li><a href="{href}"{cur}>{E(label)}</a></li>'
     return f'''<a class="skip" href="#main">Skip to content</a>
 <header class="site-header"><div class="wrap nav">
-<a class="logo" href="index.html" aria-label="TEAM3 WEBLOGICS home"><img class="sym" src="assets/img/symbol.png" alt="" width="382" height="540"><span><img class="wm wm-d" src="assets/img/wordmark-dark.png" alt="TEAM3" width="891" height="130"><img class="wm wm-l" src="assets/img/wordmark-light.png" alt="TEAM3" width="891" height="130"><span class="tag">WEBLOGICS</span></span></a>
+<a class="logo" href="index.html" aria-label="TEAM3 WEBLOGICS home"><img class="sym" src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><span><img class="wm wm-d" src="assets/img/wordmark-dark-sm.webp" alt="TEAM3" width="420" height="61"><img class="wm wm-l" src="assets/img/wordmark-light-sm.webp" alt="TEAM3" width="420" height="61"><span class="tag">WEBLOGICS</span></span></a>
 <ul class="menu" id="menu">{lis}<li class="nav-btns"><a class="btn sm nav-partner" href="partners.html"{' aria-current="page"' if active == 'partners.html' else ''}>Partners</a><a class="btn red sm nav-cta" href="contact.html">Let’s Build Something</a></li></ul>
 <button class="burger" type="button" aria-label="Menu" aria-controls="menu" aria-expanded="false"><span></span><span></span></button>
 </div></header>'''
@@ -251,24 +291,24 @@ def header(active):
 
 FOOTER = '''<footer class="site-footer"><div class="wrap">
 <div class="f-top">
-<div class="f-brand"><img class="f-logo" src="assets/img/wordmark-light.png" alt="TEAM3" width="891" height="130" loading="lazy">
+<div class="f-brand"><img class="f-logo" src="assets/img/wordmark-light-sm.webp" alt="TEAM3" width="420" height="61" loading="lazy">
 <p class="claim">Branding. Technology.<br><span class="gold-t">Intelligence.</span></p>
 <p>An integrated creative and technology company. Established in 2004. Building intelligent solutions for the future.</p>
 <p style="margin-top:18px">__FOOTCONTACT__</p></div>
-<div class="f-col"><h5>Company</h5><a href="about.html">About Us</a><a href="about.html#journey">Our Journey</a><a href="work.html">Our Work</a><a href="gallery.html">Gallery</a><a href="clients.html">Clients</a><a href="careers.html">Careers</a><a href="contact.html">Contact</a></div>
-<div class="f-col"><h5>Services</h5><a href="branding.html">Branding</a><a href="branding.html#advertising">Advertising</a><a href="technology.html">IT &amp; Apps</a><a href="ai.html#agents">AI Agents</a><a href="marketing.html">Digital Marketing</a></div>
-<div class="f-col"><h5>Explore</h5><a href="academy.html">AI Academy</a><a href="partners.html">Partner Network</a><a href="industries.html">Industries</a><a href="insights.html">Insights</a><a href="industries.html#innovation">Innovation</a></div>
-<div class="f-col"><h5>Legal</h5><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Use</a><a href="legal.html#cookies">Cookie Policy</a><a href="legal.html#responsible-ai">Responsible AI Policy</a></div>
+<div class="f-col"><h2 class="h5">Company</h2><a href="about.html">About Us</a><a href="about.html#journey">Our Journey</a><a href="work.html">Our Work</a><a href="gallery.html">Gallery</a><a href="clients.html">Clients</a><a href="careers.html">Careers</a><a href="contact.html">Contact</a></div>
+<div class="f-col"><h2 class="h5">Services</h2><a href="branding.html">Branding</a><a href="branding.html#advertising">Advertising</a><a href="technology.html">IT &amp; Apps</a><a href="ai.html#agents">AI Agents</a><a href="marketing.html">Digital Marketing</a></div>
+<div class="f-col"><h2 class="h5">Explore</h2><a href="academy.html">AI Academy</a><a href="partners.html">Partner Network</a><a href="industries.html">Industries</a><a href="insights.html">Insights</a><a href="industries.html#innovation">Innovation</a></div>
+<div class="f-col"><h2 class="h5">Legal</h2><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Use</a><a href="legal.html#cookies">Cookie Policy</a><a href="legal.html#responsible-ai">Responsible AI Policy</a></div>
 </div>
 <div class="f-bot"><span>© <span id="yr">2026</span> TEAM3 WEBLOGICS. All rights reserved.</span><span class="tag">Step beyond imagination. · Established 2004</span></div>
-<div class="f-big" aria-hidden="true">TEAM<b>3</b></div>
+<div class="f-big" aria-hidden="true"></div>
 </div></footer>'''
 
 
 ASSISTANT = '''<div class="asst" id="asst">
-<button class="asst-fab" type="button" aria-expanded="false" aria-controls="asst-panel"><img src="assets/img/symbol.png" alt="" width="382" height="540"><span>Ask TEAM3</span></button>
+<button class="asst-fab" type="button" aria-expanded="false" aria-controls="asst-panel" aria-label="Ask TEAM3 – open the enquiry assistant"><img src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><span>Ask TEAM3</span></button>
 <div class="asst-panel" id="asst-panel" role="dialog" aria-label="TEAM3 enquiry assistant" hidden>
-<div class="asst-top"><img src="assets/img/symbol.png" alt="" width="382" height="540"><div><b>TEAM3 Assistant</b><span>Guided enquiry · usually replies instantly</span></div><button type="button" class="asst-x" aria-label="Close assistant">&times;</button></div>
+<div class="asst-top"><img src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><div><b>TEAM3 Assistant</b><span>Guided enquiry · usually replies instantly</span></div><button type="button" class="asst-x" aria-label="Close assistant">&times;</button></div>
 <div class="asst-log" aria-live="polite"></div>
 <form class="asst-in"><input type="text" placeholder="Type your question…" aria-label="Your message" autocomplete="off"><button type="submit" aria-label="Send">''' + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' + '''</button></form>
 </div></div>'''
@@ -279,13 +319,18 @@ def layout(fname, title, desc, body, og_type='website'):
     canon = SITE['url'] + '/' + ('' if fname == 'index.html' else fname)
     data = f' data-endpoint="{E(SITE["form_endpoint"])}" data-email="{E(SITE["email"])}" data-wa="{E(SITE["whatsapp"])}"'
     return f'''<!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="en-IN" dir="ltr" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{E(full_title)}</title>
 <meta name="description" content="{E(desc)}">
 <meta name="theme-color" content="#000000">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="format-detection" content="telephone=no">
+<link rel="alternate" hreflang="en" href="{canon}">
+<link rel="alternate" hreflang="x-default" href="{canon}">
+<meta property="og:locale" content="en_IN">
 <link rel="canonical" href="{canon}">
 <meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="TEAM3 WEBLOGICS">
@@ -297,11 +342,10 @@ def layout(fname, title, desc, body, og_type='website'):
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap">
-<link rel="stylesheet" href="assets/css/site.css">
-<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Organization","name":"TEAM3 WEBLOGICS PVT. LTD.","url":"https://www.team3weblogics.com","logo":"https://www.team3weblogics.com/assets/img/logo-full.jpg","foundingDate":"2004","slogan":"Step beyond imagination.","address":{{"@type":"PostalAddress","addressLocality":"Hyderabad","addressCountry":"IN"}}}}</script>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css?v={asset_v('assets/css/site.css')}">
+<script type="application/ld+json">{org_schema()}</script>
 </head>
 <body{data}>
 {header(fname)}
@@ -311,7 +355,7 @@ def layout(fname, title, desc, body, og_type='website'):
 {FOOTER.replace("__FOOTCONTACT__", footer_contact())}
 {LIGHTBOX if ('class="gopen"' in body and 'id="lb"' not in body) else ''}
 {ASSISTANT}
-<script src="assets/js/site.js" defer></script>
+<script src="assets/js/site.js?v={asset_v('assets/js/site.js')}" defer></script>
 </body>
 </html>
 '''
@@ -356,23 +400,23 @@ GROUP = [('COLLABIZ', 'Intelligent business collaboration platform', 'software a
          ('SUNGATE', 'Community energy management platform', 'apps software'), ('PRIZO', 'Intelligent buyer-side negotiation platform', 'ai apps'),
          ('HNW', 'Health and wealth membership ecosystem', 'apps'), ('BEYOU', 'Inclusive community support platform', 'apps')]
 
-FILM_CLIENTS = [('Vibha Seeds', 'Corporate film', 'film-vibha-seeds.jpg'), ('Rachem Pharma', 'Corporate film', 'film-rachem-pharma.jpg'),
-                ('Ethames Graduate School', 'Corporate film', 'film-ethames.jpg'),
-                ('CRIDA, Hyderabad', 'Central Research Institute for Dryland Agriculture (ICAR) — corporate film', 'film-crida.jpg')]
+FILM_CLIENTS = [('Vibha Seeds', 'Corporate film', 'film-vibha-seeds.webp'), ('Rachem Pharma', 'Corporate film', 'film-rachem-pharma.webp'),
+                ('Ethames Graduate School', 'Corporate film', 'film-ethames.webp'),
+                ('CRIDA, Hyderabad', 'Central Research Institute for Dryland Agriculture (ICAR) — corporate film', 'film-crida.webp')]
 
 GALLERY = [
-    ('nird-technology-bank-2008.jpg', 'events', 'Events', 'NIRD Technology Bank, 2008', 'Inaugurated by former President of India Shri A.P.J. Abdul Kalam. Designed by TEAM3.', 1600, 1068),
-    ('nird-vision-souvenir-2009.jpg', 'events', 'Events', 'NIRD Vision &amp; Souvenir, 2009', 'Inaugurated by Hon’ble President of India Smt. Pratibha Patil and Hon’ble Governor of Andhra Pradesh Shri N.D. Tiwari. Designed by TEAM3.', 1600, 1068),
-    ('print-works.jpg', 'print', 'Print &amp; Design', 'Selected print works', 'Brochures, menus, catalogues, identities and corporate collateral.', 1600, 1200),
-    ('nird-rdm-brochure.jpg', 'publications', 'Publications', 'NIRD — Rural Development Management', 'Programme literature for the National Institute of Rural Development.', 508, 352),
-    ('nird-pgdrdm-fieldwork.jpg', 'publications', 'Publications', 'NIRD — PGDRDM Field Work handbook', 'Publication design for the National Institute of Rural Development.', 508, 352),
-    ('swachh-bharat.jpg', 'campaigns', 'Campaigns', 'Swachh Bharat Abhiyan', 'Campaign creative — one of our prestigious projects.', 1297, 1265),
-    ('home-cafe-publication.jpg', 'publications', 'Publications', 'Home Café', 'TEAM3’s own publication — editorial, layout and advertising.', 938, 1235),
-    ('film-vibha-seeds.jpg', 'films', 'Corporate Films', 'Vibha Seeds', 'Corporate film.', 631, 277),
-    ('film-rachem-pharma.jpg', 'films', 'Corporate Films', 'Rachem Pharma', 'Corporate film — “Different thought process”.', 848, 444),
-    ('film-ethames.jpg', 'films', 'Corporate Films', 'Ethames Graduate School', 'Corporate film.', 833, 357),
-    ('film-crida.jpg', 'films', 'Corporate Films', 'CRIDA, Hyderabad', 'Central Research Institute for Dryland Agriculture (ICAR) — corporate film.', 634, 356),
-    ('brand-mug.jpg', 'campaigns', 'Campaigns', 'Step beyond imagination.', 'TEAM3 brand campaign.', 720, 540),
+    ('nird-technology-bank-2008.webp', 'events', 'Events', 'NIRD Technology Bank, 2008', 'Inaugurated by former President of India Shri A.P.J. Abdul Kalam. Designed by TEAM3.', 1600, 1068),
+    ('nird-vision-souvenir-2009.webp', 'events', 'Events', 'NIRD Vision &amp; Souvenir, 2009', 'Inaugurated by Hon’ble President of India Smt. Pratibha Patil and Hon’ble Governor of Andhra Pradesh Shri N.D. Tiwari. Designed by TEAM3.', 1600, 1068),
+    ('print-works.webp', 'print', 'Print &amp; Design', 'Selected print works', 'Brochures, menus, catalogues, identities and corporate collateral.', 1600, 1200),
+    ('nird-rdm-brochure.webp', 'publications', 'Publications', 'NIRD — Rural Development Management', 'Programme literature for the National Institute of Rural Development.', 508, 352),
+    ('nird-pgdrdm-fieldwork.webp', 'publications', 'Publications', 'NIRD — PGDRDM Field Work handbook', 'Publication design for the National Institute of Rural Development.', 508, 352),
+    ('swachh-bharat.webp', 'campaigns', 'Campaigns', 'Swachh Bharat Abhiyan', 'Campaign creative — one of our prestigious projects.', 1297, 1265),
+    ('home-cafe-publication.webp', 'publications', 'Publications', 'Home Café', 'TEAM3’s own publication — editorial, layout and advertising.', 938, 1235),
+    ('film-vibha-seeds.webp', 'films', 'Corporate Films', 'Vibha Seeds', 'Corporate film.', 631, 277),
+    ('film-rachem-pharma.webp', 'films', 'Corporate Films', 'Rachem Pharma', 'Corporate film — “Different thought process”.', 848, 444),
+    ('film-ethames.webp', 'films', 'Corporate Films', 'Ethames Graduate School', 'Corporate film.', 833, 357),
+    ('film-crida.webp', 'films', 'Corporate Films', 'CRIDA, Hyderabad', 'Central Research Institute for Dryland Agriculture (ICAR) — corporate film.', 634, 356),
+    ('brand-mug.webp', 'campaigns', 'Campaigns', 'Step beyond imagination.', 'TEAM3 brand campaign.', 720, 540),
 ]
 
 CLIENTS = [('Madhucon Projects Limited', 'India'), ('Pi Metrics Inc.', 'USA'), ('Impress International LLC', 'Canada'),
@@ -419,7 +463,7 @@ def page_article(a):
     body = f'''
 {page_hero("Insights", a["cat"].title() + " · " + str(a["mins"]) + " min read", E(a["title"]), E(a["lead"]))}
 <article class="section prose-wrap"><div class="wrap"><div class="prose rv">{secs}
-<div class="byline"><img src="assets/img/symbol.png" alt="" width="382" height="540"><div><b>TEAM3 Insights</b><span>TEAM3 WEBLOGICS · Hyderabad</span></div></div>
+<div class="byline"><img src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><div><b>TEAM3 Insights</b><span>TEAM3 WEBLOGICS · Hyderabad</span></div></div>
 </div></div></article>
 <section class="section bg-grey"><div class="wrap">{head("Keep reading", "More ideas worth exploring.")}<div class="grid g3">{insight_cards(a["slug"])}</div></div></section>
 {cta_band("Turn insight into action.", "Talk to our strategists and engineers about what this means for your business.", btn("Start a conversation", "contact.html", "red"))}
@@ -441,7 +485,7 @@ COMPARE = [('Separate creative agency', 'Integrated creative and technology'), (
 def compare_block():
     old = ''.join(f'<li>{E(a)}</li>' for a, _ in COMPARE)
     new = ''.join(f'<li>{E(b)}</li>' for _, b in COMPARE)
-    return f'<div class="compare rv"><div class="old"><h4>Conventional approach</h4><ul>{old}</ul></div><div class="new"><h4>The TEAM3 approach</h4><ul>{new}</ul></div></div>'
+    return f'<div class="compare rv"><div class="old"><h3 class="h4">Conventional approach</h3><ul>{old}</ul></div><div class="new"><h3 class="h4">The TEAM3 approach</h3><ul>{new}</ul></div></div>'
 
 
 PILLARS = [('Our Clients', 'Every engagement starts and ends with the client. We build relationships that last — many for well over a decade.'),
@@ -465,7 +509,7 @@ def page_index():
 <p class="hero-tagline rv d3">One partner. <span class="gold-t">Infinite possibilities.</span></p>
 <div class="actions rv d3">{btn("Explore Our Services", "#services", "light")}{btn("Start a Project", "contact.html", "ghost", False)}</div>
 </div>
-<div class="hero-sym rv d2"><span class="dot-ring"></span><span class="dot-ring r2"></span><img src="assets/img/symbol.png" alt="TEAM3 footprint symbol" width="382" height="540"></div>
+<div class="hero-sym rv d2"><span class="dot-ring"></span><span class="dot-ring r2"></span><img src="assets/img/symbol.webp" alt="TEAM3 footprint symbol" width="382" height="540"></div>
 </div><span class="scroll-cue" aria-hidden="true"></span></section>
 
 <section class="section tight"><div class="wrap">
@@ -514,6 +558,8 @@ def page_index():
 <section class="section tight"><div class="wrap">
 <div class="head center rv"><span class="eyebrow">Our clients</span><h2>Trusted by more than 100 organisations.</h2><p class="lead">From the Collabiz and Unite Group businesses to national institutions and international companies.</p></div>
 </div>{client_marquee()}<div class="wrap center" style="margin-top:36px">{link("Meet our clients", "clients.html")}</div></section>
+
+{GLOBAL}
 
 <section class="section bg-black"><div class="wrap">
 <div class="head split"><div class="rv"><span class="eyebrow gold">From the archive</span><h2 style="margin-top:16px">Moments that <span class="grad">shaped us.</span></h2></div>
@@ -568,7 +614,7 @@ def page_about():
 </div></section>
 
 <section class="section" id="founder"><div class="wrap founder">
-<figure class="portrait rv"><img src="assets/img/symbol.png" alt="" width="382" height="540" loading="lazy"><figcaption><span>Founder &amp; Managing Director</span><b>Dr. Ravi Chandra</b></figcaption></figure>
+<figure class="portrait rv"><img src="assets/img/symbol.webp" alt="" width="382" height="540" loading="lazy"><figcaption><span>Founder &amp; Managing Director</span><b>Dr. Ravi Chandra</b></figcaption></figure>
 <div class="rv d1"><span class="eyebrow">Our founder</span>
 <blockquote style="margin-top:24px">TEAM3 was founded with an entrepreneurial vision to integrate creative design, advertising, information technology and business innovation.</blockquote>
 <p class="lead" style="margin-top:26px">With experience spanning creative communication, technology architecture, digital platforms and business development, the founder’s vision is to transform TEAM3 into a next-generation global creative and technology enterprise.</p>
@@ -668,7 +714,7 @@ def page_technology():
 <section class="section" id="web"><div class="wrap">
 {head("Web design & development", "Your digital presence. Designed for performance.", "Websites that combine compelling visual experiences, reliable technology and measurable business objectives.")}
 {rows(web)}
-<div class="grid g3" style="margin-top:40px">{"".join(f'<div class="card rv"><span class="ic">{ic(i)}</span><h4 style="font-size:19px">{t}</h4></div>' for i, t in [("phone","Mobile responsive"),("users","Accessible"),("shield","Secure"),("search","SEO-ready"),("rocket","High performance"),("layers","Future scalable")])}</div>
+<div class="grid g3" style="margin-top:40px">{"".join(f'<div class="card rv"><span class="ic">{ic(i)}</span><h3 style="font-size:19px">{t}</h3></div>' for i, t in [("phone","Mobile responsive"),("users","Accessible"),("shield","Secure"),("search","SEO-ready"),("rocket","High performance"),("layers","Future scalable")])}</div>
 <div class="actions">{btn("Build Your Website", "contact.html?service=Web", "red")}</div>
 </div></section>
 
@@ -765,7 +811,7 @@ def page_ai():
 <div class="tool rv" id="recommender">
 <div class="q"><b>1. What are you trying to achieve? <span class="muted small" style="font-weight:500">(choose any)</span></b><div class="opts" id="rq-goal" data-multi>{"".join(f'<button type="button" class="opt" aria-pressed="false" data-v="{k}">{E(v)}</button>' for k, v in goal_opts)}</div></div>
 <div class="q"><b>2. Where is your business today?</b><div class="opts" id="rq-stage">{"".join(f'<button type="button" class="opt" aria-pressed="false" data-v="{k}">{E(v)}</button>' for k, v in [("idea","An idea"),("startup","Startup / SME"),("growth","Growing business"),("enterprise","Enterprise")])}</div></div>
-<div class="result" id="rq-result" aria-live="polite"><h4>Recommended for you</h4><div class="chips"></div><div class="actions" style="margin-top:22px"><a class="btn red" href="contact.html">Explore these services{ARROW}</a><a class="btn ghost" href="contact.html">Talk to an expert</a></div></div>
+<div class="result" id="rq-result" aria-live="polite"><h3 class="h4">Recommended for you</h3><div class="chips"></div><div class="actions" style="margin-top:22px"><a class="btn red" href="contact.html">Explore these services{ARROW}</a><a class="btn ghost" href="contact.html">Talk to an expert</a></div></div>
 </div></div></section>
 {cta_band("Transform your business with AI.", "Start with a readiness assessment and a practical roadmap — then build with confidence.", btn("Transform Your Business with AI", "contact.html?service=AI", "red") + btn("Learn AI with TEAM3 Academy", "academy.html", "ghost", False))}
 '''
@@ -776,6 +822,7 @@ def page_marketing():
     body = f'''
 {page_hero("Digital Marketing", "Digital Marketing", "Visibility. Engagement. <span class='grad'>Conversion. Growth.</span>", "TEAM3 develops integrated digital marketing strategies that connect businesses with the right customers through data, creativity and technology.", btn("Grow Your Business", "contact.html?service=Marketing", "red"))}
 <section class="section"><div class="wrap">
+<h2 class="sr-only">Our approach</h2>
 <div class="grid g4" style="margin-bottom:80px">{"".join(f'<div class="card rv d{n}"><span class="num">{n+1:02d}</span><h3 style="margin-top:40px;font-size:30px;font-weight:800">{w}</h3></div>' for n, w in enumerate(["Visibility","Engagement","Conversion","Growth"]))}</div>
 {cap("Search engine optimisation", "", checks(["Technical SEO","On-page optimisation","Content strategy","Local SEO","Keyword research","Competitor analysis","Search performance tracking"], True))}
 {cap("Search engine marketing", "", checks(["Google Ads","Search campaigns","Display advertising","Shopping campaigns","Remarketing","Conversion optimisation"], True))}
@@ -816,10 +863,10 @@ def page_academy():
 
 
 def page_work():
-    heritage = [('Publications &amp; Events', 'branding advertising', 'Heritage', 'NIRD Technology Bank', 'Designed by TEAM3 — inaugurated by former President of India Shri A.P.J. Abdul Kalam, 2008.', 'nird-technology-bank-2008.jpg'),
-                ('Publications &amp; Events', 'branding advertising', 'Heritage', 'NIRD Vision &amp; Souvenir', 'Designed by TEAM3 — inaugurated by President of India Smt. Pratibha Patil, 2009.', 'nird-vision-souvenir-2009.jpg'),
-                ('Print &amp; Design', 'branding advertising', 'Heritage', 'Selected print works', 'Brochures, menus, catalogues, identities and corporate collateral.', 'print-works.jpg'),
-                ('Campaigns', 'advertising', 'Heritage', 'Swachh Bharat Abhiyan', 'Campaign creative — one of our prestigious projects.', 'swachh-bharat.jpg')]
+    heritage = [('Publications &amp; Events', 'branding advertising', 'Heritage', 'NIRD Technology Bank', 'Designed by TEAM3 — inaugurated by former President of India Shri A.P.J. Abdul Kalam, 2008.', 'nird-technology-bank-2008.webp'),
+                ('Publications &amp; Events', 'branding advertising', 'Heritage', 'NIRD Vision &amp; Souvenir', 'Designed by TEAM3 — inaugurated by President of India Smt. Pratibha Patil, 2009.', 'nird-vision-souvenir-2009.webp'),
+                ('Print &amp; Design', 'branding advertising', 'Heritage', 'Selected print works', 'Brochures, menus, catalogues, identities and corporate collateral.', 'print-works.webp'),
+                ('Campaigns', 'advertising', 'Heritage', 'Swachh Bharat Abhiyan', 'Campaign creative — one of our prestigious projects.', 'swachh-bharat.webp')]
     heritage += [('Corporate Films', 'films', 'Heritage', E(n), E(d), img) for n, d, img in FILM_CLIENTS]
     heritage += [('Software', 'software websites', 'Heritage', 'Enterprise portals &amp; ERP', 'Web applications, business portals, ERP and smart-card security systems.', None)]
     products = GROUP
@@ -830,11 +877,12 @@ def page_work():
         if img:
             return f'<div class="thumb photo"><img src="assets/img/gallery/{img}" alt="{n}" loading="lazy"></div>'
         return f'<div class="thumb {th[i%6]}"><b>{n}</b></div>'
-    cards = ''.join(f'<article class="work rv" data-cat="{c}">{thumb(n, img, i)}<div class="meta"><small>{k}</small><h4>{n}</h4><p>{p}</p><span class="badge">{s}</span></div></article>' for i, (k, c, s, n, p, img) in enumerate(heritage))
-    cards += ''.join(f'<article class="work rv" data-cat="{c}"><div class="thumb {th[i%6]}"><b>{E(n)}</b></div><div class="meta"><small>Collabiz &amp; Unite Group</small><h4>{E(n)}</h4><p>{E(p)}</p><span class="badge">Group client</span></div></article>' for i, (n, p, c) in enumerate(products))
+    cards = ''.join(f'<article class="work rv" data-cat="{c}">{thumb(n, img, i)}<div class="meta"><small>{k}</small><h3>{n}</h3><p>{p}</p><span class="badge">{s}</span></div></article>' for i, (k, c, s, n, p, img) in enumerate(heritage))
+    cards += ''.join(f'<article class="work rv" data-cat="{c}"><div class="thumb {th[i%6]}"><b>{E(n)}</b></div><div class="meta"><small>Collabiz &amp; Unite Group</small><h3>{E(n)}</h3><p>{E(p)}</p><span class="badge">Group client</span></div></article>' for i, (n, p, c) in enumerate(products))
     body = f'''
 {page_hero("Our Work", "Our Work & Portfolio", "Our imagination. <span class='grad'>Your success.</span>", "Explore our creative and technology heritage — from corporate communication and print advertising to enterprise software, digital platforms and next-generation intelligent applications.")}
 <section class="section"><div class="wrap">
+<h2 class="sr-only">Portfolio</h2>
 <div class="filters rv" role="group" aria-label="Filter projects">{"".join(f'<button type="button" data-f="{k}" aria-pressed="{str(k=="all").lower()}">{E(v)}</button>' for k, v in filters)}</div>
 <div class="works">{cards}</div>
 </div></section>
@@ -973,7 +1021,7 @@ def page_partners():
 {page_hero("Partners", "TEAM3 Partner Network", "Connect. Collaborate. <span class='grad'>Create opportunities.</span>", "TEAM3 believes that the future of business lies in collaboration. Our partner ecosystem brings together creative professionals, technology companies, consultants, entrepreneurs, investors and industry specialists.", btn("Become a TEAM3 Partner", "#register", "red") + btn("See partner benefits", "#benefits", "ghost", False))}
 <section class="section"><div class="wrap">
 {head("Partnership opportunities", "Ten ways to partner.")}
-<div class="grid g4 ptypes">{"".join(f'<div class="card rv d{n%4}"><span class="ic">{ic(i)}</span><h4 style="font-size:18px">{E(t)}</h4></div>' for n, (i, t) in enumerate(tiles))}</div>
+<div class="grid g4 ptypes">{"".join(f'<div class="card rv d{n%4}"><span class="ic">{ic(i)}</span><h3 style="font-size:18px">{E(t)}</h3></div>' for n, (i, t) in enumerate(tiles))}</div>
 </div></section>
 <section class="section bg-black" id="benefits"><div class="wrap">
 {head("Partner benefits", "Grow together. <span class='grad'>Win together.</span>", gold=True)}
@@ -1011,6 +1059,7 @@ def page_insights():
     body = f'''
 {page_hero("Insights", "Insights & Knowledge Centre", "Ideas worth <span class='grad'>exploring.</span>", "Discover perspectives on branding, artificial intelligence, technology, marketing and the future of business.")}
 <section class="section"><div class="wrap">
+<h2 class="sr-only">Latest articles</h2>
 <div class="grid g2">{insight_cards()}</div>
 <div class="rv" style="margin-top:64px"><h3>More topics coming soon</h3><div style="margin-top:18px">{chips(cats)}</div></div>
 </div></section>
@@ -1035,8 +1084,10 @@ def page_contact():
 <section class="section"><div class="wrap"><div class="cap contact-grid" style="border:0;padding:0">
 <div class="rv">
 <span class="eyebrow">Get in touch</span>
-<h3 style="margin-top:18px">{E(SITE['company'])}</h3>
+<h2 class="h3" style="margin-top:18px">{E(SITE['company'])}</h2>
 <div class="contact-lines" style="margin-top:14px">{contact_lines()}</div>
+<div class="clock-inline" aria-live="off"><span>Hyderabad now</span><b class="t" data-tz="Asia/Kolkata">--:--</b><span class="z">IST · UTC+5:30</span></div>
+<p class="yourtime small" hidden>Your local time: <b class="t" data-tz="local">--:--</b> <span class="ovl"></span></p>
 <ul class="bullets" style="margin-top:30px">{"".join(f"<li>{E(x)}</li>" for x in ["Global business enquiries","Technology consulting","Branding projects","Partnership opportunities","Training programmes"])}</ul>
 <div class="actions" style="margin-top:28px">{btn("Book a meeting", "#meeting", "ghost", False)}</div>
 </div>
@@ -1081,7 +1132,7 @@ def page_contact():
 <div class="q"><b>Services needed</b><div class="opts" id="es-svc" data-multi>{"".join(f'<button type="button" class="opt" aria-pressed="false" data-v="{k}">{E(v)}</button>' for k, v in es)}</div></div>
 <div class="q"><b>Project size: <span id="es-size-l" class="red">Standard</span></b><input id="es-size" type="range" min="1" max="4" value="2" style="margin-top:16px" aria-label="Project size"></div>
 <div class="q"><b>Timeline preference</b><div class="opts" id="es-time"><button type="button" class="opt" aria-pressed="true" data-v="std">Standard</button><button type="button" class="opt" aria-pressed="false" data-v="fast">Accelerated</button></div></div>
-<div class="result" id="es-result" aria-live="polite"><span class="eyebrow plain">Indicative result</span><h4 style="margin-top:12px">—</h4><div class="meter"><i></i></div>
+<div class="result" id="es-result" aria-live="polite"><span class="eyebrow plain">Indicative result</span><h3 class="h4" style="margin-top:12px">—</h3><div class="meter"><i></i></div>
 <div class="grid g2" style="margin-top:22px;gap:14px"><div><span class="muted small">Typical timeline</span><p style="font-weight:700;margin-top:4px" id="es-time-o">—</p></div><div><span class="muted small">Suggested engagement model</span><p style="font-weight:700;margin-top:4px" id="es-model">—</p></div></div>
 <div class="actions" style="margin-top:22px"><a class="btn red" href="#enquiry">Request a detailed proposal{ARROW}</a></div></div>
 </div></div></section>
@@ -1118,6 +1169,23 @@ def page_404():
     return layout('404.html', 'Page not found', 'Page not found.', body).replace('<meta name="viewport"', '<meta name="robots" content="noindex">\n<meta name="viewport"', 1)
 
 
+def security_headers():
+    ep = SITE['form_endpoint']
+    origin = '/'.join(ep.split('/')[:3]) if ep else ''
+    csp = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; "
+           f"connect-src 'self'{(' ' + origin) if origin else ''}; form-action 'self'{(' ' + origin) if origin else ''}; "
+           "frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests")
+    return {
+        'Content-Security-Policy': csp,
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()',
+        'Cross-Origin-Opener-Policy': 'same-origin',
+    }
+
+
 def write_extras(names):
     urls = ''.join(f'<url><loc>{SITE["url"]}/{"" if n == "index.html" else n}</loc></url>' for n in names if n != '404.html')
     files = {
@@ -1125,6 +1193,15 @@ def write_extras(names):
         'robots.txt': f'User-agent: *\nAllow: /\nSitemap: {SITE["url"]}/sitemap.xml\n',
         'site.webmanifest': '{"name":"TEAM3 WEBLOGICS","short_name":"TEAM3","start_url":"index.html","display":"standalone","background_color":"#000000","theme_color":"#000000","icons":[{"src":"assets/img/favicon.png","sizes":"192x192","type":"image/png"}]}\n',
     }
+    files['_headers'] = '/*\n' + ''.join(f'  {k}: {v}\n' for k, v in security_headers().items()) + \
+        '\n/assets/css/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/assets/js/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/assets/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/assets/img/*\n  Cache-Control: public, max-age=2592000\n\n/*.html\n  Cache-Control: public, max-age=0, must-revalidate\n'
+    files['.htaccess'] = ('# TEAM3 WEBLOGICS — Apache / cPanel configuration\n'
+        'ErrorDocument 404 /404.html\nOptions -Indexes\nAddDefaultCharset utf-8\n'
+        'AddType font/woff2 .woff2\nAddType image/webp .webp\nAddType application/manifest+json .webmanifest\n'
+        '<IfModule mod_rewrite.c>\n  RewriteEngine On\n  RewriteCond %{HTTPS} off\n  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\n</IfModule>\n'
+        '<IfModule mod_headers.c>\n' + ''.join(f'  Header always set {k} "{v}"\n' for k, v in security_headers().items()) +
+        '  <FilesMatch "\\.(css|js|woff2)$">\n    Header set Cache-Control "public, max-age=31536000, immutable"\n  </FilesMatch>\n  <FilesMatch "\\.(webp|png|jpg|svg)$">\n    Header set Cache-Control "public, max-age=2592000"\n  </FilesMatch>\n</IfModule>\n'
+        '<IfModule mod_deflate.c>\n  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml application/manifest+json\n</IfModule>\n')
     for n, c in files.items():
         with open(os.path.join(ROOT, n), 'w', encoding='utf-8') as f:
             f.write(c)

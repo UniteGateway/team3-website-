@@ -310,5 +310,19 @@
 
   d.querySelectorAll('.menu a').forEach(function (a) { a.addEventListener('click', function () { root.classList.remove('nav-open'); d.body.style.overflow = ''; burger && burger.setAttribute('aria-expanded', 'false'); closeAll(); }); });
 
+  /* ---------- Time zones (international visitors) ---------- */
+  var clocks = d.querySelectorAll('.t[data-tz]');
+  if (clocks.length && window.Intl) {
+    var localTz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || '';
+    var fmt = function (tz) { return new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', timeZone: tz === 'local' ? undefined : tz }); };
+    var tick = function () { var now = new Date(); clocks.forEach(function (c) { try { c.textContent = fmt(c.getAttribute('data-tz')).format(now); } catch (e) {} }); };
+    tick(); setInterval(tick, 30000);
+    if (localTz && localTz !== 'Asia/Kolkata' && localTz !== 'Asia/Calcutta') {
+      var off = 330 + new Date().getTimezoneOffset(), h = Math.floor(Math.abs(off) / 60), m = Math.abs(off) % 60;
+      var diff = off === 0 ? 'Hyderabad is on the same time as you.' : 'Hyderabad is ' + h + (m ? 'h ' + m + 'm' : 'h') + (off > 0 ? ' ahead of' : ' behind') + ' you.';
+      d.querySelectorAll('.yourtime').forEach(function (p) { p.hidden = false; var o = p.querySelector('.ovl'); if (o) o.textContent = '(' + localTz.replace(/_/g, ' ') + ') · ' + diff; });
+    }
+  }
+
   var y = d.getElementById('yr'); if (y) y.textContent = new Date().getFullYear();
 })();

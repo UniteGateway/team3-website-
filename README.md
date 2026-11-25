@@ -38,6 +38,16 @@ Gallery images (from the TEAM3 company presentation): `assets/img/gallery/`; cap
 
 Styles: `assets/css/site.css` · Interactions: `assets/js/site.js` · Logo assets: `assets/img/`.
 
+## International standards
+| Area | What's in place |
+|---|---|
+| Accessibility | WCAG 2.2 AA — 0 axe-core violations on all pages (desktop + mobile); accessible red `#DA1220` for small text/buttons, brand red `#ED1726` for display type and graphics; logical heading order; keyboard and screen-reader support; reduced-motion and forced-colours support |
+| Privacy (GDPR / DPDP) | Self-hosted fonts and assets — zero third-party requests, no cookies or trackers, so no cookie banner needed; consent checkbox on every form |
+| Performance | WebP images, variable fonts (preloaded), lazy loading, content-hashed CSS/JS, ~230 KB home page before compression, CLS 0 |
+| Security | `_headers` (Netlify / Cloudflare Pages) and `.htaccess` (Apache / cPanel) with CSP, HSTS, X-Frame-Options, nosniff, Referrer- and Permissions-Policy; HTTPS redirect |
+| International SEO | `lang="en-IN"`, hreflang, canonical URLs, Open Graph, Organization schema (address, phone, founder, areas served), sitemap, robots |
+| Global UX | Global presence section, live Hyderabad (IST) clock and visitor time-zone difference, international phone format, print stylesheet |
+
 ## Site-wide features
 - **TEAM3 Assistant** (bottom-right on every page): guided, rule-based enquiry helper that recommends services and pre-fills the enquiry form. It is not an LLM and stores nothing.
 - **Forms** (enquiry, meeting request, careers profile, partner registration) with consent checkbox and spam honeypot.

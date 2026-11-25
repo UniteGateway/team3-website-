@@ -154,6 +154,7 @@ LEGAL = [
         ('How we use it', [['To respond to enquiries, meeting requests, partner registrations and career profiles.', 'To prepare proposals and deliver services you have requested.', 'To keep records of our communication with you.', 'To protect the website against misuse and fraud.'],
                            'We do not sell your personal data. We will only send you marketing communication where you have agreed to receive it, and you can withdraw that consent at any time.']),
         ('Sharing', ['We may share data with service providers who help us operate the website, forms and communication tools, under obligations of confidentiality. We may also disclose data where required by law.']),
+        ('International visitors', ['We welcome enquiries from around the world. If you contact us from outside India — including from the European Economic Area or the United Kingdom — your details are processed in India for the purpose of responding to you. Where laws such as the EU/UK General Data Protection Regulation apply, we process enquiry data on the basis of your consent and our legitimate interest in responding to business requests, and you may exercise the rights those laws give you by contacting us.']),
         ('Retention', ['We keep enquiry and recruitment data only for as long as needed for the purpose it was provided for, or as required by law, and then delete or anonymise it.']),
         ('Your rights', ['Subject to applicable law, you may ask to access, correct or erase your personal data, withdraw consent, or raise a grievance about how it has been handled. To do so, please contact us through the <a class="red" href="contact.html">contact page</a>.']),
         ('Changes', ['We may update this policy from time to time. The latest version will always be published on this page.']),
@@ -170,7 +171,8 @@ LEGAL = [
     ]),
     ('cookies', 'Cookie Policy', [
         ('Our approach', ['This website does not use advertising or tracking cookies, and does not set cookies for analytics.']),
-        ('Third-party services', ['Web fonts are loaded from Google Fonts, which receives your IP address in order to deliver the font files. If we add analytics or other third-party services in the future, we will update this policy and, where required, ask for your consent first.']),
+        ('Third-party services', ['This website makes no requests to third-party servers: fonts, images and scripts are all served from our own domain. Because no non-essential cookies or trackers are used, no cookie banner is required. If we add analytics or other third-party services in the future, we will update this policy and, where required, ask for your consent first.']),
+        ('Browser storage', ['The website does not store personal data in your browser. The TEAM3 Assistant keeps its conversation only in the open page and discards it when you leave.']),
         ('Managing cookies', ['You can block or delete cookies at any time through your browser settings.']),
     ]),
     ('responsible-ai', 'Responsible AI Policy', [
