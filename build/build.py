@@ -19,7 +19,8 @@ E = html.escape
 # --------------------------------------------------------------------------- site config
 # Fill these in before going live. Empty values are simply not shown on the site.
 SITE = {
-    'url': 'https://www.team3weblogics.com',
+    # Live address. Change to the custom domain (e.g. 'https://www.team3weblogics.com') once it is registered and connected in Vercel.
+    'url': 'https://team3-weblogics.vercel.app',
     'company': 'TEAM3 WEBLOGICS PVT. LTD.',
     'address': '6-3-569, 3rd Floor, Above BMW Showroom, Khairatabad Road, Hyderabad, India',
     'email': 'info@team3solutions.in',
@@ -146,7 +147,8 @@ def footer_contact():
         bits.append(f'<a href="mailto:{E(SITE["email"])}" style="color:#fff">{E(SITE["email"])}</a>')
     if SITE['phone']:
         bits.append(E(SITE['phone']))
-    bits.append(f'<a href="{SITE["url"]}" style="color:#fff">{E(SITE["url"].split("//")[1])}</a>')
+    if 'vercel.app' not in SITE['url']:
+        bits.append(f'<a href="{SITE["url"]}" style="color:#fff">{E(SITE["url"].split("//")[1])}</a>')
     return '<br>'.join(bits)
 
 
@@ -158,7 +160,8 @@ def contact_lines(dark=False):
         out.append(f'<p><a class="link" href="tel:{E(SITE["phone"].replace(" ", ""))}">{E(SITE["phone"])}</a></p>')
     if SITE['whatsapp']:
         out.append(f'<p><a class="link" href="https://wa.me/{E(SITE["whatsapp"])}" rel="noopener">WhatsApp us</a></p>')
-    out.append(f'<p><a class="link" href="{SITE["url"]}">{E(SITE["url"].split("//")[1])}{ARROW}</a></p>')
+    if 'vercel.app' not in SITE['url']:
+        out.append(f'<p><a class="link" href="{SITE["url"]}">{E(SITE["url"].split("//")[1])}{ARROW}</a></p>')
     return ''.join(out)
 
 
