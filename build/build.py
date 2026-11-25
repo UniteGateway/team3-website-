@@ -1154,7 +1154,7 @@ def page_gallery():
 
 PRODUCT_SHOT = {
     'collabiz': ('collabiz.app', 'Live app · home page'), 'solbid': ('solbid.app', 'Live app · welcome screen'),
-    'bizo': ('bizo.one', 'Home page'),
+    'bizo': ('bizo.one', 'Live website · bizo.one'), 'leaddna': ('leaddna.bizo.one', 'Live app · sign-in page'),
 }
 
 
