@@ -543,7 +543,7 @@ def page_article(a):
 
 
 def client_marquee():
-    items = ''.join(f'<div class="client"><b>{E(n)}</b><span>{E(sec.split(" & ")[0])}</span></div>' for n, sec, _ in all_clients())
+    items = ''.join((f'<div class="client"><img src="{client_logo_file(n)}" alt="{E(n)}" loading="lazy"></div>' if client_logo_file(n) else f'<div class="client"><b>{E(n)}</b><span>{E(sec.split(" & ")[0])}</span></div>') for n, sec, _ in all_clients())
     dup = items.replace('<div class="client">', '<div class="client" aria-hidden="true">')
     return f'<div class="marquee" aria-label="Selected historical clientele"><div class="marquee-track">{items}{dup}</div></div>'
 
@@ -1523,6 +1523,14 @@ def _initials(n):
     return (w[0][0] + (w[1][0] if len(w) > 1 else (w[0][1] if len(w[0]) > 1 else ''))).upper()
 
 
+def client_logo_file(name):
+    slug = slugify(name)
+    for ext in ('svg', 'png', 'webp'):
+        if os.path.exists(os.path.join(ROOT, 'assets', 'img', 'clients', f'{slug}.{ext}')):
+            return f'assets/img/clients/{slug}.{ext}'
+    return None
+
+
 def client_tile(name, sector, market, i=0):
     slug = slugify(name)
     for ext in ('svg', 'png', 'webp'):
@@ -1536,7 +1544,7 @@ def client_tile(name, sector, market, i=0):
 
 def logo_strip():
     names = [c[0] for c in all_clients()]
-    items = ''.join(f'<span class="lg {LOGO_STYLE[i % len(LOGO_STYLE)]}">{E(n)}</span>' for i, n in enumerate(names))
+    items = ''.join((f'<span class="lg lgi"><img src="{client_logo_file(n)}" alt="{E(n)}" loading="lazy"></span>' if client_logo_file(n) else f'<span class="lg {LOGO_STYLE[i % len(LOGO_STYLE)]}">{E(n)}</span>') for i, n in enumerate(names))
     dup = items.replace('<span class="lg', '<span aria-hidden="true" class="lg')
     return (f'<section class="logobar" aria-label="Our clients"><div class="wrap lb-head"><span class="eyebrow">Trusted by 300+ clients</span>{link("Our clients", "clients.html")}</div>'
             f'<div class="marquee"><div class="marquee-track lbt">{items}{dup}</div></div></section>')

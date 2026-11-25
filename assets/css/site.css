@@ -1061,3 +1061,9 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 @media (max-width:1100px){.clwall{grid-template-columns:repeat(4,1fr)}}
 @media (max-width:860px){.clwall{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:640px){.clwall{grid-template-columns:1fr 1fr;gap:10px}.cl{min-height:130px}}
+.lg.lgi{background:#fff;border:1px solid var(--line)}
+.lg.lgi img{max-height:38px;max-width:150px;object-fit:contain}
+.client img{height:34px;width:auto;max-width:150px;object-fit:contain;filter:grayscale(1);opacity:.8}
+.client:hover img{filter:none;opacity:1}
+.cl img{max-height:56px}
+.cl img{width:170px;height:64px;max-width:100%;max-height:none;object-fit:contain}
