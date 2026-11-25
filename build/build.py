@@ -625,14 +625,13 @@ def roadmap():
 def page_index():
     body = f'''
 <section class="hero hero-home"><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
-<div class="wrap hero-layout"><div>
+<div class="wrap hero-layout solo"><div>
 <span class="eyebrow gold rv">Established 2004. Reimagined for the future.</span>
 <h1 class="display rv d1" style="margin-top:26px"><span class="l">We build brands.</span><span class="l">We build technology.</span><span class="l grad">We build the future.</span></h1>
 <p class="lead rv d2" style="margin-top:30px">From powerful brand identities to intelligent software, from creative advertising to autonomous AI agents, TEAM3 brings strategy, creativity and technology together to transform businesses.</p>
 <p class="hero-tagline rv d3">One partner. <span class="gold-t">Infinite possibilities.</span></p>
 <div class="actions rv d3">{btn("Explore Our Services", "#services", "light")}{btn("Start a Project", "contact.html", "ghost", False)}</div>
 </div>
-<div class="hero-sym rv d2"><span class="dot-ring"></span><span class="dot-ring r2"></span><img src="assets/img/symbol.webp" alt="TEAM3 footprint symbol" width="382" height="540"></div>
 </div><span class="scroll-cue" aria-hidden="true"></span></section>
 
 <section class="section tight"><div class="wrap">
