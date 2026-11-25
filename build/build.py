@@ -19,9 +19,9 @@ E = html.escape
 SITE = {
     'url': 'https://www.team3weblogics.com',
     'company': 'TEAM3 WEBLOGICS PVT. LTD.',
-    'address': 'Hyderabad, India',
+    'address': '6-3-569, 3rd Floor, Above BMW Showroom, Khairatabad Road, Hyderabad, India',
     'email': '',            # e.g. 'hello@team3weblogics.com'
-    'phone': '',            # e.g. '+91 40 0000 0000'
+    'phone': '+91 905 227 0203',
     'whatsapp': '',         # digits only with country code, e.g. '919800000000'
     # Form backend: any endpoint that accepts a POST of form fields (Formspree, Getform,
     # Basin, a CRM webhook, or your own API). Leave empty to use the offline fallback
@@ -171,9 +171,9 @@ NAV = [
     ('branding.html', 'Branding', 'branding'),
     ('technology.html', 'Technology', 'technology'),
     ('ai.html', 'Artificial Intelligence', 'ai'),
-    ('marketing.html', 'Digital Marketing', None),
+    ('marketing.html', 'Marketing', None),
     ('academy.html', 'Academy', None),
-    ('work.html', 'Our Work', None),
+    ('work.html', 'Our Work', 'work'),
     ('industries.html', 'Industries', None),
     ('careers.html', 'Careers', None),
 ]
@@ -212,6 +212,17 @@ MEGA = {
                    ('ai.html#recommend', 'Service Recommender', 'Find the right AI solution'),
                    ('legal.html#responsible-ai', 'Responsible AI', 'Our principles')]),
     ], ('Human imagination. Artificial intelligence.', 'Extraordinary possibilities.', 'ai.html')),
+    'work': ([
+        ('Work', [('work.html', 'Portfolio', 'Branding, software, films, AI'),
+                  ('gallery.html', 'Gallery', 'Events, publications, print, films'),
+                  ('work.html#heritage', 'Heritage projects', 'Two decades of work')]),
+        ('Clients', [('clients.html', 'Our Clients', 'National and international'),
+                     ('clients.html#group', 'Collabiz & Unite Group', 'Group businesses we build for'),
+                     ('clients.html#heritage', 'Heritage clientele', '100+ organisations since 2004')]),
+        ('Partners', [('partners.html', 'Partner Network', 'Connect. Collaborate. Create.'),
+                      ('partners.html#register', 'Become a Partner', 'Register in minutes'),
+                      ('careers.html', 'Careers', 'Join the TEAM3 team')]),
+    ], ('Our imagination. Your success.', 'See the work, the clients and the moments.', 'gallery.html')),
 }
 
 
@@ -225,7 +236,7 @@ def header(active):
                 f'<div><h5>{E(t)}</h5>' + ''.join(f'<a class="mi" href="{h}">{E(a)}<span>{E(s)}</span></a>' for h, a, s in links) + '</div>'
                 for t, links in cols)
             fh = f'<a class="mega-feature" href="{feat[2]}"><b>{E(feat[0])}</b><p>{E(feat[1])}</p></a>'
-            curcls = ' style="opacity:1;box-shadow:inset 0 -2px 0 var(--red)"' if href == active else ''
+            curcls = ' style="opacity:1;box-shadow:inset 0 -2px 0 var(--red)"' if active in [href] + [h.split('#')[0] for _, ls in cols for h, _, _ in ls if not h.startswith('careers') and not h.startswith('partners')] else ''
             lis += (f'<li class="has-mega"><button type="button" aria-expanded="false"{curcls}>{E(label if label != "Artificial Intelligence" else "AI")}{ic("chev","chev")}</button>'
                     f'<div class="mega"><div class="wrap mega-in">{colhtml}{fh}</div></div></li>')
         else:
@@ -233,7 +244,7 @@ def header(active):
     return f'''<a class="skip" href="#main">Skip to content</a>
 <header class="site-header"><div class="wrap nav">
 <a class="logo" href="index.html" aria-label="TEAM3 WEBLOGICS home"><img class="sym" src="assets/img/symbol.png" alt="" width="382" height="540"><span><img class="wm wm-d" src="assets/img/wordmark-dark.png" alt="TEAM3" width="891" height="130"><img class="wm wm-l" src="assets/img/wordmark-light.png" alt="TEAM3" width="891" height="130"><span class="tag">WEBLOGICS</span></span></a>
-<ul class="menu" id="menu">{lis}<li><a class="btn red sm nav-cta" href="contact.html">Let’s Build Something</a></li></ul>
+<ul class="menu" id="menu">{lis}<li class="nav-btns"><a class="btn sm nav-partner" href="partners.html"{' aria-current="page"' if active == 'partners.html' else ''}>Partners</a><a class="btn red sm nav-cta" href="contact.html">Let’s Build Something</a></li></ul>
 <button class="burger" type="button" aria-label="Menu" aria-controls="menu" aria-expanded="false"><span></span><span></span></button>
 </div></header>'''
 
@@ -244,9 +255,9 @@ FOOTER = '''<footer class="site-footer"><div class="wrap">
 <p class="claim">Branding. Technology.<br><span class="gold-t">Intelligence.</span></p>
 <p>An integrated creative and technology company. Established in 2004. Building intelligent solutions for the future.</p>
 <p style="margin-top:18px">__FOOTCONTACT__</p></div>
-<div class="f-col"><h5>Company</h5><a href="about.html">About Us</a><a href="about.html#journey">Our Journey</a><a href="work.html">Our Work</a><a href="careers.html">Careers</a><a href="contact.html">Contact</a></div>
+<div class="f-col"><h5>Company</h5><a href="about.html">About Us</a><a href="about.html#journey">Our Journey</a><a href="work.html">Our Work</a><a href="gallery.html">Gallery</a><a href="clients.html">Clients</a><a href="careers.html">Careers</a><a href="contact.html">Contact</a></div>
 <div class="f-col"><h5>Services</h5><a href="branding.html">Branding</a><a href="branding.html#advertising">Advertising</a><a href="technology.html">IT &amp; Apps</a><a href="ai.html#agents">AI Agents</a><a href="marketing.html">Digital Marketing</a></div>
-<div class="f-col"><h5>Explore</h5><a href="academy.html">AI Academy</a><a href="careers.html#partners">Partner Network</a><a href="industries.html">Industries</a><a href="insights.html">Insights</a><a href="industries.html#innovation">Innovation</a></div>
+<div class="f-col"><h5>Explore</h5><a href="academy.html">AI Academy</a><a href="partners.html">Partner Network</a><a href="industries.html">Industries</a><a href="insights.html">Insights</a><a href="industries.html#innovation">Innovation</a></div>
 <div class="f-col"><h5>Legal</h5><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Use</a><a href="legal.html#cookies">Cookie Policy</a><a href="legal.html#responsible-ai">Responsible AI Policy</a></div>
 </div>
 <div class="f-bot"><span>© <span id="yr">2026</span> TEAM3 WEBLOGICS. All rights reserved.</span><span class="tag">Step beyond imagination. · Established 2004</span></div>
@@ -298,6 +309,7 @@ def layout(fname, title, desc, body, og_type='website'):
 {body}
 </main>
 {FOOTER.replace("__FOOTCONTACT__", footer_contact())}
+{LIGHTBOX if ('class="gopen"' in body and 'id="lb"' not in body) else ''}
 {ASSISTANT}
 <script src="assets/js/site.js" defer></script>
 </body>
@@ -336,6 +348,31 @@ INDUSTRIES = [
     ('rocket', 'Startups', 'Idea-to-market product development'),
     ('leaf', 'Agriculture', 'Agritech and procurement platforms'),
     ('car', 'Automotive & EV', 'Mobility platforms and connected solutions'),
+]
+
+GROUP = [('COLLABIZ', 'Intelligent business collaboration platform', 'software ai'), ('LeadDNA', 'Business opportunity and lead intelligence', 'ai marketing'),
+         ('SOLBID', 'Solar procurement and bidding marketplace', 'apps software'), ('ADBUZ', 'Influencer and advertising marketplace', 'marketing apps'),
+         ('UNITE EXIM', 'International trade and sourcing platform', 'software websites'), ('BIZO', 'AI-powered business intelligence', 'ai software'),
+         ('SUNGATE', 'Community energy management platform', 'apps software'), ('PRIZO', 'Intelligent buyer-side negotiation platform', 'ai apps'),
+         ('HNW', 'Health and wealth membership ecosystem', 'apps'), ('BEYOU', 'Inclusive community support platform', 'apps')]
+
+FILM_CLIENTS = [('Vibha Seeds', 'Corporate film', 'film-vibha-seeds.jpg'), ('Rachem Pharma', 'Corporate film', 'film-rachem-pharma.jpg'),
+                ('Ethames Graduate School', 'Corporate film', 'film-ethames.jpg'),
+                ('CRIDA, Hyderabad', 'Central Research Institute for Dryland Agriculture (ICAR) — corporate film', 'film-crida.jpg')]
+
+GALLERY = [
+    ('nird-technology-bank-2008.jpg', 'events', 'Events', 'NIRD Technology Bank, 2008', 'Inaugurated by former President of India Shri A.P.J. Abdul Kalam. Designed by TEAM3.', 1600, 1068),
+    ('nird-vision-souvenir-2009.jpg', 'events', 'Events', 'NIRD Vision &amp; Souvenir, 2009', 'Inaugurated by Hon’ble President of India Smt. Pratibha Patil and Hon’ble Governor of Andhra Pradesh Shri N.D. Tiwari. Designed by TEAM3.', 1600, 1068),
+    ('print-works.jpg', 'print', 'Print &amp; Design', 'Selected print works', 'Brochures, menus, catalogues, identities and corporate collateral.', 1600, 1200),
+    ('nird-rdm-brochure.jpg', 'publications', 'Publications', 'NIRD — Rural Development Management', 'Programme literature for the National Institute of Rural Development.', 508, 352),
+    ('nird-pgdrdm-fieldwork.jpg', 'publications', 'Publications', 'NIRD — PGDRDM Field Work handbook', 'Publication design for the National Institute of Rural Development.', 508, 352),
+    ('swachh-bharat.jpg', 'campaigns', 'Campaigns', 'Swachh Bharat Abhiyan', 'Campaign creative — one of our prestigious projects.', 1297, 1265),
+    ('home-cafe-publication.jpg', 'publications', 'Publications', 'Home Café', 'TEAM3’s own publication — editorial, layout and advertising.', 938, 1235),
+    ('film-vibha-seeds.jpg', 'films', 'Corporate Films', 'Vibha Seeds', 'Corporate film.', 631, 277),
+    ('film-rachem-pharma.jpg', 'films', 'Corporate Films', 'Rachem Pharma', 'Corporate film — “Different thought process”.', 848, 444),
+    ('film-ethames.jpg', 'films', 'Corporate Films', 'Ethames Graduate School', 'Corporate film.', 833, 357),
+    ('film-crida.jpg', 'films', 'Corporate Films', 'CRIDA, Hyderabad', 'Central Research Institute for Dryland Agriculture (ICAR) — corporate film.', 634, 356),
+    ('brand-mug.jpg', 'campaigns', 'Campaigns', 'Step beyond imagination.', 'TEAM3 brand campaign.', 720, 540),
 ]
 
 CLIENTS = [('Madhucon Projects Limited', 'India'), ('Pi Metrics Inc.', 'USA'), ('Impress International LLC', 'Canada'),
@@ -391,7 +428,7 @@ def page_article(a):
 
 
 def client_marquee():
-    items = ''.join(f'<div class="client"><b>{E(n)}</b><span>{E(m)}</span></div>' for n, m in CLIENTS)
+    items = ''.join(f'<div class="client"><b>{E(n)}</b><span>{E(m)}</span></div>' for n, m in [(g[0], 'Group') for g in GROUP] + CLIENTS + [(f[0], 'Film') for f in FILM_CLIENTS])
     dup = items.replace('<div class="client">', '<div class="client" aria-hidden="true">')
     return f'<div class="marquee" aria-label="Selected historical clientele"><div class="marquee-track">{items}{dup}</div></div>'
 
@@ -407,9 +444,9 @@ def compare_block():
     return f'<div class="compare rv"><div class="old"><h4>Conventional approach</h4><ul>{old}</ul></div><div class="new"><h4>The TEAM3 approach</h4><ul>{new}</ul></div></div>'
 
 
-PILLARS = [('Branding', 'Creative communication — strategy, identity, advertising and storytelling that build trust and lasting value.'),
-           ('Technology', 'Engineering that works — software, platforms, apps, cloud and smart systems built to scale.'),
-           ('Intelligence', 'Data and AI that amplify people — automation, agents and insight that deliver measurable outcomes.')]
+PILLARS = [('Our Clients', 'Every engagement starts and ends with the client. We build relationships that last — many for well over a decade.'),
+           ('Our Team', 'Designers, engineers, strategists and AI specialists — a strong technical team with deep domain knowledge.'),
+           ('Our Management', 'Leadership that believes in teamwork, good client relationships and good employee relationships.')]
 
 
 def pillars_block():
@@ -446,7 +483,7 @@ def page_index():
 <div class="grid g4">{svc_cards(SERVICES)}</div></div></section>
 
 <section class="section bg-black"><div class="wrap">
-{head("The meaning behind TEAM3", "Three pillars. <span class='grad'>One integrated partner.</span>", "The number three represents the three pillars of our organisation — the philosophy from the original TEAM3 corporate presentation that still forms our foundation.", gold=True)}
+{head("The meaning behind TEAM3", "TEAM stands for teamwork. <span class='grad'>3 for the people behind it.</span>", "The number three represents the three pillars of our organisation: our clients, our team members and our management. This philosophy from the original TEAM3 corporate presentation still forms our foundation.", gold=True)}
 {pillars_block()}</div></section>
 
 <section class="section"><div class="wrap">
@@ -475,8 +512,14 @@ def page_index():
 {ind_cards(INDUSTRIES[:8])}</div></section>
 
 <section class="section tight"><div class="wrap">
-<div class="head center rv"><span class="eyebrow">Our heritage clientele</span><h2>Trusted by more than 100 organisations.</h2><p class="lead">A selection of organisations in India and international markets listed in the original TEAM3 company presentation.</p></div>
-</div>{client_marquee()}</section>
+<div class="head center rv"><span class="eyebrow">Our clients</span><h2>Trusted by more than 100 organisations.</h2><p class="lead">From the Collabiz and Unite Group businesses to national institutions and international companies.</p></div>
+</div>{client_marquee()}<div class="wrap center" style="margin-top:36px">{link("Meet our clients", "clients.html")}</div></section>
+
+<section class="section bg-black"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow gold">From the archive</span><h2 style="margin-top:16px">Moments that <span class="grad">shaped us.</span></h2></div>
+<div class="rv d1"><p class="lead">Landmark launches, publications and films from two decades of TEAM3.</p><div style="margin-top:22px">{link("Open the gallery", "gallery.html")}</div></div></div>
+<div class="arch">{"".join(gallery_tile(g, n, True) for n, g in enumerate(GALLERY[:4]))}</div>
+</div></section>
 
 <section class="section bg-grey"><div class="wrap">
 <div class="head split"><div class="rv"><span class="eyebrow">Insights</span><h2 style="margin-top:16px">Ideas worth exploring.</h2></div>
@@ -511,7 +554,7 @@ def page_about():
 </div></div></div></section>
 
 <section class="section bg-black" id="meaning"><div class="wrap">
-{head("The meaning behind TEAM3", "The number three represents the three pillars of our organisation.", "This philosophy comes from the original TEAM3 corporate presentation and continues to form the foundation of the organisation.", gold=True)}
+{head("The meaning behind TEAM3", "The name TEAM3 itself <span class='grad'>represents teamwork.</span>", "The number “3” represents our clients, our team members and the management. We believe in maintaining good client relationships and employee relationships — a philosophy from the original TEAM3 corporate presentation that continues to form our foundation.", gold=True)}
 {pillars_block()}</div></section>
 
 <section class="section" id="vision"><div class="wrap"><div class="grid g2">
@@ -525,11 +568,11 @@ def page_about():
 </div></section>
 
 <section class="section" id="founder"><div class="wrap founder">
-<figure class="portrait rv"><img src="assets/img/symbol.png" alt="" width="382" height="540" loading="lazy"><figcaption><span>Founder</span><b>Dr. Ravi Chandra</b></figcaption></figure>
+<figure class="portrait rv"><img src="assets/img/symbol.png" alt="" width="382" height="540" loading="lazy"><figcaption><span>Founder &amp; Managing Director</span><b>Dr. Ravi Chandra</b></figcaption></figure>
 <div class="rv d1"><span class="eyebrow">Our founder</span>
 <blockquote style="margin-top:24px">TEAM3 was founded with an entrepreneurial vision to integrate creative design, advertising, information technology and business innovation.</blockquote>
 <p class="lead" style="margin-top:26px">With experience spanning creative communication, technology architecture, digital platforms and business development, the founder’s vision is to transform TEAM3 into a next-generation global creative and technology enterprise.</p>
-<p style="margin-top:24px;font-weight:700">Dr. Ravi Chandra <span class="muted" style="font-weight:500">— Founder, TEAM3</span></p></div>
+<p style="margin-top:24px;font-weight:700">Dr. Ravi Chandra <span class="muted" style="font-weight:500">— Founder &amp; Managing Director, TEAM3</span></p></div>
 </div></section>
 
 <section class="section bg-black" id="journey"><div class="wrap">
@@ -773,33 +816,31 @@ def page_academy():
 
 
 def page_work():
-    heritage = [('Corporate Communication', 'branding advertising', 'Heritage', 'Corporate identity & print', 'Print advertising and corporate communication for clients across India and international markets.', 't1'),
-                ('Corporate Films', 'films', 'Heritage', 'Vibha Seeds', 'Corporate film production.', 't2'),
-                ('Corporate Films', 'films', 'Heritage', 'Rachem Pharma', 'Corporate film production.', 't3'),
-                ('Corporate Films', 'films', 'Heritage', 'Ethames Graduate School', 'Corporate film production.', 't4'),
-                ('Corporate Films', 'films', 'Heritage', 'CRDIA Hyderabad', 'Corporate film production.', 't5'),
-                ('Software', 'software websites', 'Heritage', 'Enterprise portals & ERP', 'Web applications, business portals and enterprise software solutions.', 't6')]
-    products = [('COLLABIZ', 'Intelligent business collaboration platform', 'software ai'), ('LeadDNA', 'Business opportunity and lead intelligence', 'ai marketing'),
-                ('SOLBID', 'Solar procurement and bidding marketplace', 'apps software'), ('ADBUZ', 'Influencer and advertising marketplace', 'marketing apps'),
-                ('UNITE EXIM', 'International trade and sourcing platform', 'software websites'), ('BIZO', 'AI-powered business intelligence', 'ai software'),
-                ('SUNGATE', 'Community energy management platform', 'apps software'), ('PRIZO', 'Intelligent buyer-side negotiation platform', 'ai apps'),
-                ('HNW', 'Health and wealth membership ecosystem', 'apps'), ('BEYOU', 'Inclusive community support platform', 'apps')]
+    heritage = [('Publications &amp; Events', 'branding advertising', 'Heritage', 'NIRD Technology Bank', 'Designed by TEAM3 — inaugurated by former President of India Shri A.P.J. Abdul Kalam, 2008.', 'nird-technology-bank-2008.jpg'),
+                ('Publications &amp; Events', 'branding advertising', 'Heritage', 'NIRD Vision &amp; Souvenir', 'Designed by TEAM3 — inaugurated by President of India Smt. Pratibha Patil, 2009.', 'nird-vision-souvenir-2009.jpg'),
+                ('Print &amp; Design', 'branding advertising', 'Heritage', 'Selected print works', 'Brochures, menus, catalogues, identities and corporate collateral.', 'print-works.jpg'),
+                ('Campaigns', 'advertising', 'Heritage', 'Swachh Bharat Abhiyan', 'Campaign creative — one of our prestigious projects.', 'swachh-bharat.jpg')]
+    heritage += [('Corporate Films', 'films', 'Heritage', E(n), E(d), img) for n, d, img in FILM_CLIENTS]
+    heritage += [('Software', 'software websites', 'Heritage', 'Enterprise portals &amp; ERP', 'Web applications, business portals, ERP and smart-card security systems.', None)]
+    products = GROUP
     filters = [('all', 'All Projects'), ('branding', 'Branding'), ('advertising', 'Advertising'), ('websites', 'Websites'), ('apps', 'Mobile Apps'), ('software', 'Software'),
                ('films', 'Corporate Films'), ('ai', 'AI Solutions'), ('marketing', 'Digital Marketing')]
     th = ['t1', 't2', 't3', 't4', 't5', 't6']
-    cards = ''.join(f'<article class="work rv" data-cat="{c}"><div class="thumb {t}"><b>{E(n)}</b></div><div class="meta"><small>{E(k)}</small><h4>{E(n)}</h4><p>{E(p)}</p><span class="badge">{E(s)}</span></div></article>' for k, c, s, n, p, t in heritage)
-    cards += ''.join(f'<article class="work rv" data-cat="{c}"><div class="thumb {th[i%6]}"><b>{E(n)}</b></div><div class="meta"><small>Next-generation product</small><h4>{E(n)}</h4><p>{E(p)}</p><span class="badge">Product initiative · status to be confirmed</span></div></article>' for i, (n, p, c) in enumerate(products))
-    clients = ''.join(f'<div class="row rv"><b>{E(n)}</b><span>{E(m)}</span><i>{i+1:02d}</i></div>' for i, (n, m) in enumerate(CLIENTS))
+    def thumb(n, img, i):
+        if img:
+            return f'<div class="thumb photo"><img src="assets/img/gallery/{img}" alt="{n}" loading="lazy"></div>'
+        return f'<div class="thumb {th[i%6]}"><b>{n}</b></div>'
+    cards = ''.join(f'<article class="work rv" data-cat="{c}">{thumb(n, img, i)}<div class="meta"><small>{k}</small><h4>{n}</h4><p>{p}</p><span class="badge">{s}</span></div></article>' for i, (k, c, s, n, p, img) in enumerate(heritage))
+    cards += ''.join(f'<article class="work rv" data-cat="{c}"><div class="thumb {th[i%6]}"><b>{E(n)}</b></div><div class="meta"><small>Collabiz &amp; Unite Group</small><h4>{E(n)}</h4><p>{E(p)}</p><span class="badge">Group client</span></div></article>' for i, (n, p, c) in enumerate(products))
     body = f'''
 {page_hero("Our Work", "Our Work & Portfolio", "Our imagination. <span class='grad'>Your success.</span>", "Explore our creative and technology heritage — from corporate communication and print advertising to enterprise software, digital platforms and next-generation intelligent applications.")}
 <section class="section"><div class="wrap">
 <div class="filters rv" role="group" aria-label="Filter projects">{"".join(f'<button type="button" data-f="{k}" aria-pressed="{str(k=="all").lower()}">{E(v)}</button>' for k, v in filters)}</div>
 <div class="works">{cards}</div>
 </div></section>
-<section class="section bg-grey"><div class="wrap">
-<div class="head split"><div class="rv"><span class="eyebrow">Heritage &amp; historical clientele</span><h2 style="margin-top:16px">More than 100 clients across India and international markets.</h2></div>
-<p class="lead rv d1">Selected historical clientele as listed in the original TEAM3 company presentation.</p></div>
-<div class="rows">{clients}</div>
+<section class="section bg-grey" id="heritage"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow">Heritage &amp; clientele</span><h2 style="margin-top:16px">More than 100 clients across India and international markets.</h2></div>
+<div class="rv d1"><p class="lead">From the Collabiz and Unite Group businesses to national institutions and global companies.</p><div class="actions" style="margin-top:22px">{btn("Meet our clients", "clients.html", "red")}{btn("Open the gallery", "gallery.html", "ghost", False)}</div></div></div>
 </div></section>
 {cta_band("Your project could be next.", "Let’s create the work you’ll be proud to show.", btn("Start a Project", "contact.html", "red"))}
 '''
@@ -827,7 +868,7 @@ def page_careers():
     creative = ['Brand strategists', 'Graphic designers', 'UI/UX designers', 'Creative directors', 'Content writers', 'Digital marketers', 'Video editors', 'Business consultants']
     tech = ['Full-stack developers', 'Mobile app developers', 'AI engineers', 'AI agent developers', 'Cloud engineers', 'Data engineers', 'Software architects', 'QA engineers']
     body = f'''
-{page_hero("Careers", "Careers", "Come imagine <span class='grad'>the future with us.</span>", "At TEAM3, creativity and technology come together to solve meaningful challenges. We are building a culture where designers, developers, AI engineers, strategists and entrepreneurs can collaborate, learn and create.", btn("Submit Your Profile", "#apply", "red") + btn("Partner with us", "#register", "ghost", False))}
+{page_hero("Careers", "Careers", "Come imagine <span class='grad'>the future with us.</span>", "At TEAM3, creativity and technology come together to solve meaningful challenges. We are building a culture where designers, developers, AI engineers, strategists and entrepreneurs can collaborate, learn and create.", btn("Submit Your Profile", "#apply", "red") + btn("Partner with us", "partners.html", "ghost", False))}
 <section class="section"><div class="wrap">
 {head("Talent communities", "Two communities. One team.")}
 <div class="grid g2">
@@ -857,30 +898,112 @@ def page_careers():
 <div class="field full"><button class="btn red" type="submit">Submit Your Profile{ARROW}</button>{form_note()}</div>
 </form></div>
 </div></div></section>
-<section class="section bg-black" id="partners"><div class="wrap">
-{head("TEAM3 Partner Network", "Connect. Collaborate. <span class='grad'>Create opportunities.</span>", "TEAM3 believes that the future of business lies in collaboration. Our proposed partner ecosystem brings together creative professionals, technology companies, consultants, entrepreneurs, investors and industry specialists.", gold=True)}
-<div class="grid g2">
-<div class="card rv"><span class="ic">{ic("users")}</span><h3>Partnership opportunities</h3><p>Creative partners, software development partners, AI technology partners, marketing agencies, business consultants, training institutions, freelance professionals, international representatives, manufacturing partners and franchise partners.</p></div>
-<div class="card rv d1"><span class="ic">{ic("rocket")}</span><h3>Partner benefits</h3><p>Access to business opportunities, collaborative project development, technology resources, marketing support, shared expertise and agreed commercial incentives.</p></div>
-</div>
-<p class="lead rv" style="margin-top:36px">The partner network can integrate with <b style="color:#fff">COLLABIZ</b> for opportunity discovery, protected leads, project collaboration, partner onboarding and commission tracking.</p>
-<div class="tool rv" id="register" style="margin-top:56px">
-<h3>Partner registration</h3>
-<form class="form" id="partner-form" data-form="Partner Registration" style="margin-top:26px" novalidate>
+{cta_band("Prefer to collaborate as a partner?", "Freelancers, agencies, consultants and technology companies can join the TEAM3 Partner Network.", btn("Become a TEAM3 Partner", "partners.html#register", "red"))}
+'''
+    return layout('careers.html', 'Careers', 'Careers at TEAM3 across creative, marketing, technology and AI.', body)
+
+
+
+
+def gallery_tile(g, n, compact=False):
+    img, cat, catl, title, cap, w, h = g
+    return (f'<figure class="gtile rv d{n%4}" data-cat="{cat}"><button type="button" class="gopen" data-full="assets/img/gallery/{img}" data-title="{title}" data-cap="{cap}" aria-label="Open image: {title}">'
+            f'<img src="assets/img/gallery/{img}" alt="{title}" width="{w}" height="{h}" loading="lazy"></button>'
+            f'<figcaption><small>{catl}</small><b>{title}</b>{"" if compact else f"<span>{cap}</span>"}</figcaption></figure>')
+
+
+LIGHTBOX = """<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
+<button type="button" class="lb-x" aria-label="Close">&times;</button>
+<button type="button" class="lb-nav lb-prev" aria-label="Previous image">&#8249;</button>
+<figure><img alt=""><figcaption><b></b><span></span></figcaption></figure>
+<button type="button" class="lb-nav lb-next" aria-label="Next image">&#8250;</button></div>"""
+
+
+def page_gallery():
+    cats = [('all', 'All'), ('events', 'Events'), ('publications', 'Publications'), ('print', 'Print &amp; Design'), ('films', 'Corporate Films'), ('campaigns', 'Campaigns')]
+    body = f"""
+{page_hero("Gallery", "Gallery", "Moments that <span class='grad'>shaped us.</span>", "Landmark launches, publications, print work and films from two decades of TEAM3 — from the TEAM3 company archive.")}
+<section class="section"><div class="wrap">
+<div class="filters rv" role="group" aria-label="Filter gallery">{"".join(f'<button type="button" data-f="{k}" data-target=".gtile" aria-pressed="{str(k=="all").lower()}">{v}</button>' for k, v in cats)}</div>
+<div class="gallery">{"".join(gallery_tile(g, n) for n, g in enumerate(GALLERY))}</div>
+</div></section>
+{cta_band("Let’s create your next landmark.", "Publications, campaigns, films and launches — designed by TEAM3.", btn("Start a Project", "contact.html", "red") + btn("Meet our clients", "clients.html", "ghost", False))}
+{LIGHTBOX}
+"""
+    return layout('gallery.html', 'Gallery', 'TEAM3 gallery: NIRD launches with the President of India, publications, print works, campaigns and corporate films.', body)
+
+
+def page_clients():
+    group = ''.join(f'<div class="gclient rv d{n%4}"><span class="mono">{E(nm[:1])}</span><b>{E(nm)}</b><span class="d">{E(ds)}</span><span class="tag">Group client</span></div>' for n, (nm, ds, _) in enumerate(GROUP))
+    heritage = ''.join(f'<div class="row rv"><b>{E(n)}</b><span>{E(m)}</span><i>{i+1:02d}</i></div>' for i, (n, m) in enumerate(CLIENTS))
+    films = ''.join(gallery_tile(g, n) for n, g in enumerate(x for x in GALLERY if x[1] == 'films'))
+    body = f"""
+{page_hero("Clients", "Our Clients", "Trusted by more than <span class='grad'>100 organisations.</span>", "Our clientele spans sectors from national to international level — from the Collabiz and Unite Group businesses to government institutions, healthcare, pharma, aviation and global technology companies.")}
+{subnav([("group","Collabiz & Unite Group"),("institutions","Institutions"),("heritage","Heritage clientele"),("films","Film clients")])}
+<section class="section" id="group"><div class="wrap">
+{head("Collabiz & Unite Group", "Group businesses <span class='grad'>we build for.</span>", "TEAM3 is the branding, technology and AI partner to the Collabiz and Unite Group businesses — from strategy and identity to platforms, apps and intelligent automation.")}
+<div class="gclients">{group}</div>
+</div></section>
+<section class="section bg-black" id="institutions"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow gold">Institutions</span><h2 style="margin-top:16px">National Institute of <span class="grad">Rural Development.</span></h2></div>
+<p class="lead rv d1">TEAM3 designed NIRD’s Technology Bank — inaugurated by former President of India Shri A.P.J. Abdul Kalam in 2008 — and NIRD’s Vision and Souvenir, inaugurated by President Smt. Pratibha Patil in 2009, along with programme literature and publications.</p></div>
+<div class="arch two">{"".join(gallery_tile(g, n, True) for n, g in enumerate(GALLERY[:2]))}</div>
+<div class="actions">{btn("Open the gallery", "gallery.html", "light")}</div>
+</div></section>
+<section class="section bg-grey" id="heritage"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow">Heritage clientele</span><h2 style="margin-top:16px">National to international.</h2></div>
+<p class="lead rv d1">A few of our prestigious clients from a database of more than 100, as listed in the TEAM3 company presentation.</p></div>
+<div class="rows">{heritage}</div>
+</div></section>
+<section class="section" id="films"><div class="wrap">
+{head("Film clients", "Few of our corporate films.")}
+<div class="gallery four">{films}</div>
+</div></section>
+{cta_band("Join our clients.", "Let’s build your brand, technology and intelligence — together.", btn("Start a Project", "contact.html", "red") + btn("Become a partner", "partners.html", "ghost", False))}
+{LIGHTBOX}
+"""
+    return layout('clients.html', 'Our Clients', 'TEAM3 clients: Collabiz and Unite Group businesses, NIRD, Accenture, Air India, Dr. Reddy’s, Madhucon and 100+ organisations since 2004.', body)
+
+
+def page_partners():
+    types = ["Creative partner", "Software development partner", "AI technology partner", "Marketing agency", "Business consultant", "Training institution", "Freelance professional", "International representative", "Manufacturing partner", "Franchise partner"]
+    tiles = [("pen", "Creative partners"), ("code", "Software development partners"), ("ai", "AI technology partners"), ("megaphone", "Marketing agencies"), ("compass", "Business consultants"), ("cap", "Training institutions"), ("users", "Freelance professionals"), ("globe", "International representatives"), ("factory", "Manufacturing partners"), ("rocket", "Franchise partners")]
+    benefits = [("Access to business opportunities", "Qualified projects from TEAM3 and the Collabiz network."), ("Collaborative project development", "Deliver together, with clear roles and shared tools."), ("Technology resources", "Platforms, AI tooling and engineering support."), ("Marketing support", "Co-branded campaigns and visibility across our channels."), ("Shared expertise", "Branding, technology and AI know-how under one roof."), ("Agreed commercial incentives", "Transparent commissions and revenue share.")]
+    body = f"""
+{page_hero("Partners", "TEAM3 Partner Network", "Connect. Collaborate. <span class='grad'>Create opportunities.</span>", "TEAM3 believes that the future of business lies in collaboration. Our partner ecosystem brings together creative professionals, technology companies, consultants, entrepreneurs, investors and industry specialists.", btn("Become a TEAM3 Partner", "#register", "red") + btn("See partner benefits", "#benefits", "ghost", False))}
+<section class="section"><div class="wrap">
+{head("Partnership opportunities", "Ten ways to partner.")}
+<div class="grid g4 ptypes">{"".join(f'<div class="card rv d{n%4}"><span class="ic">{ic(i)}</span><h4 style="font-size:18px">{E(t)}</h4></div>' for n, (i, t) in enumerate(tiles))}</div>
+</div></section>
+<section class="section bg-black" id="benefits"><div class="wrap">
+{head("Partner benefits", "Grow together. <span class='grad'>Win together.</span>", gold=True)}
+<div class="grid g3">{"".join(f'<div class="card rv d{n%3}"><span class="num">{n+1:02d}</span><h3 style="margin-top:28px;font-size:21px">{E(t)}</h3><p>{E(d)}</p></div>' for n, (t, d) in enumerate(benefits))}</div>
+<p class="lead rv" style="margin-top:40px">The partner network integrates with <b style="color:#fff">COLLABIZ</b> for opportunity discovery, protected leads, project collaboration, partner onboarding and commission tracking.</p>
+</div></section>
+<section class="section bg-grey" id="register"><div class="wrap"><div class="cap contact-grid" style="border:0;padding:0">
+<div class="rv"><span class="eyebrow">Partner registration</span><h2 style="margin-top:16px">Become a TEAM3 partner.</h2>
+<p class="lead" style="margin-top:20px">Tell us about you and how you’d like to collaborate. Our partnerships team will get back to you to discuss the next steps.</p>
+{steps_mini(["Register your interest", "Discovery call with TEAM3", "Partner agreement & onboarding", "Collaborate on opportunities"])}</div>
+<div class="tool rv d1">
+<form class="form" id="partner-form" data-form="Partner Registration" novalidate>
 {HONEYPOT}
 <div class="field"><label for="p-name">Full name</label><input id="p-name" name="name" autocomplete="name" required></div>
 <div class="field"><label for="p-company">Company / practice</label><input id="p-company" name="company" autocomplete="organization"></div>
 <div class="field"><label for="p-email">Email address</label><input id="p-email" name="email" type="email" autocomplete="email" required></div>
 <div class="field"><label for="p-phone">Phone / WhatsApp</label><input id="p-phone" name="phone" type="tel" autocomplete="tel"></div>
-<div class="field"><label for="p-type">Partner type</label><select id="p-type" name="partner_type">{"".join(f"<option>{E(o)}</option>" for o in ["Creative partner","Software development partner","AI technology partner","Marketing agency","Business consultant","Training institution","Freelance professional","International representative","Manufacturing partner","Franchise partner"])}</select></div>
+<div class="field"><label for="p-type">Partner type</label><select id="p-type" name="partner_type">{"".join(f"<option>{E(o)}</option>" for o in types)}</select></div>
 <div class="field"><label for="p-loc">City / country</label><input id="p-loc" name="location"></div>
 <div class="field full"><label for="p-msg">How would you like to collaborate?</label><textarea id="p-msg" name="message" required></textarea></div>
 {consent_field("p")}
 <div class="field full"><button class="btn red" type="submit">Become a TEAM3 Partner{ARROW}</button>{form_note()}</div>
 </form></div>
-</div></section>
-'''
-    return layout('careers.html', 'Careers & Partner Network', 'Careers at TEAM3 across creative, marketing, technology and AI — and the TEAM3 Partner Network.', body)
+</div></div></section>
+"""
+    return layout('partners.html', 'Partner Network', 'Join the TEAM3 Partner Network: creative, technology, AI, marketing, consulting, training, international and franchise partners.', body)
+
+
+def steps_mini(items):
+    return '<ol class="msteps">' + ''.join(f'<li><span>{n+1}</span>{E(t)}</li>' for n, t in enumerate(items)) + '</ol>'
 
 
 def page_insights():
@@ -1012,6 +1135,7 @@ PAGES = {
     'ai.html': page_ai, 'marketing.html': page_marketing, 'academy.html': page_academy, 'work.html': page_work,
     'industries.html': page_industries, 'careers.html': page_careers, 'insights.html': page_insights,
     'contact.html': page_contact, 'legal.html': page_legal, '404.html': page_404,
+    'gallery.html': page_gallery, 'clients.html': page_clients, 'partners.html': page_partners,
 }
 for _a in ARTICLES:
     PAGES[_a['slug'] + '.html'] = (lambda a=_a: page_article(a))

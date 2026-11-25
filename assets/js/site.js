@@ -73,17 +73,42 @@
     sub.forEach(function (a) { var t = d.querySelector(a.getAttribute('href')); t && so.observe(t); });
   }
 
-  /* ---------- Portfolio filter ---------- */
+  /* ---------- Portfolio / gallery filter ---------- */
   var fb = d.querySelectorAll('.filters button');
   fb.forEach(function (b) {
     b.addEventListener('click', function () {
-      var f = b.getAttribute('data-f');
+      var f = b.getAttribute('data-f'), sel = b.getAttribute('data-target') || '.work';
       fb.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
-      d.querySelectorAll('.work').forEach(function (w) {
+      d.querySelectorAll(sel).forEach(function (w) {
         w.classList.toggle('hide', f !== 'all' && (w.getAttribute('data-cat') || '').split(' ').indexOf(f) < 0);
       });
     });
   });
+
+  /* ---------- Lightbox ---------- */
+  var lb = d.getElementById('lb');
+  if (lb) {
+    var lbImg = lb.querySelector('img'), lbT = lb.querySelector('figcaption b'), lbC = lb.querySelector('figcaption span'), cur = 0, list = [], last = null;
+    var show = function (i) {
+      cur = (i + list.length) % list.length; var g = list[cur];
+      lbImg.src = g.getAttribute('data-full'); lbImg.alt = g.getAttribute('data-title').replace(/&amp;/g, '&');
+      lbT.innerHTML = g.getAttribute('data-title'); lbC.innerHTML = g.getAttribute('data-cap');
+    };
+    var openLb = function (btn) {
+      list = Array.prototype.filter.call(d.querySelectorAll('.gopen'), function (x) { return !x.closest('.hide'); });
+      last = btn; show(list.indexOf(btn)); lb.hidden = false; d.body.style.overflow = 'hidden'; lb.querySelector('.lb-x').focus();
+    };
+    var closeLb = function () { lb.hidden = true; d.body.style.overflow = ''; lbImg.removeAttribute('src'); last && last.focus(); };
+    d.querySelectorAll('.gopen').forEach(function (b) { b.addEventListener('click', function () { openLb(b); }); });
+    lb.querySelector('.lb-x').addEventListener('click', closeLb);
+    lb.querySelector('.lb-prev').addEventListener('click', function () { show(cur - 1); });
+    lb.querySelector('.lb-next').addEventListener('click', function () { show(cur + 1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+    d.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') closeLb(); else if (e.key === 'ArrowLeft') show(cur - 1); else if (e.key === 'ArrowRight') show(cur + 1);
+    });
+  }
 
   /* ---------- Toggle option groups ---------- */
   d.querySelectorAll('.opts').forEach(function (g) {
@@ -228,7 +253,7 @@
       it: { l: 'ERP, CRM or IT modernisation', svc: 'Technology', page: 'technology.html#enterprise', say: 'We build custom enterprise software (ERP, CRM, HRMS, inventory, workflow) and help with architecture, integration, cloud migration and cybersecurity.' },
       film: { l: 'Corporate film or video', svc: 'Media', page: 'branding.html#media', say: 'We produce corporate films, ad films, product videos, animation, motion graphics and AI-assisted video, from script and storyboard to final edit.' },
       learn: { l: 'AI training for my team', svc: 'Academy', page: 'academy.html', say: 'TEAM3 Academy offers AI Foundation, Prompt Engineering, Generative AI, AI Agent Development and more, delivered online, in the classroom or as corporate workshops.' },
-      partner: { l: 'Partner with TEAM3', svc: 'Partnership', page: 'careers.html#register', say: 'The TEAM3 Partner Network is open to creative, technology and AI partners, agencies, consultants, trainers and international representatives.' },
+      partner: { l: 'Partner with TEAM3', svc: 'Partnership', page: 'partners.html#register', say: 'The TEAM3 Partner Network is open to creative, technology and AI partners, agencies, consultants, trainers and international representatives.' },
       job: { l: 'Careers at TEAM3', svc: 'Careers', page: 'careers.html#apply', say: 'We welcome designers, developers, AI engineers, marketers and strategists, for full-time roles, internships and freelance projects.' }
     };
     var KW = [['job', /career|job|hiring|vacanc|intern|resume|cv\b|work for/i], ['partner', /partner|franchise|reseller|white.?label|collaborat/i],

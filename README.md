@@ -15,9 +15,12 @@ or deploy the repository root to any static host (GitHub Pages, Netlify, Vercel,
 | `ai.html` | AI consulting, BI, ecosystem, 14 AI agents, multi-agent orchestration, governance, service recommender |
 | `marketing.html` | SEO, SEM, social, performance, influencer and AI-powered marketing |
 | `academy.html` | TEAM3 Academy programmes and formats |
-| `work.html` | Filterable portfolio, product initiatives, historical clientele |
+| `work.html` | Filterable portfolio with heritage project images and group businesses |
+| `gallery.html` | Archive gallery (events, publications, print, films, campaigns) with lightbox |
+| `clients.html` | Collabiz & Unite Group businesses, NIRD, heritage clientele, film clients |
+| `partners.html` | Partner Network, benefits and partner registration (header “Partners” button) |
 | `industries.html` | 14 industries, business consulting, innovation as a service |
-| `careers.html` | Talent communities, careers profile form, partner network + registration |
+| `careers.html` | Talent communities and careers profile form |
 | `insights.html` + `insight-*.html` | Knowledge centre and four full articles |
 | `contact.html` | Enquiry form, appointment booking, project scope estimator, engagement models |
 | `legal.html` | Privacy, terms, cookies, responsible AI policies |
@@ -30,6 +33,8 @@ Edit content there, then run:
 ```bash
 python3 build/build.py
 ```
+
+Gallery images (from the TEAM3 company presentation): `assets/img/gallery/`; captions in the `GALLERY` list. Group clients: `GROUP` list.
 
 Styles: `assets/css/site.css` · Interactions: `assets/js/site.js` · Logo assets: `assets/img/`.
 
