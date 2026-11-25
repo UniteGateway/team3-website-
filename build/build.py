@@ -25,6 +25,7 @@ SITE = {
     'address': '2nd Floor, Ashoka Capitol, Road No. 2, Opp. KBR Park, Park View Enclave, Banjara Hills, Hyderabad, Telangana 500034, India',
     'email': 'info@team3solutions.in',
     'phone': '+91 90522 70203',
+    'phones': ['+91 90522 70203', '+91 96676 60773'],
     'whatsapp': '',         # digits only with country code, e.g. '919800000000'
     # Form backend: any endpoint that accepts a POST of form fields (Formspree, Getform,
     # Basin, a CRM webhook, or your own API). Leave empty to use the offline fallback
@@ -117,11 +118,11 @@ def org_schema():
          "areaServed": ["IN", "US", "GB", "CA", "Worldwide"],
          "knowsAbout": ["Branding", "Advertising", "Software development", "Mobile apps", "Artificial intelligence", "AI agents", "Digital marketing", "Film production"]}
     cp = {"@type": "ContactPoint", "contactType": "sales", "availableLanguage": ["English"], "areaServed": "Worldwide"}
-    if SITE['phone']:
-        d["telephone"] = SITE['phone'].replace(' ', ''); cp["telephone"] = d["telephone"]
+    if SITE['phones']:
+        d["telephone"] = SITE['phones'][0].replace(' ', ''); cp["telephone"] = d["telephone"]
     if SITE['email']:
         d["email"] = SITE['email']; cp["email"] = SITE['email']
-    d["contactPoint"] = cp
+    d["contactPoint"] = [cp] + [dict(cp, telephone=ph.replace(' ', '')) for ph in SITE['phones'][1:]]
     return json.dumps(d, ensure_ascii=False).replace('</', '<\\/')
 
 
@@ -145,8 +146,8 @@ def footer_contact():
     bits = [E(SITE['company']), E(SITE['address'])]
     if SITE['email']:
         bits.append(f'<a href="mailto:{E(SITE["email"])}" style="color:#fff">{E(SITE["email"])}</a>')
-    if SITE['phone']:
-        bits.append(E(SITE['phone']))
+    if SITE['phones']:
+        bits.append(' · '.join(f'<a href="tel:{E(ph.replace(" ", ""))}" style="color:#fff">{E(ph)}</a>' for ph in SITE['phones']))
     if 'vercel.app' not in SITE['url']:
         bits.append(f'<a href="{SITE["url"]}" style="color:#fff">{E(SITE["url"].split("//")[1])}</a>')
     return '<br>'.join(bits)
@@ -156,8 +157,8 @@ def contact_lines(dark=False):
     out = [f'<p class="muted">{E(SITE["address"])}</p>']
     if SITE['email']:
         out.append(f'<p><a class="link" href="mailto:{E(SITE["email"])}">{E(SITE["email"])}</a></p>')
-    if SITE['phone']:
-        out.append(f'<p><a class="link" href="tel:{E(SITE["phone"].replace(" ", ""))}">{E(SITE["phone"])}</a></p>')
+    for ph in SITE['phones']:
+        out.append(f'<p><a class="link" href="tel:{E(ph.replace(" ", ""))}">{E(ph)}</a></p>')
     if SITE['whatsapp']:
         out.append(f'<p><a class="link" href="https://wa.me/{E(SITE["whatsapp"])}" rel="noopener">WhatsApp us</a></p>')
     if 'vercel.app' not in SITE['url']:
