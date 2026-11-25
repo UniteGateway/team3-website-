@@ -27,6 +27,8 @@ SITE = {
     'phone': '+91 90522 70203',
     'phones': ['+91 90522 70203', '+91 96676 60773'],
     'whatsapp': '919667660773',
+    # Social profile URLs — icons without a URL show as 'coming soon' in the footer.
+    'social': {'linkedin': '', 'instagram': '', 'facebook': '', 'x': '', 'youtube': ''},
     # Form backend: any endpoint that accepts a POST of form fields (Formspree, Getform,
     # Basin, a CRM webhook, or your own API). Leave empty to use the offline fallback
     # (opens an email if 'email' is set, otherwise copies the enquiry to the clipboard).
@@ -207,14 +209,14 @@ HERO_PHOTOS = {'About Us': 'team_office', 'Branding': 'palette', 'Technology': '
                'Insights': 'open_office', 'Contact': 'office_glass', 'Consulting': 'boardroom'}
 
 
-def page_hero(crumb, eyebrow, title, lead, buttons='', photo=None):
+def page_hero(crumb, eyebrow, title, lead, buttons='', photo=None, parent=None):
     acts = f'<div class="actions">{buttons}</div>' if buttons else ''
     ph = photo or HERO_PHOTOS.get(crumb)
     art = (f'<img class="hero-photo" src="assets/img/photos/{ph}.webp" alt="" fetchpriority="high" decoding="async"><div class="hero-shade"></div>'
            if ph else '<img class="sym-bg" src="assets/img/symbol.webp" alt="" width="382" height="540">')
     return f'''<section class="hero page-hero{' has-photo' if ph else ''}"><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
 {art}
-<div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span>{E(crumb)}</span></nav>
+<div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span>{f'<a href="{parent[0]}">{E(parent[1])}</a><span>/</span>' if parent else ''}<span>{E(crumb)}</span></nav>
 <span class="eyebrow gold rv">{E(eyebrow)}</span><h1 class="rv d1">{title}</h1><p class="lead rv d2">{lead}</p>{acts}</div></section>'''
 
 
@@ -262,7 +264,7 @@ MENUS = [
         ('ai.html#recommend', 'Service recommender', 'Find the right AI solution', _ph('robot_reading')),
     ]),
     ('products.html', 'Products', 'Platforms built by TEAM3.', 'Ten platforms for collaboration, sales, trade, energy, marketing, procurement and community.', [
-        (f'products.html#{p[0]}', p[1], p[3], f'products/{p[0]}-t.webp') for p in PRODUCTS
+        (f'product-{p[0]}.html', p[1], p[3], f'products/{p[0]}-t.webp') for p in PRODUCTS
     ]),
     ('marketing.html', 'Marketing', 'Visibility. Engagement. Conversion. Growth.', 'Data, creativity and technology working together to win the right customers.', [
         ('marketing.html#seo', 'Search engine optimisation', 'Technical, local, content SEO', _ph('analytics_laptop')),
@@ -287,11 +289,11 @@ MENUS = [
         ('insights.html', 'Insights', 'Ideas worth exploring', _ph('open_office')),
     ]),
     ('consulting.html', 'Consulting', 'Strategy to execution. One partner.', 'Fifteen consulting practices — from business strategy and AI to campaigns and interior design.', [
-        ('consulting.html#business-strategy', 'Business strategy', 'Growth, markets, business models', _ph('workshop')),
-        ('consulting.html#digital-transformation', 'Digital transformation', 'Roadmaps, ERP, cloud, change', _ph('dashboard')),
-        ('consulting.html#ai-data', 'AI & data strategy', 'Use cases, governance, CoE', _ph('ai_letters')),
-        ('consulting.html#campaign-design', 'Campaign design', 'Big ideas, launches, media', _ph('event_stage')),
-        ('consulting.html#interior-design', 'Interior design', 'Offices, showrooms, homes', _ph('interior_office')),
+        ('consulting-business-strategy.html', 'Business strategy', 'Growth, markets, business models', _ph('workshop')),
+        ('consulting-digital-transformation.html', 'Digital transformation', 'Roadmaps, ERP, cloud, change', _ph('dashboard')),
+        ('consulting-ai-data.html', 'AI & data strategy', 'Use cases, governance, CoE', _ph('ai_letters')),
+        ('consulting-campaign-design.html', 'Campaign design', 'Big ideas, launches, media', _ph('event_stage')),
+        ('consulting-interior-design.html', 'Interior design', 'Offices, showrooms, homes', _ph('interior_office')),
         ('industries.html', 'Industries we serve', '14 sectors, one partner', _ph('engineer_factory')),
     ]),
     ('careers.html', 'Careers', 'Come imagine the future with us.', 'Designers, developers, AI engineers, strategists and entrepreneurs — build what’s next.', [
@@ -388,7 +390,8 @@ def layout(fname, title, desc, body, og_type='website'):
 <main id="main">
 {body}
 </main>
-{FOOTER.replace("__FOOTCONTACT__", footer_contact())}
+{logo_strip() if fname not in ('index.html', 'clients.html', '404.html') else ''}
+{footer()}
 {LIGHTBOX if ('class="gopen"' in body and 'id="lb"' not in body) else ''}
 {ASSISTANT}
 <script src="assets/js/site.js?v={asset_v('assets/js/site.js')}" defer></script>
@@ -492,8 +495,8 @@ def slugify(t):
 
 def ind_cards(items, ids=False):
     return '<div class="ind">' + ''.join(
-        f'<div class="it pit rv"{f" id=ind-{slugify(t)}" if ids else ""}><img src="assets/img/photos/{IND_PHOTOS[t]}-t.webp" alt="" width="480" height="300" loading="lazy">'
-        f'<span class="ic">{ic(i)}</span><b>{E(t)}</b><span>{E(s)}</span></div>' for i, t, s in items) + '</div>'
+        f'<a class="it pit rv" href="{industry_href(t)}"{f" id=ind-{slugify(t)}" if ids else ""}><img src="assets/img/photos/{IND_PHOTOS[t]}-t.webp" alt="" width="480" height="300" loading="lazy">'
+        f'<span class="ic">{ic(i)}</span><b>{E(t)}</b><span>{E(s)}</span></a>' for i, t, s in items) + '</div>'
 
 
 def insight_cards(exclude=None):
@@ -678,14 +681,14 @@ def page_index():
 <section class="section bg-black"><div class="wrap">
 <div class="head split"><div class="rv"><span class="eyebrow gold">AI agents &amp; automation</span><h2 style="margin-top:16px">Build your intelligent <span class="grad">digital workforce.</span></h2></div>
 <p class="lead rv d1">Agents that research, analyse, communicate, coordinate and execute approved business tasks around the clock — with human approval for anything sensitive.</p></div>
-<div class="agents">{"".join(f'<div class="agent rv"><span class="av">{E(a[0])}{E(a.split()[1][0]) if len(a.split())>1 else ""}</span><div><b>{E(a)}<span class="live" aria-hidden="true"></span></b><span>{E(b)}</span></div></div>' for a, b in AGENTS[:8])}</div>
+<div class="agents">{"".join(f'<a class="agent rv" href="{agent_href(a)}"><span class="av">{E(a[0])}{E(a.split()[1][0]) if len(a.split())>1 else ""}</span><div><b>{E(a)}<span class="live" aria-hidden="true"></span></b><span>{E(b)}</span></div></a>' for a, b in AGENTS[:8])}</div>
 <div class="actions">{btn("Build Your AI Workforce", "ai.html#agents", "red")}{btn("See all 14 agents", "ai.html#agents", "ghost", False)}</div>
 </div></section>
 
 <section class="section bg-grey"><div class="wrap">
 <div class="head split"><div class="rv"><span class="eyebrow">Our products</span><h2 style="margin-top:16px">Platforms built by TEAM3.</h2></div>
 <div class="rv d1"><p class="lead">Ten platforms for collaboration, sales intelligence, trade, energy, marketing, procurement and community.</p><div style="margin-top:22px">{link("Explore all products", "products.html")}</div></div></div>
-<div class="pindex">{"".join(f'<a class="pidx" href="products.html#{p[0]}"><span class="pic">{ic(p[4])}</span><b>{E(p[1])}</b><span>{E(p[2])}</span></a>' for p in PRODUCTS)}</div>
+<div class="pindex">{"".join(f'<a class="pidx" href="{product_href(p[0])}"><span class="pic">{ic(p[4])}</span><b>{E(p[1])}</b><span>{E(p[2])}</span></a>' for p in PRODUCTS)}</div>
 </div></section>
 
 <section class="section"><div class="wrap">
@@ -940,7 +943,7 @@ def page_ai():
 
 <section class="section bg-black" id="agents"><div class="wrap">
 {head("AI agents & business automation", "Build your intelligent <span class='grad'>digital workforce.</span>", "Imagine a workforce that can research, analyse, communicate, coordinate and execute approved business tasks around the clock. TEAM3 designs AI agents that integrate with business applications and assist teams in managing complex workflows.", gold=True)}
-<div class="agents">{"".join(f'<div class="agent rv"><span class="av">{E(a[0])}{E(a.split()[1][0]) if len(a.split())>1 else ""}</span><div><b>{E(a)}</b><span>{E(b)}</span></div></div>' for a, b in AGENTS)}</div>
+<div class="agents">{"".join(f'<a class="agent rv" href="{agent_href(a)}"><img class="ag-ph" src="assets/img/photos/{AGENT_DETAIL[a][0]}-t.webp" alt="" loading="lazy"><span class="av">{E(a[0])}{E(a.split()[1][0]) if len(a.split())>1 else ""}</span><div><b>{E(a)}</b><span>{E(b)}</span></div></a>' for a, b in AGENTS)}</div>
 </div></section>
 
 <section class="section bg-black" style="padding-top:0"><div class="wrap">
@@ -1004,7 +1007,7 @@ def page_academy():
 {page_hero("Academy", "TEAM3 Academy — AI Learning", "Learn today. <span class='grad'>Lead tomorrow.</span>", "TEAM3 Academy is envisioned as a practical learning platform for students, entrepreneurs, working professionals and organisations seeking to develop skills for the AI-powered economy.", btn("Explore Learning Programmes", "#programmes", "red") + btn("Become a Training Partner", "contact.html?service=Academy", "ghost", False))}
 <section class="section" id="programmes"><div class="wrap">
 {head("Proposed learning programmes", "Twelve programmes for the AI-powered economy.")}
-<div class="grid g3">{"".join(f'<div class="card rv d{n%3}"><span class="num">{n+1:02d}</span><h3 style="margin-top:34px">{E(t)}</h3><p>{E(p)}</p></div>' for n, (t, p) in enumerate(progs))}</div>
+<div class="grid g3">{"".join(f'<a class="card svc pcard rv d{n%3}" href="{programme_href(t)}"><span class="sv-img"><img src="assets/img/photos/{PROGRAMME_DETAIL[t][0]}-t.webp" alt="" width="480" height="300" loading="lazy"></span><span class="num">{n+1:02d}</span><span class="sv-body"><span class="ic">{ic("cap")}</span><h3>{E(t)}</h3><p>{E(p)}</p><span class="link">View programme{ARROW}</span></span></a>' for n, (t, p) in enumerate(progs))}</div>
 </div></section>
 <section class="section bg-grey" id="formats"><div class="wrap">
 {head("Learning formats", "Learn the way that works for you.")}
@@ -1150,7 +1153,7 @@ def product_visual(pr, n):
 
 
 def page_products():
-    idx = ''.join(f'<a class="pidx" href="#{p[0]}"><img src="assets/img/products/{p[0]}-t.webp" alt="" width="480" height="288" loading="lazy"><b>{E(p[1])}</b><span>{E(p[3])}</span></a>' for p in PRODUCTS)
+    idx = ''.join(f'<a class="pidx" href="{product_href(p[0])}"><img src="assets/img/products/{p[0]}-t.webp" alt="" width="480" height="288" loading="lazy"><b>{E(p[1])}</b><span>{E(p[3])}</span></a>' for p in PRODUCTS)
     blocks = ''
     for n, pr in enumerate(PRODUCTS):
         slug, name, tag, cat, icon, desc, feats, aud = pr
@@ -1160,7 +1163,7 @@ def page_products():
 <div class="pbody"><span class="eyebrow">{E(cat)}</span><h2>{E(name)}</h2><p class="ptag">{E(tag)}</p><p class="lead">{E(desc)}</p>
 <div style="margin-top:26px">{checks(feats, True)}</div>
 <p class="pfor"><b>Built for</b> {E(aud)}</p>
-<div class="actions" style="margin-top:28px">{btn("Request a demo", demo, "red")}{btn("Partner with " + name, "partners.html#register", "ghost", False)}</div></div>
+<div class="actions" style="margin-top:28px">{btn("Request a demo", demo, "red")}{btn("View product details", product_href(slug), "ghost", False)}</div></div>
 </article>"""
     body = f"""
 {page_hero("Products", "Our Products", "Platforms built by TEAM3. <span class='grad'>Ready to scale.</span>", "Ten digital platforms for collaboration, sales intelligence, trade, energy, marketing, procurement and community — designed, engineered and powered with AI by TEAM3 for the Collabiz and Unite Group businesses.", btn("Explore the products", "#products", "light") + btn("Request a demo", "contact.html?service=Apps&msg=" + quote("Product demo request") + "#enquiry", "ghost", False))}
@@ -1180,7 +1183,7 @@ def page_products():
 
 
 def page_clients():
-    group = ''.join(f'<div class="gclient rv d{n%4}"><span class="mono">{E(nm[:1])}</span><b>{E(nm)}</b><span class="d">{E(ds)}</span><span class="tag">Group client</span></div>' for n, (nm, ds, _) in enumerate(GROUP))
+    group = ''.join(f'<a class="gclient rv d{n%4}" href="{product_href(next(p[0] for p in PRODUCTS if p[1] == nm))}"><span class="mono">{E(nm[:1])}</span><b>{E(nm)}</b><span class="d">{E(ds)}</span><span class="tag">Group client</span></a>' for n, (nm, ds, _) in enumerate(GROUP))
     heritage = ''.join(f'<div class="row rv"><b>{E(n)}</b><span>{E(m)}</span><i>{i+1:02d}</i></div>' for i, (n, m) in enumerate(CLIENTS))
     films = ''.join(gallery_tile(g, n) for n, g in enumerate(x for x in GALLERY if x[1] == 'films'))
     body = f"""
@@ -1268,7 +1271,7 @@ def steps_mini(items):
 def page_consulting():
     feat_slugs = ['business-strategy', 'campaign-design', 'interior-design']
     by = {c[0]: c for c in CONSULTING}
-    idx = ''.join(f'<a class="pidx" href="#{c[0]}"><img src="assets/img/photos/{c[4]}-t.webp" alt="" width="480" height="300" loading="lazy"><b>{E(c[2])}</b><span>{E(c[1])}</span></a>' for c in CONSULTING)
+    idx = ''.join(f'<a class="pidx" href="{consulting_href(c[0])}"><img src="assets/img/photos/{c[4]}-t.webp" alt="" width="480" height="300" loading="lazy"><b>{E(c[2])}</b><span>{E(c[1])}</span></a>' for c in CONSULTING)
     feats = ''
     for n, sl in enumerate(feat_slugs):
         slug, grp, title, icon, photo, intro, offers = by[sl]
@@ -1277,7 +1280,7 @@ def page_consulting():
 <figure class="cphoto"><img src="assets/img/photos/{photo}.webp" alt="" loading="lazy"><figcaption><span class="ic">{ic(icon)}</span>{E(grp)}</figcaption></figure>
 <div class="pbody"><span class="eyebrow">Featured practice</span><h2>{E(title)}</h2><p class="lead">{E(intro)}</p>
 <div style="margin-top:26px">{checks(offers, True)}</div>
-<div class="actions" style="margin-top:28px">{btn("Talk to a consultant", f"contact.html?service={svc}#enquiry", "red")}{btn("Book a discovery call", "contact.html#meeting", "ghost", False)}</div></div>
+<div class="actions" style="margin-top:28px">{btn("Talk to a consultant", f"contact.html?service={svc}#enquiry", "red")}{btn("Explore practice", consulting_href(slug), "ghost", False)}</div></div>
 </article>"""
     if True:
         # extra imagery for interior design
@@ -1289,8 +1292,8 @@ def page_consulting():
         items = [c for c in CONSULTING if c[1] == g and c[0] not in feat_slugs]
         if not items:
             continue
-        cards = ''.join(f"""<article class="ccard rv d{i % 3}" id="{slug}"><div class="cc-img"><img src="assets/img/photos/{photo}-t.webp" alt="" width="480" height="300" loading="lazy"><span class="ic">{ic(icon)}</span></div>
-<div class="cc-body"><h3>{E(title)}</h3><p>{E(intro)}</p><ul class="bullets">{''.join(f'<li>{E(o)}</li>' for o in offers)}</ul></div></article>"""
+        cards = ''.join(f"""<a class="ccard rv d{i % 3}" id="{slug}" href="{consulting_href(slug)}"><div class="cc-img"><img src="assets/img/photos/{photo}-t.webp" alt="" width="480" height="300" loading="lazy"><span class="ic">{ic(icon)}</span></div>
+<div class="cc-body"><h3>{E(title)}</h3><p>{E(intro)}</p><ul class="bullets">{''.join(f'<li>{E(o)}</li>' for o in offers)}</ul><span class="link">Explore practice{ARROW}</span></div></a>"""
                         for i, (slug, grp, title, icon, photo, intro, offers) in enumerate(items))
         cols = {4: 'g4', 2: 'g2', 1: 'g2'}.get(len(items), 'g3')
         groups += f'<div class="cgroup"><h2 class="cg-t rv">{E(g)}</h2><div class="grid {cols}">{cards}</div></div>'
@@ -1324,6 +1327,245 @@ def page_consulting():
 {cta_band("Let’s solve your next big challenge.", "Tell us what you’re facing — growth, transformation, a campaign or a new space — and we’ll propose the right team.", btn("Talk to a consultant", "contact.html?service=Consulting#enquiry", "red") + btn("Book a discovery call", "contact.html#meeting", "ghost", False))}
 """
     return layout('consulting.html', 'Consulting', 'TEAM3 Consulting: business strategy, digital transformation, AI and data, campaign design, interior design, brand and CX, operations, people, ESG and international expansion.', body)
+
+
+# --------------------------------------------------------------------------- inner (detail) pages
+from details import INDUSTRY_DETAIL, PROGRAMME_DETAIL, AGENT_DETAIL  # noqa: E402
+
+PROGRAMMES = [('AI Foundation', 'AI concepts and productivity tools'), ('Prompt Engineering', 'Effective communication with AI models'), ('Generative AI', 'Text, image, video and content generation'),
+              ('AI Agent Development', 'Building intelligent autonomous workflows'), ('No-Code AI', 'Applications without extensive coding'), ('AI for Business', 'Business planning and automation'),
+              ('AI for Marketing', 'Campaigns, content and analytics'), ('Full-Stack Development', 'Frontend, backend and databases'), ('Mobile App Development', 'Cross-platform application engineering'),
+              ('UI/UX Design', 'Product design and user experience'), ('Digital Marketing', 'Practical digital growth strategies'), ('Entrepreneurship', 'Idea validation and business development')]
+
+
+def product_href(slug): return f'product-{slug}.html'
+def consulting_href(slug): return f'consulting-{slug}.html'
+def industry_href(name): return f'industry-{slugify(name)}.html'
+def programme_href(name): return f'programme-{slugify(name)}.html'
+def agent_href(name): return f'agent-{slugify(name)}.html'
+
+
+def rel_cards(items, title='Explore more', dark=False):
+    """items: (href, img path under assets/img, kicker, title, sub)"""
+    cards = ''.join(f'<a class="relc rv d{i % 4}" href="{h}"><span class="th"><img src="assets/img/{img}" alt="" width="480" height="300" loading="lazy"></span>'
+                    f'<small>{E(k)}</small><b>{E(t)}</b><span>{E(s)}</span></a>' for i, (h, img, k, t, s) in enumerate(items))
+    return f'<section class="section{" bg-black" if dark else " bg-grey"}"><div class="wrap"><div class="head rv"><span class="eyebrow{" gold" if dark else ""}">{E(title)}</span></div><div class="relgrid{ {5: " c5", 6: " c3", 3: " c3"}.get(len(items), "")}">{cards}</div></div></section>'
+
+
+def prod_cards(slugs):
+    by = {p[0]: p for p in PRODUCTS}
+    return [(product_href(s), f'products/{s}-t.webp', 'Product', by[s][1], by[s][2]) for s in slugs if s in by]
+
+
+def cons_cards(slugs):
+    by = {c[0]: c for c in CONSULTING}
+    return [(consulting_href(s), f'photos/{by[s][4]}-t.webp', 'Consulting', by[s][2], by[s][1]) for s in slugs if s in by]
+
+
+def ind_cards_rel(names):
+    d = {t: s for _, t, s in INDUSTRIES}
+    return [(industry_href(n), f'photos/{INDUSTRY_DETAIL[n][0]}-t.webp', 'Industry', n, d[n]) for n in names]
+
+
+def page_product(pr):
+    slug, name, tag, cat, icon, desc, feats, aud = pr
+    demo = f'contact.html?service=Apps&msg={quote("Demo request: " + name)}#enquiry'
+    others = [p[0] for p in PRODUCTS if p[0] != slug]
+    i = [p[0] for p in PRODUCTS].index(slug)
+    rel = others[i % len(others):] + others[:i % len(others)]
+    body = f"""
+{page_hero(name, cat, E(name) + ". <span class='grad'>" + E(tag) + ".</span>", E(desc), btn("Request a demo", demo, "red") + btn("All products", "products.html", "ghost", False), photo='laptop_dark', parent=('products.html', 'Products'))}
+<section class="section"><div class="wrap">
+<figure class="pshot big rv"><div class="bchrome" aria-hidden="true"><i></i><i></i><i></i><span>{E(name.lower().replace(" ", ""))}.app</span></div>
+<img src="assets/img/products/{slug}.webp" alt="{E(name)} — illustrative interface" width="1440" height="860"><figcaption>Illustrative interface</figcaption></figure>
+</div></section>
+<section class="section bg-grey"><div class="wrap">
+{head("Key features", "What " + E(name) + " does.")}
+<div class="grid g4">{"".join(f'<div class="card rv d{n}"><span class="num">{n + 1:02d}</span><h3 style="margin-top:26px;font-size:20px">{E(f)}</h3></div>' for n, f in enumerate(feats))}</div>
+</div></section>
+<section class="section"><div class="wrap"><div class="cap" style="border:0;padding:0">
+<div class="rv"><span class="eyebrow">Built for</span><h2 style="margin-top:16px">{E(aud)}.</h2></div>
+<div class="rv d1"><p class="lead">{E(name)} is designed, engineered and continuously improved by TEAM3 — with AI-assisted insights, a mobile-first interface and secure cloud infrastructure.</p>
+<div style="margin-top:24px">{chips(["AI-assisted insights", "Web & mobile", "Secure cloud", "Role-based access", "Analytics dashboards", "API integrations"])}</div>
+<div class="actions">{btn("Request a demo", demo, "red")}{btn("Partner with " + name, "partners.html#register", "ghost", False)}</div></div>
+</div></div></section>
+{rel_cards(prod_cards(rel[:4]), "More TEAM3 products")}
+{cta_band("See " + E(name) + " in action.", "Book a walkthrough with our product team, or talk to us about white-label and partnership options.", btn("Request a demo", demo, "red") + btn("Book a discovery call", "contact.html#meeting", "ghost", False))}
+"""
+    return layout(product_href(slug), name, f'{name} by TEAM3 Solutions — {tag}. {desc}', body)
+
+
+CONS_SVC = {'business-strategy': 'Strategy', 'campaign-design': 'Campaigns', 'interior-design': 'Interior'}
+
+
+def page_consult(c):
+    slug, grp, title, icon, photo, intro, offers = c
+    svc = CONS_SVC.get(slug, 'Consulting')
+    same = [x[0] for x in CONSULTING if x[1] == grp and x[0] != slug]
+    other = [x[0] for x in CONSULTING if x[1] != grp]
+    rel = (same + other)[:4]
+    approach = [('Discover', 'Listen and gather the facts.'), ('Diagnose', 'Find the real constraints and opportunities.'), ('Design', 'Shape the solution, with options.'), ('Deliver', 'Build and launch with your team.'), ('Sustain', 'Measure, train and improve.')]
+    inds = [n for n, d in INDUSTRY_DETAIL.items() if slug in d[5]][:4] or list(INDUSTRY_DETAIL)[:4]
+    gal = ''
+    if slug == 'interior-design':
+        gal = '<div class="mini-gal wide rv">' + ''.join(f'<img src="assets/img/photos/{k}.webp" alt="" loading="lazy">' for k in ['interior_lounge', 'interior_living', 'boardroom', 'interior_home', 'open_plan', 'office_glass']) + '</div>'
+    body = f"""
+{page_hero(title, grp, E(title) + '.', E(intro), btn("Talk to a consultant", f"contact.html?service={svc}&msg={quote('Consulting enquiry: ' + title)}#enquiry", "red") + btn("All consulting", "consulting.html", "ghost", False), photo=photo, parent=('consulting.html', 'Consulting'))}
+<section class="section"><div class="wrap">
+{head("What we offer", "How TEAM3 helps.", "Every engagement is shaped around your goals — and we can design, build and launch what we recommend.")}
+<div class="grid g3">{"".join(f'<div class="card rv d{n % 3}"><span class="ic">{ic(icon)}</span><span class="num" style="position:absolute;top:32px;right:32px">{n + 1:02d}</span><h3 style="font-size:20px">{E(o)}</h3></div>' for n, o in enumerate(offers))}</div>
+{gal}
+</div></section>
+<section class="section bg-grey"><div class="wrap">
+{head("Our approach", "From first conversation to lasting results.")}
+<ol class="roadmap light five">{"".join(f'<li class="rv d{i % 4}"><span class="rm-n">{i + 1:02d}</span><b>{E(t)}</b><p>{E(d)}</p></li>' for i, (t, d) in enumerate(approach))}</ol>
+</div></section>
+{rel_cards(ind_cards_rel(inds), "Industries where this matters", dark=True)}
+{rel_cards(cons_cards(rel), "Related consulting practices")}
+{cta_band("Let’s talk about " + E(title.lower()) + ".", "Tell us about your goals and we’ll propose the right team and engagement model.", btn("Talk to a consultant", f"contact.html?service={svc}#enquiry", "red") + btn("Book a discovery call", "contact.html#meeting", "ghost", False))}
+"""
+    return layout(consulting_href(slug), title + ' Consulting', f'TEAM3 Consulting — {title}: {intro}', body)
+
+
+def page_industry(name):
+    photo, intro, challenges, solutions, prods, cons = INDUSTRY_DETAIL[name]
+    icon = next(i for i, t, _ in INDUSTRIES if t == name)
+    others = [t for _, t, _ in INDUSTRIES if t != name]
+    k = [t for _, t, _ in INDUSTRIES].index(name)
+    rel = (others[k:] + others[:k])[:4]
+    body = f"""
+{page_hero(name, "Industries", E(name) + '.', E(intro), btn("Discuss your project", f"contact.html?msg={quote('Industry enquiry: ' + name)}#enquiry", "red") + btn("All industries", "industries.html", "ghost", False), photo=photo, parent=('industries.html', 'Industries'))}
+<section class="section bg-black"><div class="wrap">
+{head("The challenge", "What " + E(name.lower()) + " businesses face.", gold=True)}
+<div class="grid g4">{"".join(f'<div class="card rv d{n}"><span class="num">{n + 1:02d}</span><h3 style="margin-top:26px;font-size:20px">{E(c)}</h3></div>' for n, c in enumerate(challenges))}</div>
+</div></section>
+<section class="section"><div class="wrap"><div class="cap" style="border:0;padding:0">
+<div class="rv"><span class="eyebrow">TEAM3 solutions</span><h2 style="margin-top:16px">Brand, technology and intelligence for {E(name.lower())}.</h2><span class="ic big-ic">{ic(icon)}</span></div>
+<div class="rv d1">{checks(solutions)}</div>
+</div></div></section>
+{rel_cards(prod_cards(prods) + cons_cards(cons), "Relevant products & consulting")}
+{rel_cards(ind_cards_rel(rel), "Other industries", dark=True)}
+{cta_band("Solutions shaped for " + E(name.lower()) + ".", "Tell us about your organisation and the challenge you’re solving.", btn("Let’s Build Something", "contact.html", "red"))}
+"""
+    return layout(industry_href(name), name + ' — Industry', f'TEAM3 Solutions for {name}: {intro}', body)
+
+
+def page_programme(name):
+    photo, audience, modules, outcome = PROGRAMME_DETAIL[name]
+    short = dict(PROGRAMMES)[name]
+    names = [p for p, _ in PROGRAMMES]
+    k = names.index(name); rel = (names[k + 1:] + names[:k])[:4]
+    enq = f"contact.html?service=Academy&msg={quote('Programme enquiry: ' + name)}#enquiry"
+    body = f"""
+{page_hero(name, "TEAM3 Academy", E(name) + '.', E(short) + '. ' + E(outcome), btn("Enquire about this programme", enq, "red") + btn("All programmes", "academy.html#programmes", "ghost", False), photo=photo, parent=('academy.html', 'Academy'))}
+<section class="section"><div class="wrap"><div class="cap" style="border:0;padding:0">
+<div class="rv"><span class="eyebrow">Who it’s for</span><h2 style="margin-top:16px">{E(audience)}</h2>
+<div class="outcome rv"><small>Outcome</small><b>{E(outcome)}</b></div></div>
+<div class="rv d1"><h3 style="margin-bottom:20px">What you’ll learn</h3><ol class="modules">{"".join(f'<li><span>{n + 1:02d}</span>{E(m)}</li>' for n, m in enumerate(modules))}</ol></div>
+</div></div></section>
+<section class="section bg-grey"><div class="wrap">
+{head("Learning formats", "Learn the way that works for you.", "Format, schedule and fees are shared on enquiry and can be customised for teams and institutions.")}
+<div class="rv">{chips(["Online learning", "Classroom training", "Corporate workshops", "College programmes", "Live projects", "Skill assessments"])}</div>
+</div></section>
+{rel_cards([(programme_href(n), f'photos/{PROGRAMME_DETAIL[n][0]}-t.webp', 'Programme', n, dict(PROGRAMMES)[n]) for n in rel], "More programmes")}
+{cta_band("Start learning " + E(name) + ".", "Individuals, teams and institutions — tell us what you need and we’ll share the next batch details.", btn("Enquire now", enq, "red") + btn("Become a training partner", "partners.html#register", "ghost", False))}
+"""
+    return layout(programme_href(name), name + ' — TEAM3 Academy', f'TEAM3 Academy programme: {name}. {outcome}', body)
+
+
+def page_agent(name):
+    photo, tasks, connects, example = AGENT_DETAIL[name]
+    short = dict(AGENTS)[name]
+    names = [a for a, _ in AGENTS]
+    k = names.index(name); rel = (names[k + 1:] + names[:k])[:4]
+    enq = f"contact.html?service=AI&msg={quote('AI agent enquiry: ' + name)}#enquiry"
+    body = f"""
+{page_hero(name, "AI Agents", E(name) + '.', E(short) + '. ' + E(example), btn("Build this agent", enq, "red") + btn("All AI agents", "ai.html#agents", "ghost", False), photo=photo, parent=('ai.html', 'Artificial Intelligence'))}
+<section class="section"><div class="wrap"><div class="cap" style="border:0;padding:0">
+<div class="rv"><span class="eyebrow">What it does</span><h2 style="margin-top:16px">Your {E(name.lower())}, working around the clock.</h2>
+<div class="outcome rv"><small>Example</small><b>{E(example)}</b></div></div>
+<div class="rv d1">{checks(tasks)}<h3 style="margin:34px 0 14px">Connects to</h3>{chips(connects)}</div>
+</div></div></section>
+<section class="section bg-black"><div class="wrap">
+{head("Governance built in", "Automation with accountability.", "Every TEAM3 agent follows our Responsible AI principles.", gold=True)}
+<div class="grid g4">{"".join(f'<div class="card rv d{n}"><span class="ic">{ic(i)}</span><h3 style="font-size:19px">{E(t)}</h3></div>' for n, (i, t) in enumerate([("users", "Human approval for sensitive actions"), ("shield", "Role-based permissions"), ("layers", "Full audit trail"), ("chart", "Performance monitoring")]))}</div>
+<div class="actions">{btn("How multi-agent orchestration works", "ai.html#orchestration", "light")}</div>
+</div></section>
+{rel_cards([(agent_href(n), f'photos/{AGENT_DETAIL[n][0]}-t.webp', 'AI agent', n, dict(AGENTS)[n]) for n in rel], "More AI agents")}
+{cta_band("Put a " + E(name.lower()) + " to work.", "We’ll scope a pilot on one real workflow, with clear success measures.", btn("Build this agent", enq, "red") + btn("AI readiness assessment", "consulting-ai-data.html", "ghost", False))}
+"""
+    return layout(agent_href(name), name + ' — AI Agent', f'TEAM3 {name}: {short}. {example}', body)
+
+
+# --------------------------------------------------------------------------- client logo strip + big footer
+LOGO_STYLE = ['ls1', 'ls2', 'ls3', 'ls4', 'ls5', 'ls6']
+
+
+def logo_strip():
+    names = [g[0] for g in GROUP] + [n for n, _ in CLIENTS] + [f[0] for f in FILM_CLIENTS]
+    items = ''.join(f'<span class="lg {LOGO_STYLE[i % len(LOGO_STYLE)]}">{E(n)}</span>' for i, n in enumerate(names))
+    dup = items.replace('<span class="lg', '<span aria-hidden="true" class="lg')
+    return (f'<section class="logobar" aria-label="Our clients"><div class="wrap lb-head"><span class="eyebrow">Trusted by 300+ clients</span>{link("Our clients", "clients.html")}</div>'
+            f'<div class="marquee"><div class="marquee-track lbt">{items}{dup}</div></div></section>')
+
+
+SOCIAL_ICONS = {
+    'linkedin': '<path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.2 8h4.6v15H.2zM8 8h4.4v2.1h.06c.61-1.16 2.11-2.38 4.34-2.38 4.64 0 5.5 3.05 5.5 7.02V23h-4.6v-7.1c0-1.7-.03-3.88-2.36-3.88-2.37 0-2.73 1.85-2.73 3.76V23H8z" transform="translate(2.5 0) scale(.85)"/>',
+    'x': '<path d="M17.5 3h3.1l-6.8 7.8 8 10.2h-6.3l-4.9-6.4L4.9 21H1.8l7.3-8.3L1.4 3h6.4l4.4 5.8zm-1.1 16.2h1.7L6.8 4.7H5z"/>',
+    'instagram': '<path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3c1.2-.1 1.6-.1 4.8-.1zM12 7a5 5 0 100 10 5 5 0 000-10zm0 8.2a3.2 3.2 0 110-6.4 3.2 3.2 0 010 6.4zm5.2-9.6a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z"/>',
+    'facebook': '<path d="M14 8.5V6.6c0-.9.6-1.1 1-1.1h2.6V1.6L14 1.6c-4 0-4.9 3-4.9 4.9v2H6.8v4h2.3V23H14V12.5h3.3l.4-4z"/>',
+    'youtube': '<path d="M23 7.2a3 3 0 00-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 001 7.2 31 31 0 00.5 12a31 31 0 00.5 4.8 3 3 0 002.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 002.1-2.1 31 31 0 00.5-4.8 31 31 0 00-.5-4.8zM9.8 15V9l5.8 3z"/>',
+    'whatsapp': '<path d="M12 1.5A10.4 10.4 0 003 17.2L1.5 22.5l5.4-1.4A10.5 10.5 0 1012 1.5zm0 19a8.6 8.6 0 01-4.4-1.2l-.3-.2-3.2.8.9-3.1-.2-.3A8.6 8.6 0 1112 20.5zm4.7-6.4c-.3-.1-1.5-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7 7 0 01-3.5-3c-.3-.5.3-.4.8-1.3.1-.2 0-.3 0-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.7 11.8 11.8 0 004.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 001.8-1.3 2.2 2.2 0 00.2-1.3c-.1-.1-.3-.2-.6-.3z"/>',
+    'email': '<path d="M2 5h20v14H2z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2 6l10 7 10-7" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+}
+SOCIAL_NAMES = {'linkedin': 'LinkedIn', 'x': 'X (Twitter)', 'instagram': 'Instagram', 'facebook': 'Facebook', 'youtube': 'YouTube', 'whatsapp': 'WhatsApp', 'email': 'Email'}
+
+
+def social_links():
+    urls = dict(SITE.get('social', {}))
+    if SITE['whatsapp']:
+        urls['whatsapp'] = f'https://wa.me/{SITE["whatsapp"]}'
+    if SITE['email']:
+        urls['email'] = f'mailto:{SITE["email"]}'
+    out = ''
+    for k in ['linkedin', 'instagram', 'facebook', 'x', 'youtube', 'whatsapp', 'email']:
+        svg = f'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">{SOCIAL_ICONS[k]}</svg>'
+        if urls.get(k):
+            out += f'<a class="soc" href="{E(urls[k])}" rel="noopener" aria-label="{SOCIAL_NAMES[k]}">{svg}</a>'
+        else:
+            out += f'<span class="soc soon" title="{SOCIAL_NAMES[k]} — coming soon" role="img" aria-label="{SOCIAL_NAMES[k]} (coming soon)">{svg}</span>'
+    return f'<div class="socials">{out}</div>'
+
+
+def footer():
+    col = lambda t, links: f'<div class="f-col"><h2 class="h5">{E(t)}</h2>' + ''.join(f'<a href="{h}">{E(l)}</a>' for h, l in links) + '</div>'
+    cols = ''.join([
+        col('Company', [('about.html', 'About Us'), ('about.html#journey', 'Our Journey'), ('clients.html', 'Clients'), ('gallery.html', 'Gallery'), ('careers.html', 'Careers'), ('partners.html', 'Partners'), ('contact.html', 'Contact')]),
+        col('Services', [('branding.html', 'Branding'), ('branding.html#advertising', 'Advertising'), ('technology.html', 'Technology'), ('technology.html#apps', 'Mobile Apps'), ('ai.html', 'Artificial Intelligence'), ('marketing.html', 'Digital Marketing'), ('branding.html#media', 'Media & Film')]),
+        col('Consulting', [(consulting_href(c[0]), c[2]) for c in CONSULTING[:7]]),
+        col('Products', [(product_href(p[0]), p[1]) for p in PRODUCTS[:7]]),
+        col('Industries', [(industry_href(t), t) for _, t, _ in INDUSTRIES[:7]]),
+        col('Explore', [('academy.html', 'AI Academy'), ('ai.html#agents', 'AI Agents'), ('insights.html', 'Insights'), ('work.html', 'Our Work'), ('legal.html#privacy', 'Privacy Policy'), ('legal.html#terms', 'Terms of Use'), ('legal.html#responsible-ai', 'Responsible AI')]),
+    ])
+    phones = ' · '.join(f'<a href="tel:{E(ph.replace(" ", ""))}">{E(ph)}</a>' for ph in SITE['phones'])
+    return f'''<footer class="site-footer big"><div class="wrap">
+<div class="f-hero">
+<div class="f-brand"><img class="f-logo" src="assets/img/wordmark-light-sm.webp" alt="TEAM3" width="420" height="61" loading="lazy">
+<p class="claim">Branding. Technology.<br><span class="gold-t">Intelligence.</span></p>
+<p>An integrated creative, technology and consulting company. Established in 2004. Step beyond imagination.</p>
+{social_links()}</div>
+<div class="f-news"><h2 class="h5">Stay ahead</h2><p>Insights on branding, AI and technology — straight to your inbox.</p>
+<form class="news-form" data-form="Newsletter Subscription" novalidate>{HONEYPOT}<label class="sr-only" for="nl-email">Email address</label><input id="nl-email" name="email" type="email" placeholder="Your email address" autocomplete="email" required><button class="btn red" type="submit">Subscribe</button>
+<label class="consent"><input type="checkbox" name="consent" value="yes" required><span>I agree to receive emails from TEAM3. See our <a href="legal.html#privacy">Privacy Policy</a>.</span></label></form></div>
+<div class="f-contact"><h2 class="h5">Contact</h2><p>{E(SITE["company"])}<br>{E(SITE["address"])}</p>
+<p><a href="mailto:{E(SITE["email"])}">{E(SITE["email"])}</a><br>{phones}</p>
+<a class="btn sm wa" href="https://wa.me/{E(SITE["whatsapp"])}" rel="noopener">WhatsApp us</a></div>
+</div>
+<div class="f-cols">{cols}</div>
+<div class="f-offices"><span><b>Hyderabad</b> Headquarters</span><span><b>United States</b> Global presence</span><span><b>United Kingdom</b> Global presence</span><span><b>Canada</b> Clients since 2004</span></div>
+<div class="f-bot"><span>© <span id="yr">2026</span> {E(SITE["company"])}. All rights reserved.</span><span class="f-legal"><a href="legal.html#privacy">Privacy</a><a href="legal.html#terms">Terms</a><a href="legal.html#cookies">Cookies</a><a href="sitemap.xml">Sitemap</a></span><span class="tag">Step beyond imagination. · Established 2004</span></div>
+<div class="f-big" aria-hidden="true"></div>
+</div></footer>'''
 
 
 def page_insights():
@@ -1500,6 +1742,16 @@ PAGES = {
     'gallery.html': page_gallery, 'clients.html': page_clients, 'partners.html': page_partners,
     'products.html': page_products, 'consulting.html': page_consulting,
 }
+for _p in PRODUCTS:
+    PAGES[product_href(_p[0])] = (lambda p=_p: page_product(p))
+for _c in CONSULTING:
+    PAGES[consulting_href(_c[0])] = (lambda c=_c: page_consult(c))
+for _n in INDUSTRY_DETAIL:
+    PAGES[industry_href(_n)] = (lambda n=_n: page_industry(n))
+for _n in PROGRAMME_DETAIL:
+    PAGES[programme_href(_n)] = (lambda n=_n: page_programme(n))
+for _n in AGENT_DETAIL:
+    PAGES[agent_href(_n)] = (lambda n=_n: page_agent(n))
 for _a in ARTICLES:
     PAGES[_a['slug'] + '.html'] = (lambda a=_a: page_article(a))
 

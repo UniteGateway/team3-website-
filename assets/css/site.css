@@ -942,3 +942,73 @@ h2.h3{font-size:clamp(21px,2vw,26px);line-height:1.2;font-weight:700;letter-spac
 @media (max-width:1100px){.cidx{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:860px){.roadmap.five{grid-template-columns:1fr 1fr}}
 @media (max-width:640px){.cidx{grid-template-columns:1fr 1fr}.mini-gal{grid-template-columns:repeat(2,1fr)}}
+
+/* ================= Related thumbnails (inner pages) ================= */
+.relgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.relc{display:flex;flex-direction:column;gap:4px;border-radius:var(--r);background:#fff;padding:10px 10px 18px;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+.relc:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.relc .th{display:block;aspect-ratio:16/10;border-radius:14px;overflow:hidden;margin-bottom:12px;background:var(--grey-2)}
+.relc .th img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.relc:hover .th img{transform:scale(1.06)}
+.relc small{font:700 11px/1 var(--b);letter-spacing:.14em;text-transform:uppercase;color:var(--red-ui);padding:0 6px}
+.relc b{font:700 18px/1.25 var(--h);letter-spacing:-.02em;padding:4px 6px 0}
+.relc>span:last-child{font-size:14px;color:var(--muted);padding:0 6px;line-height:1.45}
+.bg-black .relc{background:#111113;color:#fff}.bg-black .relc>span:last-child{color:#A1A1A6}.bg-black .relc small{color:var(--red-on-dark)}
+.pshot.big{max-width:1160px;margin:0 auto}
+.outcome{margin-top:30px;padding:24px;border-radius:var(--r);background:var(--black);color:#fff}
+.outcome small{display:block;font:700 11px/1 var(--b);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.outcome b{font:700 20px/1.35 var(--h);letter-spacing:-.02em}
+.modules{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.modules li{display:flex;gap:16px;align-items:center;padding:16px 18px;border-radius:16px;background:var(--grey);font-weight:600}
+.modules span{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--red-ui);color:#fff;font:800 13px/1 var(--h)}
+.big-ic{display:grid;place-items:center;width:72px;height:72px;border-radius:20px;background:var(--grey);color:var(--red-ui);margin-top:28px}
+.big-ic svg{width:34px;height:34px}
+.mini-gal.wide{grid-template-columns:repeat(6,1fr);margin-top:28px}
+a.agent{color:inherit}
+.agent .ag-ph{display:none}
+a.ccard{color:inherit}
+a.ccard .link{margin-top:14px}
+a.gclient{color:inherit}
+.pcard .sv-body .ic svg{width:22px;height:22px}
+
+/* ================= Client logo strip (above footer) ================= */
+.logobar{background:#fff;border-top:1px solid var(--line);padding:36px 0 40px;overflow:hidden}
+.lb-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}
+.lbt{gap:14px;animation-duration:60s}
+.lg{display:flex;align-items:center;justify-content:center;min-width:190px;height:72px;padding:0 26px;border-radius:16px;background:var(--grey);color:#3a3a3e;white-space:nowrap;filter:grayscale(1);opacity:.85;transition:all .3s}
+.lg:hover{filter:none;opacity:1;background:#fff;box-shadow:var(--shadow);color:var(--ink)}
+.lg.ls1{font:800 20px/1 var(--h);letter-spacing:-.03em}
+.lg.ls2{font:700 14px/1 var(--b);letter-spacing:.22em;text-transform:uppercase}
+.lg.ls3{font:italic 600 20px/1 Georgia,'Times New Roman',serif}
+.lg.ls4{font:800 17px/1 var(--b);letter-spacing:.04em;text-transform:uppercase}
+.lg.ls5{font:600 19px/1 var(--h);letter-spacing:-.01em}
+.lg.ls6{font:700 16px/1 Georgia,serif;letter-spacing:.08em;text-transform:uppercase}
+
+/* ================= Big footer ================= */
+.site-footer.big{padding-top:clamp(64px,8vw,96px)}
+.f-hero{display:grid;grid-template-columns:1.2fr 1.1fr 1fr;gap:48px;padding-bottom:56px;border-bottom:1px solid #222}
+.f-news p,.f-contact p{font-size:14.5px;margin-top:10px;line-height:1.6}
+.f-contact a{color:#fff}
+.f-contact .btn.wa{margin-top:16px}
+.news-form{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:18px}
+.news-form input[type=email]{min-width:0;padding:14px 18px;border-radius:999px;border:1px solid #2c2c30;background:#111113;color:#fff;font-size:15px}
+.news-form input[type=email]:focus{outline:0;border-color:#fff}
+.news-form .consent{grid-column:1/-1;color:#86868B!important;font-size:12.5px!important}
+.news-form .consent a{color:#fff}
+.site-footer .form-ok h3{color:#fff;font-size:22px}.site-footer .form-ok p{color:#A1A1A6}
+.socials{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.soc{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#161618;border:1px solid #2a2a2e;color:#fff;transition:all .3s var(--ease)}
+.soc svg{width:19px;height:19px}
+a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:translateY(-3px)}
+.soc.soon{opacity:.45;cursor:default}
+.f-cols{display:grid;grid-template-columns:repeat(6,1fr);gap:32px;padding-block:52px;border-bottom:1px solid #222}
+.f-cols .f-col a{font-size:14.5px;padding:5px 0}
+.f-offices{display:flex;flex-wrap:wrap;gap:12px 36px;padding-block:24px;border-bottom:1px solid #222;font-size:14px}
+.f-offices b{color:#fff;margin-right:6px}
+.f-legal{display:flex;gap:18px}.f-legal a:hover{color:#fff}
+@media (max-width:1100px){.f-hero{grid-template-columns:1fr 1fr}.f-contact{grid-column:1/-1}.f-cols{grid-template-columns:repeat(3,1fr)}.relgrid{grid-template-columns:repeat(2,1fr)}.mini-gal.wide{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:640px){.f-hero{grid-template-columns:1fr}.f-cols{grid-template-columns:1fr 1fr;gap:24px}.news-form{grid-template-columns:1fr}.relgrid{grid-template-columns:1fr 1fr;gap:12px}.relc b{font-size:15px}.lg{min-width:150px;height:60px}.lb-head{flex-direction:column;align-items:flex-start}}
+@media (max-width:640px){.btn{white-space:normal;text-align:center;height:auto;padding-block:14px;line-height:1.25}}
+.site-footer h2.h5{margin:0 0 6px;font:700 12px/1 var(--b);letter-spacing:.16em;text-transform:uppercase;color:#fff}
+.relgrid.c5{grid-template-columns:repeat(5,1fr)}.relgrid.c3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:1100px){.relgrid.c5,.relgrid.c3{grid-template-columns:repeat(2,1fr)}}
