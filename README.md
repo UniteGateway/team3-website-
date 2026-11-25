@@ -1,4 +1,4 @@
-# TEAM3 WEBLOGICS — Website (Relaunch 2026)
+# TEAM3 Solutions — Website (Relaunch 2026)
 
 Branding. Advertising. Technology. Artificial Intelligence. · *Step beyond imagination.*
 

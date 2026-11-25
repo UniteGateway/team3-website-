@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""TEAM3 WEBLOGICS static site generator.
+"""TEAM3 Solutions static site generator.
 
 Shared header/footer + page content live here; run `python3 build/build.py`
 from the repo root to regenerate every *.html page in the repository root.
@@ -19,10 +19,10 @@ E = html.escape
 # --------------------------------------------------------------------------- site config
 # Fill these in before going live. Empty values are simply not shown on the site.
 SITE = {
-    # Live address. Change to the custom domain (e.g. 'https://www.team3weblogics.com') once it is registered and connected in Vercel.
-    'url': 'https://team3-weblogics.vercel.app',
-    'company': 'TEAM3 WEBLOGICS PVT. LTD.',
-    'address': '6-3-569, 3rd Floor, Above BMW Showroom, Khairatabad Road, Hyderabad, India',
+    # Live address. Change to the custom domain (e.g. 'https://www.team3solutions.in') once it is registered and connected in Vercel.
+    'url': 'https://team3solutions.vercel.app',
+    'company': 'TEAM3 Solutions',
+    'address': 'Ashoka Capitol, Road No. 2, Banjara Hills, Hyderabad, Telangana, India',
     'email': 'info@team3solutions.in',
     'phone': '+91 90522 70203',
     'whatsapp': '',         # digits only with country code, e.g. '919800000000'
@@ -112,7 +112,7 @@ def org_schema():
     d = {"@context": "https://schema.org", "@type": "Organization", "name": SITE['company'], "alternateName": "TEAM3",
          "url": SITE['url'], "logo": SITE['url'] + "/assets/img/logo-full.jpg", "foundingDate": "2004",
          "slogan": "Step beyond imagination.", "founder": {"@type": "Person", "name": "Dr. Ravi Chandra", "jobTitle": "Founder & Managing Director"},
-         "address": {"@type": "PostalAddress", "streetAddress": "6-3-569, 3rd Floor, Above BMW Showroom, Khairatabad Road",
+         "address": {"@type": "PostalAddress", "streetAddress": "Ashoka Capitol, Road No. 2, Banjara Hills",
                      "addressLocality": "Hyderabad", "addressRegion": "Telangana", "addressCountry": "IN"},
          "areaServed": ["IN", "US", "GB", "CA", "Worldwide"],
          "knowsAbout": ["Branding", "Advertising", "Software development", "Mobile apps", "Artificial intelligence", "AI agents", "Digital marketing", "Film production"]}
@@ -129,7 +129,7 @@ GLOBAL = """<section class="section global" id="global"><div class="wrap">
 <div class="head split"><div class="rv"><span class="eyebrow">Global presence</span><h2 style="margin-top:16px">Rooted in Hyderabad. <span class="grad">Working with the world.</span></h2></div>
 <p class="lead rv d1">Headquartered in Hyderabad, India, with a global presence in the United States and the United Kingdom — and clients in Canada and beyond since 2004.</p></div>
 <div class="globe-grid">
-<div class="hq rv"><span class="pin" aria-hidden="true"></span><small>Headquarters</small><b>Hyderabad, India</b><span>TEAM3 WEBLOGICS PVT. LTD.</span>
+<div class="hq rv"><span class="pin" aria-hidden="true"></span><small>Headquarters</small><b>Hyderabad, India</b><span>TEAM3 Solutions · Ashoka Capitol, Banjara Hills</span>
 <div class="clock"><span class="t" data-tz="Asia/Kolkata">--:--</span><span class="z">IST · UTC+5:30</span></div></div>
 <div class="mkts">
 <div class="mkt city rv d1"><img src="assets/img/photos/nyc-t.webp" alt="" loading="lazy"><span class="cc">US</span><b>United States</b><span class="ln">Global presence · <span class="t" data-tz="America/New_York">--:--</span> New York</span></div>
@@ -317,7 +317,7 @@ def header(active):
                 f'<div class="mi-grid c{cols}{" dense" if n > 6 else ""}">{cards}</div></div></div></li>')
     return f'''<a class="skip" href="#main">Skip to content</a>
 <header class="site-header"><div class="wrap nav">
-<a class="logo" href="index.html" aria-label="TEAM3 WEBLOGICS home"><img class="sym" src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><span><img class="wm wm-d" src="assets/img/wordmark-dark-sm.webp" alt="TEAM3" width="420" height="61"><img class="wm wm-l" src="assets/img/wordmark-light-sm.webp" alt="TEAM3" width="420" height="61"><span class="tag">WEBLOGICS</span></span></a>
+<a class="logo" href="index.html" aria-label="TEAM3 Solutions home"><img class="sym" src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><span><img class="wm wm-d" src="assets/img/wordmark-dark-sm.webp" alt="TEAM3" width="420" height="61"><img class="wm wm-l" src="assets/img/wordmark-light-sm.webp" alt="TEAM3" width="420" height="61"><span class="tag">SOLUTIONS</span></span></a>
 <ul class="menu" id="menu">{lis}<li class="nav-btns"><a class="btn sm nav-partner" href="partners.html"{' aria-current="page"' if active == 'partners.html' else ''}>Partners</a><a class="btn red sm nav-cta" href="contact.html">Let’s Build Something</a></li></ul>
 <button class="burger" type="button" aria-label="Menu" aria-controls="menu" aria-expanded="false"><span></span><span></span></button>
 </div></header>'''
@@ -333,7 +333,7 @@ FOOTER = '''<footer class="site-footer"><div class="wrap">
 <div class="f-col"><h2 class="h5">Explore</h2><a href="products.html">Our Products</a><a href="academy.html">AI Academy</a><a href="partners.html">Partner Network</a><a href="industries.html">Industries</a><a href="insights.html">Insights</a><a href="industries.html#innovation">Innovation</a></div>
 <div class="f-col"><h2 class="h5">Legal</h2><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Use</a><a href="legal.html#cookies">Cookie Policy</a><a href="legal.html#responsible-ai">Responsible AI Policy</a></div>
 </div>
-<div class="f-bot"><span>© <span id="yr">2026</span> TEAM3 WEBLOGICS. All rights reserved.</span><span class="tag">Step beyond imagination. · Established 2004</span></div>
+<div class="f-bot"><span>© <span id="yr">2026</span> TEAM3 Solutions. All rights reserved.</span><span class="tag">Step beyond imagination. · Established 2004</span></div>
 <div class="f-big" aria-hidden="true"></div>
 </div></footer>'''
 
@@ -348,7 +348,7 @@ ASSISTANT = '''<div class="asst" id="asst">
 
 
 def layout(fname, title, desc, body, og_type='website'):
-    full_title = 'TEAM3 WEBLOGICS — Branding, Technology & Artificial Intelligence' if fname == 'index.html' else f'{title} | TEAM3 WEBLOGICS'
+    full_title = 'TEAM3 Solutions — Branding, Technology & Artificial Intelligence' if fname == 'index.html' else f'{title} | TEAM3 Solutions'
     canon = SITE['url'] + '/' + ('' if fname == 'index.html' else fname)
     data = f' data-endpoint="{E(SITE["form_endpoint"])}" data-email="{E(SITE["email"])}" data-wa="{E(SITE["whatsapp"])}"'
     return f'''<!DOCTYPE html>
@@ -366,7 +366,7 @@ def layout(fname, title, desc, body, og_type='website'):
 <meta property="og:locale" content="en_IN">
 <link rel="canonical" href="{canon}">
 <meta property="og:type" content="{og_type}">
-<meta property="og:site_name" content="TEAM3 WEBLOGICS">
+<meta property="og:site_name" content="TEAM3 Solutions">
 <meta property="og:url" content="{canon}">
 <meta property="og:title" content="{E(full_title)}">
 <meta property="og:description" content="{E(desc)}">
@@ -524,7 +524,7 @@ def page_article(a):
 {page_hero("Insights", a["cat"].title() + " · " + str(a["mins"]) + " min read", E(a["title"]), E(a["lead"]), photo=a["photo"])}
 <article class="section prose-wrap"><div class="wrap">
 <div class="prose rv">{secs_with_fig(a)}
-<div class="byline"><img src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><div><b>TEAM3 Insights</b><span>TEAM3 WEBLOGICS · Hyderabad</span></div></div>
+<div class="byline"><img src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><div><b>TEAM3 Insights</b><span>TEAM3 Solutions · Hyderabad</span></div></div>
 </div></div></article>
 <section class="section bg-grey"><div class="wrap">{head("Keep reading", "More ideas worth exploring.")}<div class="grid g3">{insight_cards(a["slug"])}</div></div></section>
 {cta_band("Turn insight into action.", "Talk to our strategists and engineers about what this means for your business.", btn("Start a conversation", "contact.html", "red"))}
@@ -717,7 +717,7 @@ def page_index():
 
 {cta_band("Great things begin with a conversation.", "Launching a brand, building an app, modernising your business or exploring AI — we are ready to understand your vision.", btn("Let’s Build Something", "contact.html", "red") + btn("Find your engagement model", "contact.html#engage", "ghost", False))}
 '''
-    return layout('index.html', 'Home', 'TEAM3 WEBLOGICS — established 2004. An integrated branding, advertising, technology and artificial intelligence company. Step beyond imagination.', body)
+    return layout('index.html', 'Home', 'TEAM3 Solutions — established 2004. An integrated branding, advertising, technology and artificial intelligence company. Step beyond imagination.', body)
 
 
 def page_about():
@@ -738,6 +738,7 @@ def page_about():
 <div class="rv"><span class="eyebrow">Our story</span><h2 style="margin-top:16px">Two decades of creativity and code.</h2></div>
 <div class="stack rv d1" style="gap:22px;font-size:19px;line-height:1.6">
 <p>Over the years, TEAM3 developed capabilities across advertising, branding, software development, web technologies, corporate communication, digital marketing and smart systems.</p>
+<p class="muted">Our earlier corporate office was at 6-3-569, Khairatabad Road, Hyderabad. Today TEAM3 Solutions works from Ashoka Capitol, Banjara Hills, Hyderabad.</p>
 <p class="muted">Today, TEAM3 is being reimagined for a new generation of businesses, where artificial intelligence, human creativity, data and technology work together to create meaningful impact.</p>
 <p style="font:700 24px/1.35 var(--h);letter-spacing:-.025em">We believe technology should simplify complexity, creativity should create value, and innovation should deliver measurable business outcomes.</p>
 </div></div></div></section>
@@ -1348,7 +1349,7 @@ def page_contact():
 <div class="eng">{"".join(f'<div class="card rv d{n%4}"><span class="num">{n+1:02d}</span><h3>{E(t)}</h3><p>{E(p)}</p></div>' for n, (t, p) in enumerate(eng))}</div>
 </div></section>
 '''
-    return layout('contact.html', 'Contact', 'Contact TEAM3 WEBLOGICS, Hyderabad — branding, technology, AI, marketing and training enquiries. Project scope estimator and engagement models.', body)
+    return layout('contact.html', 'Contact', 'Contact TEAM3 Solutions, Hyderabad — branding, technology, AI, marketing and training enquiries. Project scope estimator and engagement models.', body)
 
 
 def page_legal():
@@ -1397,11 +1398,11 @@ def write_extras(names):
     files = {
         'sitemap.xml': f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n',
         'robots.txt': f'User-agent: *\nAllow: /\nSitemap: {SITE["url"]}/sitemap.xml\n',
-        'site.webmanifest': '{"name":"TEAM3 WEBLOGICS","short_name":"TEAM3","start_url":"index.html","display":"standalone","background_color":"#000000","theme_color":"#000000","icons":[{"src":"assets/img/favicon.png","sizes":"192x192","type":"image/png"}]}\n',
+        'site.webmanifest': '{"name":"TEAM3 Solutions","short_name":"TEAM3","start_url":"index.html","display":"standalone","background_color":"#000000","theme_color":"#000000","icons":[{"src":"assets/img/favicon.png","sizes":"192x192","type":"image/png"}]}\n',
     }
     files['_headers'] = '/*\n' + ''.join(f'  {k}: {v}\n' for k, v in security_headers().items()) + \
         '\n/assets/css/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/assets/js/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/assets/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/assets/img/*\n  Cache-Control: public, max-age=2592000\n\n/*.html\n  Cache-Control: public, max-age=0, must-revalidate\n'
-    files['.htaccess'] = ('# TEAM3 WEBLOGICS — Apache / cPanel configuration\n'
+    files['.htaccess'] = ('# TEAM3 Solutions — Apache / cPanel configuration\n'
         'ErrorDocument 404 /404.html\nOptions -Indexes\nAddDefaultCharset utf-8\n'
         'AddType font/woff2 .woff2\nAddType image/webp .webp\nAddType application/manifest+json .webmanifest\n'
         '<IfModule mod_rewrite.c>\n  RewriteEngine On\n  RewriteCond %{HTTPS} off\n  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\n</IfModule>\n'

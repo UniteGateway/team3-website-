@@ -1,4 +1,4 @@
-/* TEAM3 WEBLOGICS — site interactions */
+/* TEAM3 Solutions — site interactions */
 (function () {
   'use strict';
   var d = document, root = d.documentElement;
@@ -186,7 +186,7 @@
   if (svcSel) Array.prototype.forEach.call(svcSel.options, function (o) { SVC[o.value] = o.text; });
 
   function compose(form, kind) {
-    var f = new FormData(form), lines = ['TEAM3 WEBLOGICS — ' + kind, ''];
+    var f = new FormData(form), lines = ['TEAM3 Solutions — ' + kind, ''];
     f.forEach(function (v, k) {
       if (k === '_gotcha' || k === 'consent' || !String(v).trim()) return;
       lines.push((LABELS[k] || k) + ': ' + (k === 'service' && SVC[v] ? SVC[v] : v));
@@ -308,7 +308,7 @@
       if (/price|cost|budget|quote|how much/i.test(v)) {
         setTimeout(function () { add('Every project is scoped individually. Our <a class="asst-link" href="contact.html#estimate">project scope estimator</a> gives you an indicative tier and timeline in seconds, and we confirm commercials after a short discovery call.'); choices([[function () { location.href = 'contact.html#meeting'; }, 'Book a discovery call'], [menu2, 'Explore services']]); }, 350);
       } else if (/contact|call|phone|email|address|where|location|office|meet/i.test(v)) {
-        setTimeout(function () { add('TEAM3 WEBLOGICS is based in Hyderabad, India, and works with clients across India and international markets. You can <a class="asst-link" href="contact.html#enquiry">send an enquiry</a> or <a class="asst-link" href="contact.html#meeting">book a discovery call</a>.'); }, 350);
+        setTimeout(function () { add('TEAM3 Solutions is based in Hyderabad, India, and works with clients across India and international markets. You can <a class="asst-link" href="contact.html#enquiry">send an enquiry</a> or <a class="asst-link" href="contact.html#meeting">book a discovery call</a>.'); }, 350);
       } else if (hit) { pick(hit, v); }
       else { setTimeout(function () { add('Thanks! I’ll pass that to our team. Choose the closest area so it reaches the right people:'); choices(Object.keys(T).map(function (k) { return [function () { pick(k, v); }, T[k].l]; })); }, 350); }
     });

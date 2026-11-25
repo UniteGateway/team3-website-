@@ -1,4 +1,4 @@
-"""Long-form content for TEAM3 WEBLOGICS: Insights articles and legal policies.
+"""Long-form content for TEAM3 Solutions: Insights articles and legal policies.
 
 Paragraph strings may contain simple inline HTML (<b>, <a>). Lists are given as
 Python lists inside a section's body.
@@ -148,7 +148,7 @@ ARTICLES = [
 
 LEGAL = [
     ('privacy', 'Privacy Policy', [
-        ('Who we are', ['This website is operated by TEAM3 WEBLOGICS PVT. LTD., Hyderabad, India (“TEAM3”, “we”, “us”). This policy explains how we collect, use and protect personal data when you visit this website or contact us. We aim to comply with applicable data protection law, including India’s Digital Personal Data Protection Act, 2023.']),
+        ('Who we are', ['This website is operated by TEAM3 Solutions, Hyderabad, India (“TEAM3”, “we”, “us”). This policy explains how we collect, use and protect personal data when you visit this website or contact us. We aim to comply with applicable data protection law, including India’s Digital Personal Data Protection Act, 2023.']),
         ('What we collect', ['We collect only the information you choose to give us through our forms — for example your name, company, email address, phone or WhatsApp number, location, the service you are interested in, your message, and any portfolio or profile links you share. We do not ask for sensitive personal data through this website.',
                              'Our web host may automatically record standard technical information such as IP address, browser type and pages requested, for security and reliability purposes.']),
         ('How we use it', [['To respond to enquiries, meeting requests, partner registrations and career profiles.', 'To prepare proposals and deliver services you have requested.', 'To keep records of our communication with you.', 'To protect the website against misuse and fraud.'],
@@ -163,7 +163,7 @@ LEGAL = [
         ('Acceptance', ['By using this website you agree to these terms. If you do not agree, please do not use the website.']),
         ('Website content', ['Content on this website is provided for general information about TEAM3 and its services. It does not constitute a binding offer. Services, timelines and commercial terms are agreed only in a written proposal or contract.',
                              'Tools such as the project scope estimator and service recommender give indicative guidance only.']),
-        ('Intellectual property', ['The TEAM3 name, footprint symbol, logo, tagline “Step beyond imagination.”, and the design and content of this website are the property of TEAM3 WEBLOGICS PVT. LTD. or its licensors. They may not be copied or used without our written permission. Names of clients and third-party products belong to their respective owners.']),
+        ('Intellectual property', ['The TEAM3 name, footprint symbol, logo, tagline “Step beyond imagination.”, and the design and content of this website are the property of TEAM3 Solutions or its licensors. They may not be copied or used without our written permission. Names of clients and third-party products belong to their respective owners.']),
         ('Acceptable use', ['You agree not to misuse the website — for example by attempting unauthorised access, submitting false information, sending spam through our forms, or interfering with its operation.']),
         ('Photography and imagery', ['Stock photography on this website is sourced from Unsplash and used under the Unsplash License, which permits free commercial use. Product interface images are illustrative designs created by TEAM3. Archive photographs and publications are from the TEAM3 company archive.']),
         ('Third-party links', ['The website may link to third-party sites. We are not responsible for their content or practices.']),

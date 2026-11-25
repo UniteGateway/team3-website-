@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://team3-weblogics.vercel.app/sitemap.xml
+Sitemap: https://team3solutions.vercel.app/sitemap.xml

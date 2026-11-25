@@ -1,4 +1,4 @@
-# TEAM3 WEBLOGICS — Apache / cPanel configuration
+# TEAM3 Solutions — Apache / cPanel configuration
 ErrorDocument 404 /404.html
 Options -Indexes
 AddDefaultCharset utf-8
