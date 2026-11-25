@@ -1510,7 +1510,7 @@ def page_agent(name):
 LOGO_STYLE = ['ls1', 'ls2', 'ls3', 'ls4', 'ls5', 'ls6']
 
 
-SECTOR_COL = {'Government & Institutions': '#1D4E89', 'Healthcare & Life Sciences': '#0F8A7E', 'Infrastructure & Engineering': '#8A5A00',
+SECTOR_COL = {'Government & Institutions': '#1D4E89', 'Healthcare & Life Sciences': '#0B7268', 'Infrastructure & Engineering': '#8A5A00',
               'Corporate & Technology': '#5B3FA8', 'Agriculture & Education': '#2F7D32', 'Collabiz & Unite Group': '#DA1220'}
 
 
