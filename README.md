@@ -16,6 +16,7 @@ or deploy the repository root to any static host (GitHub Pages, Netlify, Vercel,
 | `marketing.html` | SEO, SEM, social, performance, influencer and AI-powered marketing |
 | `academy.html` | TEAM3 Academy programmes and formats |
 | `work.html` | Filterable portfolio with heritage project images and group businesses |
+| `products.html` | Our Products: COLLABIZ, LeadDNA, SOLBID, ADBUZ, UNITE EXIM, BIZO, SUNGATE, PRIZO, HNW, BEYOU (data in `build/content.py` → `PRODUCTS`) |
 | `gallery.html` | Archive gallery (events, publications, print, films, campaigns) with lightbox |
 | `clients.html` | Collabiz & Unite Group businesses, NIRD, heritage clientele, film clients |
 | `partners.html` | Partner Network, benefits and partner registration (header “Partners” button) |

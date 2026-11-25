@@ -253,10 +253,11 @@
       it: { l: 'ERP, CRM or IT modernisation', svc: 'Technology', page: 'technology.html#enterprise', say: 'We build custom enterprise software (ERP, CRM, HRMS, inventory, workflow) and help with architecture, integration, cloud migration and cybersecurity.' },
       film: { l: 'Corporate film or video', svc: 'Media', page: 'branding.html#media', say: 'We produce corporate films, ad films, product videos, animation, motion graphics and AI-assisted video, from script and storyboard to final edit.' },
       learn: { l: 'AI training for my team', svc: 'Academy', page: 'academy.html', say: 'TEAM3 Academy offers AI Foundation, Prompt Engineering, Generative AI, AI Agent Development and more, delivered online, in the classroom or as corporate workshops.' },
+      products: { l: 'TEAM3 products & demos', svc: 'Apps', page: 'products.html', say: 'TEAM3 builds ten platforms, including COLLABIZ (collaboration), LeadDNA (lead intelligence), SOLBID (solar bidding), UNITE EXIM (global trade) and BIZO (AI business intelligence). You can request a demo of any of them.' },
       partner: { l: 'Partner with TEAM3', svc: 'Partnership', page: 'partners.html#register', say: 'The TEAM3 Partner Network is open to creative, technology and AI partners, agencies, consultants, trainers and international representatives.' },
       job: { l: 'Careers at TEAM3', svc: 'Careers', page: 'careers.html#apply', say: 'We welcome designers, developers, AI engineers, marketers and strategists, for full-time roles, internships and freelance projects.' }
     };
-    var KW = [['job', /career|job|hiring|vacanc|intern|resume|cv\b|work for/i], ['partner', /partner|franchise|reseller|white.?label|collaborat/i],
+    var KW = [['products', /product|demo|collabiz|leaddna|solbid|adbuz|unite exim|exim|bizo|sungate|prizo|\bhnw\b|beyou|platform list/i], ['job', /career|job|hiring|vacanc|intern|resume|cv\b|work for/i], ['partner', /partner|franchise|reseller|white.?label|collaborat/i],
       ['learn', /train|course|learn|academy|workshop|class|student|college/i], ['ai', /\bai\b|artificial|agent|automat|chatbot|gpt|llm|rag|machine learning/i],
       ['app', /\bapp\b|mobile|android|ios|saas|product|marketplace|platform/i], ['web', /website|web ?site|e-?commerce|online store|portal|landing/i],
       ['it', /erp|crm|software|cloud|security|cyber|server|it\b|hrms|inventory|iot|rfid/i], ['mkt', /seo|marketing|ads|lead|social|instagram|google|customer|sales|grow/i],

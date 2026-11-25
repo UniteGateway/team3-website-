@@ -7,9 +7,10 @@ from the repo root to regenerate every *.html page in the repository root.
 import os
 import sys
 import html
+from urllib.parse import quote
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from content import ARTICLES, LEGAL  # noqa: E402
+from content import ARTICLES, LEGAL, PRODUCTS  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 E = html.escape
@@ -207,10 +208,11 @@ def subnav(items):
 
 # --------------------------------------------------------------------------- chrome
 NAV = [
-    ('about.html', 'About Us', None),
+    ('about.html', 'About', None),
     ('branding.html', 'Branding', 'branding'),
     ('technology.html', 'Technology', 'technology'),
     ('ai.html', 'Artificial Intelligence', 'ai'),
+    ('products.html', 'Products', None),
     ('marketing.html', 'Marketing', None),
     ('academy.html', 'Academy', None),
     ('work.html', 'Our Work', 'work'),
@@ -297,7 +299,7 @@ FOOTER = '''<footer class="site-footer"><div class="wrap">
 <p style="margin-top:18px">__FOOTCONTACT__</p></div>
 <div class="f-col"><h2 class="h5">Company</h2><a href="about.html">About Us</a><a href="about.html#journey">Our Journey</a><a href="work.html">Our Work</a><a href="gallery.html">Gallery</a><a href="clients.html">Clients</a><a href="careers.html">Careers</a><a href="contact.html">Contact</a></div>
 <div class="f-col"><h2 class="h5">Services</h2><a href="branding.html">Branding</a><a href="branding.html#advertising">Advertising</a><a href="technology.html">IT &amp; Apps</a><a href="ai.html#agents">AI Agents</a><a href="marketing.html">Digital Marketing</a></div>
-<div class="f-col"><h2 class="h5">Explore</h2><a href="academy.html">AI Academy</a><a href="partners.html">Partner Network</a><a href="industries.html">Industries</a><a href="insights.html">Insights</a><a href="industries.html#innovation">Innovation</a></div>
+<div class="f-col"><h2 class="h5">Explore</h2><a href="products.html">Our Products</a><a href="academy.html">AI Academy</a><a href="partners.html">Partner Network</a><a href="industries.html">Industries</a><a href="insights.html">Insights</a><a href="industries.html#innovation">Innovation</a></div>
 <div class="f-col"><h2 class="h5">Legal</h2><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Use</a><a href="legal.html#cookies">Cookie Policy</a><a href="legal.html#responsible-ai">Responsible AI Policy</a></div>
 </div>
 <div class="f-bot"><span>© <span id="yr">2026</span> TEAM3 WEBLOGICS. All rights reserved.</span><span class="tag">Step beyond imagination. · Established 2004</span></div>
@@ -541,6 +543,12 @@ def page_index():
 <p class="lead rv d1">Agents that research, analyse, communicate, coordinate and execute approved business tasks around the clock — with human approval for anything sensitive.</p></div>
 <div class="agents">{"".join(f'<div class="agent rv"><span class="av">{E(a[0])}{E(a.split()[1][0]) if len(a.split())>1 else ""}</span><div><b>{E(a)}<span class="live" aria-hidden="true"></span></b><span>{E(b)}</span></div></div>' for a, b in AGENTS[:8])}</div>
 <div class="actions">{btn("Build Your AI Workforce", "ai.html#agents", "red")}{btn("See all 14 agents", "ai.html#agents", "ghost", False)}</div>
+</div></section>
+
+<section class="section bg-grey"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow">Our products</span><h2 style="margin-top:16px">Platforms built by TEAM3.</h2></div>
+<div class="rv d1"><p class="lead">Ten platforms for collaboration, sales intelligence, trade, energy, marketing, procurement and community.</p><div style="margin-top:22px">{link("Explore all products", "products.html")}</div></div></div>
+<div class="pindex">{"".join(f'<a class="pidx" href="products.html#{p[0]}"><span class="pic">{ic(p[4])}</span><b>{E(p[1])}</b><span>{E(p[2])}</span></a>' for p in PRODUCTS)}</div>
 </div></section>
 
 <section class="section"><div class="wrap">
@@ -878,7 +886,7 @@ def page_work():
             return f'<div class="thumb photo"><img src="assets/img/gallery/{img}" alt="{n}" loading="lazy"></div>'
         return f'<div class="thumb {th[i%6]}"><b>{n}</b></div>'
     cards = ''.join(f'<article class="work rv" data-cat="{c}">{thumb(n, img, i)}<div class="meta"><small>{k}</small><h3>{n}</h3><p>{p}</p><span class="badge">{s}</span></div></article>' for i, (k, c, s, n, p, img) in enumerate(heritage))
-    cards += ''.join(f'<article class="work rv" data-cat="{c}"><div class="thumb {th[i%6]}"><b>{E(n)}</b></div><div class="meta"><small>Collabiz &amp; Unite Group</small><h3>{E(n)}</h3><p>{E(p)}</p><span class="badge">Group client</span></div></article>' for i, (n, p, c) in enumerate(products))
+    cards += ''.join(f'<article class="work rv" data-cat="{c}"><div class="thumb {th[i%6]}"><b>{E(n)}</b></div><div class="meta"><small>TEAM3 product · Collabiz &amp; Unite Group</small><h3><a href="products.html#{next(x[0] for x in PRODUCTS if x[1] == n)}">{E(n)}</a></h3><p>{E(p)}</p><span class="badge">Group client</span></div></article>' for i, (n, p, c) in enumerate(products))
     body = f'''
 {page_hero("Our Work", "Our Work & Portfolio", "Our imagination. <span class='grad'>Your success.</span>", "Explore our creative and technology heritage — from corporate communication and print advertising to enterprise software, digital platforms and next-generation intelligent applications.")}
 <section class="section"><div class="wrap">
@@ -981,6 +989,42 @@ def page_gallery():
     return layout('gallery.html', 'Gallery', 'TEAM3 gallery: NIRD launches with the President of India, publications, print works, campaigns and corporate films.', body)
 
 
+def product_visual(pr, n):
+    slug, name, tag, cat, icon, *_ = pr
+    return (f'<div class="pvis t{(n % 6) + 1}" aria-hidden="true"><span class="pic">{ic(icon)}</span>'
+            f'<b>{E(name)}</b><span class="pcat">{E(cat)}</span><span class="orb o1"></span><span class="orb o2"></span></div>')
+
+
+def page_products():
+    idx = ''.join(f'<a class="pidx" href="#{p[0]}"><span class="pic">{ic(p[4])}</span><b>{E(p[1])}</b><span>{E(p[3])}</span></a>' for p in PRODUCTS)
+    blocks = ''
+    for n, pr in enumerate(PRODUCTS):
+        slug, name, tag, cat, icon, desc, feats, aud = pr
+        demo = f'contact.html?service=Apps&msg={quote("Demo request: " + name)}#enquiry'
+        blocks += f"""<article class="prod rv{' rev' if n % 2 else ''}" id="{slug}">
+{product_visual(pr, n)}
+<div class="pbody"><span class="eyebrow">{E(cat)}</span><h2>{E(name)}</h2><p class="ptag">{E(tag)}</p><p class="lead">{E(desc)}</p>
+<div style="margin-top:26px">{checks(feats, True)}</div>
+<p class="pfor"><b>Built for</b> {E(aud)}</p>
+<div class="actions" style="margin-top:28px">{btn("Request a demo", demo, "red")}{btn("Partner with " + name, "partners.html#register", "ghost", False)}</div></div>
+</article>"""
+    body = f"""
+{page_hero("Products", "Our Products", "Platforms built by TEAM3. <span class='grad'>Ready to scale.</span>", "Ten digital platforms for collaboration, sales intelligence, trade, energy, marketing, procurement and community — designed, engineered and powered with AI by TEAM3 for the Collabiz and Unite Group businesses.", btn("Explore the products", "#products", "light") + btn("Request a demo", "contact.html?service=Apps&msg=" + quote("Product demo request") + "#enquiry", "ghost", False))}
+<section class="section tight" id="products"><div class="wrap">
+<h2 class="sr-only">All products</h2>
+<div class="pindex">{idx}</div>
+</div></section>
+<section class="section" style="padding-top:0"><div class="wrap prods">{blocks}</div></section>
+<section class="section bg-black"><div class="wrap">
+{head("Built with TEAM3", "The same team can build <span class='grad'>your product.</span>", "Every TEAM3 product goes through the same process we offer clients: strategy, UI/UX, scalable architecture, AI integration, quality assurance and continuous growth.", gold=True)}
+<div class="grid g4">{"".join(f'<div class="card rv d{i}"><span class="num">{i+1:02d}</span><h3 style="margin-top:28px;font-size:21px">{E(t)}</h3><p>{E(d)}</p></div>' for i, (t, d) in enumerate([("Product strategy", "Features, commercial model and roadmap."), ("Design", "Research-led UI/UX and design systems."), ("Engineering", "Web, mobile, SaaS and cloud architecture."), ("Intelligence", "AI agents, analytics and automation built in.")]))}</div>
+<div class="actions">{btn("Turn Your Idea into a Product", "contact.html?service=Apps#enquiry", "red")}{btn("See our process", "technology.html#apps", "ghost", False)}</div>
+</div></section>
+{cta_band("See a product in action.", "Book a walkthrough with our product team, or talk to us about white-label and partnership options.", btn("Request a demo", "contact.html?service=Apps&msg=" + quote("Product demo request") + "#enquiry", "red") + btn("Book a discovery call", "contact.html#meeting", "ghost", False))}
+"""
+    return layout('products.html', 'Our Products', 'TEAM3 products: COLLABIZ, LeadDNA, SOLBID, ADBUZ, UNITE EXIM, BIZO, SUNGATE, PRIZO, HNW and BEYOU — platforms for collaboration, sales, trade, energy, marketing, procurement and community.', body)
+
+
 def page_clients():
     group = ''.join(f'<div class="gclient rv d{n%4}"><span class="mono">{E(nm[:1])}</span><b>{E(nm)}</b><span class="d">{E(ds)}</span><span class="tag">Group client</span></div>' for n, (nm, ds, _) in enumerate(GROUP))
     heritage = ''.join(f'<div class="row rv"><b>{E(n)}</b><span>{E(m)}</span><i>{i+1:02d}</i></div>' for i, (n, m) in enumerate(CLIENTS))
@@ -990,6 +1034,7 @@ def page_clients():
 {subnav([("group","Collabiz & Unite Group"),("institutions","Institutions"),("heritage","Heritage clientele"),("films","Film clients")])}
 <section class="section" id="group"><div class="wrap">
 {head("Collabiz & Unite Group", "Group businesses <span class='grad'>we build for.</span>", "TEAM3 is the branding, technology and AI partner to the Collabiz and Unite Group businesses — from strategy and identity to platforms, apps and intelligent automation.")}
+<p class="rv" style="margin:-36px 0 36px">{link("Explore these products", "products.html")}</p>
 <div class="gclients">{group}</div>
 </div></section>
 <section class="section bg-black" id="institutions"><div class="wrap">
@@ -1213,6 +1258,7 @@ PAGES = {
     'industries.html': page_industries, 'careers.html': page_careers, 'insights.html': page_insights,
     'contact.html': page_contact, 'legal.html': page_legal, '404.html': page_404,
     'gallery.html': page_gallery, 'clients.html': page_clients, 'partners.html': page_partners,
+    'products.html': page_products,
 }
 for _a in ARTICLES:
     PAGES[_a['slug'] + '.html'] = (lambda a=_a: page_article(a))
