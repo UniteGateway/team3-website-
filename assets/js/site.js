@@ -14,8 +14,14 @@
       if (li !== except) { li.classList.remove('open'); var b = li.querySelector('button'); b && b.setAttribute('aria-expanded', 'false'); }
     });
   }
+  function thumbs(li) {
+    li.querySelectorAll('img[data-src]').forEach(function (im) { im.src = im.getAttribute('data-src'); im.removeAttribute('data-src'); });
+  }
   items.forEach(function (li) {
     var btn = li.querySelector('button'), t;
+    li.addEventListener('mouseenter', function () { thumbs(li); }, { once: true });
+    btn.addEventListener('focus', function () { thumbs(li); }, { once: true });
+    btn.addEventListener('click', function () { thumbs(li); });
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
       var open = !li.classList.contains('open');

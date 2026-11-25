@@ -5,6 +5,7 @@ Shared header/footer + page content live here; run `python3 build/build.py`
 from the repo root to regenerate every *.html page in the repository root.
 """
 import os
+import re
 import sys
 import html
 from urllib.parse import quote
@@ -112,7 +113,7 @@ def org_schema():
          "slogan": "Step beyond imagination.", "founder": {"@type": "Person", "name": "Dr. Ravi Chandra", "jobTitle": "Founder & Managing Director"},
          "address": {"@type": "PostalAddress", "streetAddress": "6-3-569, 3rd Floor, Above BMW Showroom, Khairatabad Road",
                      "addressLocality": "Hyderabad", "addressRegion": "Telangana", "addressCountry": "IN"},
-         "areaServed": ["IN", "US", "CA", "Worldwide"],
+         "areaServed": ["IN", "US", "GB", "CA", "Worldwide"],
          "knowsAbout": ["Branding", "Advertising", "Software development", "Mobile apps", "Artificial intelligence", "AI agents", "Digital marketing", "Film production"]}
     cp = {"@type": "ContactPoint", "contactType": "sales", "availableLanguage": ["English"], "areaServed": "Worldwide"}
     if SITE['phone']:
@@ -123,17 +124,17 @@ def org_schema():
     return json.dumps(d, ensure_ascii=False).replace('</', '<\\/')
 
 
-GLOBAL = """<section class="section global"><div class="wrap">
+GLOBAL = """<section class="section global" id="global"><div class="wrap">
 <div class="head split"><div class="rv"><span class="eyebrow">Global presence</span><h2 style="margin-top:16px">Rooted in Hyderabad. <span class="grad">Working with the world.</span></h2></div>
-<p class="lead rv d1">Since 2004 we have served clients in India, the USA and Canada. Today we work with organisations wherever they are, across time zones, in English.</p></div>
+<p class="lead rv d1">Headquartered in Hyderabad, India, with a global presence in the United States and the United Kingdom — and clients in Canada and beyond since 2004.</p></div>
 <div class="globe-grid">
 <div class="hq rv"><span class="pin" aria-hidden="true"></span><small>Headquarters</small><b>Hyderabad, India</b><span>TEAM3 WEBLOGICS PVT. LTD.</span>
 <div class="clock"><span class="t" data-tz="Asia/Kolkata">--:--</span><span class="z">IST · UTC+5:30</span></div></div>
 <div class="mkts">
-<div class="mkt rv d1"><span class="cc">IN</span><b>India</b><span>Headquarters &amp; delivery centre</span></div>
-<div class="mkt rv d2"><span class="cc">US</span><b>United States</b><span>Heritage clients since 2004</span></div>
-<div class="mkt rv d3"><span class="cc">CA</span><b>Canada</b><span>Heritage clients since 2004</span></div>
-<div class="mkt rv d4 any"><span class="cc">🌐</span><b>Worldwide</b><span>Remote delivery &amp; international partners</span></div>
+<div class="mkt city rv d1"><img src="assets/img/photos/nyc-t.webp" alt="" loading="lazy"><span class="cc">US</span><b>United States</b><span class="ln">Global presence · <span class="t" data-tz="America/New_York">--:--</span> New York</span></div>
+<div class="mkt city rv d2"><img src="assets/img/photos/london-t.webp" alt="" loading="lazy"><span class="cc">UK</span><b>United Kingdom</b><span class="ln">Global presence · <span class="t" data-tz="Europe/London">--:--</span> London</span></div>
+<div class="mkt city rv d3"><img src="assets/img/photos/toronto-t.webp" alt="" loading="lazy"><span class="cc">CA</span><b>Canada</b><span class="ln">Clients since 2004</span></div>
+<div class="mkt rv d4 any"><span class="cc">🌐</span><b>Worldwide</b><span class="ln">Remote delivery &amp; international partners</span></div>
 </div></div>
 <p class="yourtime rv" hidden>Your local time: <b class="t" data-tz="local">--:--</b> <span class="ovl"></span></p>
 </div></section>"""
@@ -194,10 +195,19 @@ def cta_band(title, lead, buttons):
 <div class="actions">{buttons}</div></div></div></section>'''
 
 
+HERO_PHOTOS = {'About Us': 'team_office', 'Branding': 'palette', 'Technology': 'code_laptop', 'Artificial Intelligence': 'ai_letters',
+               'Products': 'laptop_dark', 'Digital Marketing': 'dm_tiles', 'Academy': 'students_laptop', 'Our Work': 'flatlay',
+               'Clients': 'handshake', 'Industries': 'engineer_factory', 'Careers': 'friends_laptops', 'Partners': 'hands_stack',
+               'Insights': 'open_office', 'Contact': 'office_glass'}
+
+
 def page_hero(crumb, eyebrow, title, lead, buttons=''):
     acts = f'<div class="actions">{buttons}</div>' if buttons else ''
-    return f'''<section class="hero page-hero"><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
-<img class="sym-bg" src="assets/img/symbol.webp" alt="" width="382" height="540">
+    ph = HERO_PHOTOS.get(crumb)
+    art = (f'<img class="hero-photo" src="assets/img/photos/{ph}.webp" alt="" fetchpriority="high" decoding="async"><div class="hero-shade"></div>'
+           if ph else '<img class="sym-bg" src="assets/img/symbol.webp" alt="" width="382" height="540">')
+    return f'''<section class="hero page-hero{' has-photo' if ph else ''}"><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
+{art}
 <div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span>{E(crumb)}</span></nav>
 <span class="eyebrow gold rv">{E(eyebrow)}</span><h1 class="rv d1">{title}</h1><p class="lead rv d2">{lead}</p>{acts}</div></section>'''
 
@@ -207,89 +217,107 @@ def subnav(items):
 
 
 # --------------------------------------------------------------------------- chrome
-NAV = [
-    ('about.html', 'About', None),
-    ('branding.html', 'Branding', 'branding'),
-    ('technology.html', 'Technology', 'technology'),
-    ('ai.html', 'Artificial Intelligence', 'ai'),
-    ('products.html', 'Products', None),
-    ('marketing.html', 'Marketing', None),
-    ('academy.html', 'Academy', None),
-    ('work.html', 'Our Work', 'work'),
-    ('industries.html', 'Industries', None),
-    ('careers.html', 'Careers', None),
-]
+def _ph(k):
+    return f'photos/{k}-t.webp'
 
-MEGA = {
-    'branding': ([
-        ('Brand', [('branding.html#strategy', 'Brand Strategy', 'Positioning, naming, architecture'),
-                   ('branding.html#identity', 'Brand Identity', 'Logos, systems, guidelines'),
-                   ('branding.html#product', 'Product Branding', 'Packaging, labels, launch')]),
-        ('Creative', [('branding.html#corporate', 'Corporate Branding', 'Identity programmes, reports'),
-                      ('branding.html#advertising', 'Advertising', 'Print, outdoor, electronic, digital'),
-                      ('branding.html#studio', 'Creative Studio', 'Motion, 3D, illustration')]),
-        ('Media', [('branding.html#media', 'Media & Film Production', 'Corporate, ad and product films'),
-                   ('branding.html#launch', 'Brand Launch Programmes', 'Complete brand-to-market'),
-                   ('contact.html?service=Branding', 'Start a brand project', 'Talk to our strategists')]),
-    ], ('We don’t just design logos.', 'We build brands — from name to market.', 'branding.html')),
-    'technology': ([
-        ('Build', [('technology.html#enterprise', 'Enterprise Software', 'ERP, CRM, HRMS, workflow'),
-                   ('technology.html#web', 'Web Design & Development', 'Corporate, commerce, portals'),
-                   ('technology.html#apps', 'Mobile Apps & Products', 'iOS, Android, SaaS, UI/UX')]),
-        ('Run', [('technology.html#consulting', 'IT Consulting', 'Architecture & modernisation'),
-                 ('technology.html#cloud', 'Cloud, Data & Security', 'DevOps, BI, cybersecurity'),
-                 ('technology.html#iot', 'Smart Technology & IoT', 'Access, RFID, energy, IIoT')]),
-        ('Grow', [('industries.html#consulting', 'Business Consulting', 'Feasibility to go-to-market'),
-                  ('industries.html#innovation', 'Product Innovation', 'Innovation as a service'),
-                  ('technology.html#stack', 'Engineering Stack', 'React to PostgreSQL')]),
-    ], ('Technology engineered around your business.', 'Scalable systems, built to last.', 'technology.html')),
-    'ai': ([
-        ('Intelligence', [('ai.html#consulting', 'AI Consulting', 'Readiness, roadmap, GenAI'),
-                          ('ai.html#bi', 'AI Business Intelligence', 'Forecasting, insights, reporting'),
-                          ('ai.html#ecosystem', 'AI Integration Ecosystem', 'Model-agnostic delivery')]),
-        ('Agents', [('ai.html#agents', 'AI Agents', 'Your intelligent digital workforce'),
-                    ('ai.html#orchestration', 'Multi-agent Orchestration', 'Agents that collaborate'),
-                    ('ai.html#governance', 'Governance & Security', 'Human-in-the-loop by design')]),
-        ('Learn', [('academy.html', 'TEAM3 Academy', 'AI learning programmes'),
-                   ('ai.html#recommend', 'Service Recommender', 'Find the right AI solution'),
-                   ('legal.html#responsible-ai', 'Responsible AI', 'Our principles')]),
-    ], ('Human imagination. Artificial intelligence.', 'Extraordinary possibilities.', 'ai.html')),
-    'work': ([
-        ('Work', [('work.html', 'Portfolio', 'Branding, software, films, AI'),
-                  ('gallery.html', 'Gallery', 'Events, publications, print, films'),
-                  ('work.html#heritage', 'Heritage projects', 'Two decades of work')]),
-        ('Clients', [('clients.html', 'Our Clients', 'National and international'),
-                     ('clients.html#group', 'Collabiz & Unite Group', 'Group businesses we build for'),
-                     ('clients.html#heritage', 'Heritage clientele', '100+ organisations since 2004')]),
-        ('Partners', [('partners.html', 'Partner Network', 'Connect. Collaborate. Create.'),
-                      ('partners.html#register', 'Become a Partner', 'Register in minutes'),
-                      ('careers.html', 'Careers', 'Join the TEAM3 team')]),
-    ], ('Our imagination. Your success.', 'See the work, the clients and the moments.', 'gallery.html')),
-}
+
+# (page, label, intro title, intro text, [(href, title, subtitle, thumbnail)])
+MENUS = [
+    ('about.html', 'About', 'Imagination is where everything begins.', 'Founded in 2004 to bring creative communication and information technology together under one roof.', [
+        ('about.html#story', 'Our story', 'Two decades of creativity and code', _ph('presentation')),
+        ('about.html#meaning', 'The meaning of 3', 'Clients · Team · Management', _ph('hands_stack')),
+        ('about.html#vision', 'Vision & mission', 'Where we are going', _ph('highfive')),
+        ('about.html#founder', 'Our founder', 'Dr. Ravi Chandra', _ph('office_glass')),
+        ('about.html#journey', 'Our journey', '2004 to the intelligent era', _ph('earth_night')),
+        ('index.html#global', 'Global presence', 'India · US · UK · Canada', _ph('london')),
+    ]),
+    ('branding.html', 'Branding', 'We don’t just design logos. We build brands.', 'Strategy, identity, advertising and film — a complete brand-to-market solution.', [
+        ('branding.html#strategy', 'Brand strategy', 'Positioning, naming, architecture', _ph('whiteboard')),
+        ('branding.html#identity', 'Brand identity', 'Logos, systems, guidelines', _ph('palette')),
+        ('branding.html#product', 'Product branding', 'Packaging, labels, launch', _ph('designer_desk')),
+        ('branding.html#advertising', 'Advertising', 'Print, outdoor, electronic, digital', _ph('sketch_tablet')),
+        ('branding.html#studio', 'Creative studio', 'Motion, 3D, illustration', _ph('wireframe_tablet')),
+        ('branding.html#media', 'Media & film', 'Corporate, ad and product films', _ph('clapper')),
+    ]),
+    ('technology.html', 'Technology', 'Technology engineered around your business.', 'Enterprise software, web, apps, cloud and smart systems — built to scale.', [
+        ('technology.html#enterprise', 'Enterprise software', 'ERP, CRM, HRMS, workflow', _ph('dashboard')),
+        ('technology.html#web', 'Web development', 'Corporate, commerce, portals', _ph('code_laptop')),
+        ('technology.html#apps', 'Apps & SaaS products', 'iOS, Android, SaaS, UI/UX', _ph('phone_app')),
+        ('technology.html#consulting', 'IT consulting', 'Architecture & modernisation', _ph('planning')),
+        ('technology.html#cloud', 'Cloud & cybersecurity', 'DevOps, data, security', _ph('servers')),
+        ('technology.html#iot', 'Smart tech & IoT', 'Access, RFID, energy, IIoT', _ph('circuit_glow')),
+    ]),
+    ('ai.html', 'AI', 'Human imagination. Artificial intelligence.', 'From readiness assessment to a governed, intelligent digital workforce.', [
+        ('ai.html#consulting', 'AI consulting', 'Readiness, roadmap, GenAI, RAG', _ph('ai_letters')),
+        ('ai.html#bi', 'AI business intelligence', 'Forecasting, insights, reporting', _ph('analytics_laptop')),
+        ('ai.html#agents', 'AI agents', 'Your intelligent digital workforce', _ph('robot_pepper')),
+        ('ai.html#orchestration', 'Multi-agent orchestration', 'Agents that work as a team', _ph('circuit')),
+        ('ai.html#governance', 'Governance & security', 'Human approval by design', _ph('security_phone')),
+        ('ai.html#recommend', 'Service recommender', 'Find the right AI solution', _ph('robot_reading')),
+    ]),
+    ('products.html', 'Products', 'Platforms built by TEAM3.', 'Ten platforms for collaboration, sales, trade, energy, marketing, procurement and community.', [
+        (f'products.html#{p[0]}', p[1], p[3], f'products/{p[0]}-t.webp') for p in PRODUCTS
+    ]),
+    ('marketing.html', 'Marketing', 'Visibility. Engagement. Conversion. Growth.', 'Data, creativity and technology working together to win the right customers.', [
+        ('marketing.html#seo', 'Search engine optimisation', 'Technical, local, content SEO', _ph('analytics_laptop')),
+        ('marketing.html#sem', 'Search & performance ads', 'Google Ads, remarketing, CRO', _ph('ux_sketch')),
+        ('marketing.html#social', 'Social media marketing', 'Content, community, social ads', _ph('dm_tiles')),
+        ('marketing.html#performance', 'Performance marketing', 'Leads, funnels, automation', _ph('dashboard')),
+        ('marketing.html#more', 'Influencer & AI marketing', 'Creators and personalisation', _ph('photographer')),
+        ('marketing.html#funnel', 'Our growth framework', 'The TEAM3 marketing funnel', _ph('meeting_hands')),
+    ]),
+    ('academy.html', 'Academy', 'Learn today. Lead tomorrow.', 'Practical AI and digital skills for students, professionals and organisations.', [
+        ('academy.html#programmes', 'Learning programmes', '12 programmes for the AI economy', _ph('students_laptop')),
+        ('academy.html#formats', 'Learning formats', 'Online, classroom, live projects', _ph('classroom')),
+        ('academy.html#enterprise', 'AI for enterprises', 'Corporate training & workshops', _ph('presentation')),
+        ('academy.html#institutions', 'AI for institutions', 'Colleges and faculty programmes', _ph('library')),
+    ]),
+    ('work.html', 'Our Work', 'Our imagination. Your success.', 'Two decades of brands, platforms, publications and films.', [
+        ('work.html', 'Portfolio', 'Branding, software, films, AI', _ph('flatlay')),
+        ('gallery.html', 'Gallery', 'Events, publications, print, films', 'gallery/nird-technology-bank-2008.webp'),
+        ('clients.html', 'Our clients', 'National to international', _ph('handshake')),
+        ('clients.html#group', 'Collabiz & Unite Group', 'Group businesses we build for', _ph('laptop_dark')),
+        ('work.html#heritage', 'Heritage projects', 'Since 2004', 'gallery/print-works.webp'),
+        ('insights.html', 'Insights', 'Ideas worth exploring', _ph('open_office')),
+    ]),
+    ('industries.html', 'Industries', 'Industry knowledge. Technology without boundaries.', 'Fourteen sectors, plus business consulting and innovation as a service.', [
+        ('industries.html#ind-manufacturing', 'Manufacturing', 'ERP, automation, B2B branding', _ph('engineer_factory')),
+        ('industries.html#ind-renewable-energy', 'Renewable energy', 'Platforms, monitoring, leads', _ph('solar')),
+        ('industries.html#ind-healthcare', 'Healthcare', 'Apps and digital engagement', _ph('doctor_phone')),
+        ('industries.html#ind-real-estate', 'Real estate', 'Branding, portals, CRM', _ph('towers')),
+        ('industries.html#ind-logistics', 'Logistics', 'Tracking and supply chain', _ph('warehouse')),
+        ('industries.html#consulting', 'Business consulting', 'Feasibility to go-to-market', _ph('planning')),
+    ]),
+    ('careers.html', 'Careers', 'Come imagine the future with us.', 'Designers, developers, AI engineers, strategists and entrepreneurs — build what’s next.', [
+        ('careers.html#talent', 'Talent communities', 'Creative, marketing, tech & AI', _ph('friends_laptops')),
+        ('careers.html#culture', 'Life at TEAM3', 'Learn, collaborate, create', _ph('team_laptops')),
+        ('careers.html#apply', 'Submit your profile', 'Jobs, internships, freelance', _ph('coders_pair')),
+        ('partners.html', 'Partner network', 'Connect. Collaborate. Create.', _ph('hands_stack')),
+        ('partners.html#register', 'Become a partner', 'Register in minutes', _ph('handshake')),
+        ('academy.html', 'Learn with TEAM3', 'AI & digital skills', _ph('students_laptop')),
+    ]),
+]
 
 
 def header(active):
     lis = ''
-    for href, label, mega in NAV:
-        cur = ' aria-current="page"' if href == active else ''
-        if mega:
-            cols, feat = MEGA[mega]
-            colhtml = ''.join(
-                f'<div><p class="h5">{E(t)}</p>' + ''.join(f'<a class="mi" href="{h}">{E(a)}<span>{E(s)}</span></a>' for h, a, s in links) + '</div>'
-                for t, links in cols)
-            fh = f'<a class="mega-feature" href="{feat[2]}"><b>{E(feat[0])}</b><p>{E(feat[1])}</p></a>'
-            curcls = ' style="opacity:1;box-shadow:inset 0 -2px 0 var(--red)"' if active in [href] + [h.split('#')[0] for _, ls in cols for h, _, _ in ls if not h.startswith('careers') and not h.startswith('partners')] else ''
-            lis += (f'<li class="has-mega"><button type="button" aria-expanded="false"{curcls}>{E(label if label != "Artificial Intelligence" else "AI")}{ic("chev","chev")}</button>'
-                    f'<div class="mega"><div class="wrap mega-in">{colhtml}{fh}</div></div></li>')
-        else:
-            lis += f'<li><a href="{href}"{cur}>{E(label)}</a></li>'
+    for page, label, it, itext, items in MENUS:
+        cur = active == page or active in [h.split('#')[0] for h, *_ in items if h.split('#')[0] == page]
+        cards = ''.join(f'<a class="mt" href="{h}"><span class="th"><img data-src="assets/img/{img}" alt="" width="480" height="300"></span>'
+                        f'<b>{E(t)}</b><span>{E(sub)}</span></a>' for h, t, sub, img in items)
+        n = len(items)
+        cols = 5 if n > 6 else (4 if n == 4 else 3)
+        lis += (f'<li class="has-mega"><button type="button" aria-expanded="false"{" aria-current=\"page\"" if cur else ""}>{E(label)}{ic("chev", "chev")}</button>'
+                f'<div class="mega"><div class="wrap mega-in">'
+                f'<div class="mi-intro"><p class="h5">{E(label)}</p><b>{E(it)}</b><p>{E(itext)}</p>'
+                f'<a class="btn red sm" href="{page}">Explore {E(label)}{ARROW}</a></div>'
+                f'<div class="mi-grid c{cols}{" dense" if n > 6 else ""}">{cards}</div></div></div></li>')
     return f'''<a class="skip" href="#main">Skip to content</a>
 <header class="site-header"><div class="wrap nav">
 <a class="logo" href="index.html" aria-label="TEAM3 WEBLOGICS home"><img class="sym" src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><span><img class="wm wm-d" src="assets/img/wordmark-dark-sm.webp" alt="TEAM3" width="420" height="61"><img class="wm wm-l" src="assets/img/wordmark-light-sm.webp" alt="TEAM3" width="420" height="61"><span class="tag">WEBLOGICS</span></span></a>
 <ul class="menu" id="menu">{lis}<li class="nav-btns"><a class="btn sm nav-partner" href="partners.html"{' aria-current="page"' if active == 'partners.html' else ''}>Partners</a><a class="btn red sm nav-cta" href="contact.html">Let’s Build Something</a></li></ul>
 <button class="burger" type="button" aria-label="Menu" aria-controls="menu" aria-expanded="false"><span></span><span></span></button>
 </div></header>'''
-
 
 FOOTER = '''<footer class="site-footer"><div class="wrap">
 <div class="f-top">
@@ -434,15 +462,32 @@ AGENTS = [('Research Agent', 'Market and competitor research'), ('Lead Generatio
           ('Branding Agent', 'Brand concepts and campaign creation'), ('Executive Agent', 'Management reporting and decision support')]
 
 
+SVC_PHOTOS = ['whiteboard', 'sketch_tablet', 'code_laptop', 'phone_app', 'ai_letters', 'robot_pepper', 'dm_tiles', 'students_laptop',
+              'clapper', 'planning', 'servers', 'ux_sketch']
+
+
 def svc_cards(items, dark=False):
     out = ''
     for n, (i, t, p, h) in enumerate(items, 1):
-        out += f'<a class="card svc rv d{(n-1)%4}" href="{h}"><span class="num">{n:02d}</span><span class="ic">{ic(i)}</span><h3>{E(t)}</h3><p>{E(p)}</p><span class="link">Explore solutions{ARROW}</span></a>'
+        out += (f'<a class="card svc pcard rv d{(n-1)%4}" href="{h}"><span class="sv-img"><img src="assets/img/photos/{SVC_PHOTOS[n-1]}-t.webp" alt="" width="480" height="300" loading="lazy"></span>'
+                f'<span class="num">{n:02d}</span><span class="sv-body"><span class="ic">{ic(i)}</span><h3>{E(t)}</h3><p>{E(p)}</p><span class="link">Explore solutions{ARROW}</span></span></a>')
     return out
 
 
-def ind_cards(items):
-    return '<div class="ind">' + ''.join(f'<div class="it rv"><span class="ic">{ic(i)}</span><b>{E(t)}</b><span>{E(s)}</span></div>' for i, t, s in items) + '</div>'
+IND_PHOTOS = {'Manufacturing': 'engineer_factory', 'Renewable Energy': 'solar', 'Healthcare': 'doctor_phone', 'Education': 'classroom',
+              'Real Estate': 'towers', 'Retail & FMCG': 'retail', 'Government': 'meeting_hands', 'Banking & Finance': 'finance_docs',
+              'Logistics': 'warehouse', 'Hospitality': 'hotel', 'Import & Export': 'port', 'Startups': 'startup_office',
+              'Agriculture': 'wheat', 'Automotive & EV': 'ev'}
+
+
+def slugify(t):
+    return re.sub(r'[^a-z0-9]+', '-', t.lower().replace('&', '')).strip('-')
+
+
+def ind_cards(items, ids=False):
+    return '<div class="ind">' + ''.join(
+        f'<div class="it pit rv"{f" id=ind-{slugify(t)}" if ids else ""}><img src="assets/img/photos/{IND_PHOTOS[t]}-t.webp" alt="" width="480" height="300" loading="lazy">'
+        f'<span class="ic">{ic(i)}</span><b>{E(t)}</b><span>{E(s)}</span></div>' for i, t, s in items) + '</div>'
 
 
 def insight_cards(exclude=None):
@@ -500,6 +545,79 @@ def pillars_block():
         f'<div class="pillar rv d{n}"><span class="dot"></span><span class="big">{n+1}</span><h3>{E(t)}</h3><p>{E(p)}</p></div>' for n, (t, p) in enumerate(PILLARS)) + '</div>'
 
 
+# --------------------------------------------------------------------------- infographics
+def _arc(cx, cy, r1, r2, a0, a1):
+    import math
+    def pt(r, a):
+        return cx + r * math.cos(math.radians(a)), cy + r * math.sin(math.radians(a))
+    large = 1 if (a1 - a0) > 180 else 0
+    x1, y1 = pt(r2, a0); x2, y2 = pt(r2, a1); x3, y3 = pt(r1, a1); x4, y4 = pt(r1, a0)
+    return f'M{x1:.1f} {y1:.1f} A{r2} {r2} 0 {large} 1 {x2:.1f} {y2:.1f} L{x3:.1f} {y3:.1f} A{r1} {r1} 0 {large} 0 {x4:.1f} {y4:.1f}Z'
+
+
+def _wrap(t, n=16):
+    words, lines, cur = t.split(), [], ''
+    for w in words:
+        if len(cur) + len(w) + 1 > n and cur:
+            lines.append(cur); cur = w
+        else:
+            cur = (cur + ' ' + w).strip()
+    lines.append(cur)
+    return lines[:3]
+
+
+def ring_svg(labels, c1, c2, aria, groups=None):
+    import math
+    n = len(labels); step = 360 / n; out = []
+    fills = ['#ED1726', '#1D1D1F', '#E9AC16']
+    for i, lab in enumerate(labels):
+        a0 = -90 + i * step + 1.2; a1 = -90 + (i + 1) * step - 1.2; am = math.radians((a0 + a1) / 2)
+        g = groups[i] if groups else (0 if i % 2 == 0 else 1)
+        out.append(f'<path d="{_arc(0, 0, 150, 228, a0, a1)}" fill="{fills[g]}" opacity="{0.92 if g != 1 else 1}"/>')
+        nx, ny = 189 * math.cos(am), 189 * math.sin(am)
+        out.append(f'<text x="{nx:.1f}" y="{ny + 6:.1f}" text-anchor="middle" class="rn">{i + 1:02d}</text>')
+        lx, ly = 262 * math.cos(am), 262 * math.sin(am)
+        anchor = 'middle' if abs(lx) < 40 else ('start' if lx > 0 else 'end')
+        lines = _wrap(lab, 18)
+        y0 = ly - (len(lines) - 1) * 9 + 5
+        out.append(f'<line x1="{232 * math.cos(am):.1f}" y1="{232 * math.sin(am):.1f}" x2="{250 * math.cos(am):.1f}" y2="{250 * math.sin(am):.1f}" class="rl"/>')
+        out.append(f'<text x="{lx:.1f}" y="{y0:.1f}" text-anchor="{anchor}" class="rt">' +
+                   ''.join(f'<tspan x="{lx:.1f}" dy="{0 if k == 0 else 18}">{E(l)}</tspan>' for k, l in enumerate(lines)) + '</text>')
+    return (f'<svg class="ring" viewBox="-470 -330 940 660" role="img" aria-label="{E(aria)}">'
+            f'<circle r="140" class="rc"/><circle r="104" class="rc2"/>'
+            f'<image href="assets/img/symbol-sm.webp" x="-22" y="-74" width="44" height="62"/>'
+            f'<text y="22" text-anchor="middle" class="r1">{E(c1)}</text><text y="50" text-anchor="middle" class="r2">{E(c2)}</text>'
+            + ''.join(out) + '</svg>')
+
+
+def funnel_svg():
+    stages = [('Visibility', 'SEO · Social · Content · PR', 'Reach & impressions'),
+              ('Engagement', 'Social media · Video · Influencers · Email', 'Engagement rate & visits'),
+              ('Conversion', 'Search ads · Landing pages · CRO · WhatsApp', 'Leads & cost per lead'),
+              ('Growth', 'Marketing automation · AI personalisation · CRM', 'Revenue & lifetime value')]
+    W, top, bot, h, gap = 560, 560, 200, 92, 10
+    out = []
+    for i, (t, ch, kpi) in enumerate(stages):
+        w1 = top - (top - bot) * i / len(stages); w2 = top - (top - bot) * (i + 1) / len(stages)
+        y = i * (h + gap); x1 = (W - w1) / 2; x2 = (W - w2) / 2
+        col = ['#ED1726', '#C8101C', '#8F0B14', '#1D1D1F'][i]
+        out.append(f'<path d="M{x1} {y} L{x1 + w1} {y} L{x2 + w2} {y + h} L{x2} {y + h}Z" fill="{col}"/>')
+        out.append(f'<text x="{W / 2}" y="{y + h / 2 + 8}" text-anchor="middle" class="ft">{E(t)}</text>')
+        out.append(f'<line x1="{x1 + w1 - 6}" y1="{y + h / 2}" x2="{W + 40}" y2="{y + h / 2}" class="fl"/><circle cx="{W + 40}" cy="{y + h / 2}" r="5" fill="#E9AC16"/>')
+        out.append(f'<text x="{W + 62}" y="{y + h / 2 - 6}" class="fc">{E(ch)}</text><text x="{W + 62}" y="{y + h / 2 + 18}" class="fk">Measure: {E(kpi)}</text>')
+    total = len(stages) * (h + gap)
+    sr = '<ul class="sr-only">' + ''.join(f'<li>{E(t)}: {E(ch)}. Measure: {E(k)}.</li>' for t, ch, k in stages) + '</ul>'
+    return f'<div class="funnel" role="region" aria-label="Marketing funnel infographic" tabindex="0"><svg viewBox="0 -4 1080 {total + 4}" aria-hidden="true">{"".join(out)}</svg>{sr}</div>'
+
+
+def roadmap():
+    steps = [('Assess', 'AI readiness assessment, data audit and use-case prioritisation.'),
+             ('Pilot', 'One workflow, one agent, real data — measured against a clear outcome.'),
+             ('Scale', 'Extend to more workflows with integrations, orchestration and training.'),
+             ('Govern', 'Human approval, permissions, audit trails and continuous monitoring.')]
+    return '<ol class="roadmap">' + ''.join(f'<li class="rv d{i}"><span class="rm-n">{i + 1:02d}</span><b>{E(t)}</b><p>{E(d)}</p></li>' for i, (t, d) in enumerate(steps)) + '</ol>'
+
+
 # --------------------------------------------------------------------------- pages
 def page_index():
     body = f'''
@@ -526,7 +644,10 @@ def page_index():
 
 <section class="section bg-grey" id="services"><div class="wrap">
 {head("What we do", "Everything your business needs to move forward.", "From an idea on paper to a globally scalable business, we help organisations imagine, create, launch, automate and grow.")}
-<div class="grid g4">{svc_cards(SERVICES)}</div></div></section>
+<div class="grid g4">{svc_cards(SERVICES)}</div>
+<div class="infog wide rv"><div class="infog-txt"><span class="eyebrow">One partner · 360°</span><h3>Twelve capabilities. One integrated team.</h3><p class="muted">Brand, technology and intelligence connected around your business — so strategy, design, engineering and marketing never work in isolation.</p><div class="legend"><span><i class="l1"></i>Brand &amp; creative</span><span><i class="l2"></i>Technology</span><span><i class="l3"></i>Intelligence &amp; growth</span></div></div>
+{ring_svg([t for _, t, _, _ in SERVICES], "360°", "solutions", "TEAM3 360-degree service ecosystem: " + ", ".join(t for _, t, _, _ in SERVICES) + ".", groups=[0, 0, 1, 1, 2, 2, 2, 2, 0, 2, 1, 1])}</div>
+</div></section>
 
 <section class="section bg-black"><div class="wrap">
 {head("The meaning behind TEAM3", "TEAM stands for teamwork. <span class='grad'>3 for the people behind it.</span>", "The number three represents the three pillars of our organisation: our clients, our team members and our management. This philosophy from the original TEAM3 corporate presentation still forms our foundation.", gold=True)}
@@ -565,7 +686,8 @@ def page_index():
 
 <section class="section tight"><div class="wrap">
 <div class="head center rv"><span class="eyebrow">Our clients</span><h2>Trusted by more than 100 organisations.</h2><p class="lead">From the Collabiz and Unite Group businesses to national institutions and international companies.</p></div>
-</div>{client_marquee()}<div class="wrap center" style="margin-top:36px">{link("Meet our clients", "clients.html")}</div></section>
+</div>{client_marquee()}<div class="wrap center" style="margin-top:36px">{link("Meet our clients", "clients.html")}</div>
+<div class="wrap" style="margin-top:72px"><div class="head split" style="margin-bottom:32px"><div class="rv"><span class="eyebrow">Our partners</span><h2 style="margin-top:16px;font-size:clamp(28px,3.2vw,40px)">Building together.</h2></div><div class="rv d1">{link("Partner network", "partners.html")}</div></div>{partner_logos()}</div></section>
 
 {GLOBAL}
 
@@ -736,6 +858,7 @@ def page_technology():
 <div class="card rv d3"><span class="ic">{ic("pen")}</span><h3>UI/UX design</h3><p>User research, customer journey mapping, information architecture, wireframes, interactive prototypes, design systems, interface design and usability testing.</p></div>
 </div></div>
 <div class="rv" style="margin-top:72px"><h3 style="font-size:clamp(26px,2.8vw,36px);font-weight:800;letter-spacing:-.04em">Our product development process</h3></div>
+<div class="infog rv">{ring_svg([t for t, _ in proc], "Product", "lifecycle", "Eight-stage product development lifecycle: " + ", ".join(t for t, _ in proc) + ".")}</div>
 <div class="steps" style="margin-top:28px">{"".join(f'<div class="step rv d{n%4}"><h4>{E(t)}</h4><p>{E(p)}</p></div>' for n, (t, p) in enumerate(proc))}</div>
 <div class="actions">{btn("Turn Your Idea into an App", "contact.html?service=Apps", "red")}</div>
 </div></section>
@@ -803,6 +926,10 @@ def page_ai():
 <div class="agents">{"".join(f'<div class="agent rv"><span class="av">{E(a[0])}{E(a.split()[1][0]) if len(a.split())>1 else ""}</span><div><b>{E(a)}</b><span>{E(b)}</span></div></div>' for a, b in AGENTS)}</div>
 </div></section>
 
+<section class="section bg-black" style="padding-top:0"><div class="wrap">
+<div class="head rv"><span class="eyebrow gold">AI adoption roadmap</span><h2 style="margin-top:16px">From first pilot to <span class="grad">governed scale.</span></h2></div>
+{roadmap()}
+</div></section>
 <section class="section bg-black" id="orchestration" style="padding-top:0"><div class="wrap">
 <div class="head split"><div class="rv"><span class="eyebrow gold">Multi-agent orchestration</span><h2 style="margin-top:16px">Agents that work as a team.</h2></div>
 <p class="lead rv d1">Specialist agents collaborate through an orchestrator that plans, delegates and reports — while sensitive actions always pass through human approval.</p></div>
@@ -832,12 +959,16 @@ def page_marketing():
 <section class="section"><div class="wrap">
 <h2 class="sr-only">Our approach</h2>
 <div class="grid g4" style="margin-bottom:80px">{"".join(f'<div class="card rv d{n}"><span class="num">{n+1:02d}</span><h3 style="margin-top:40px;font-size:30px;font-weight:800">{w}</h3></div>' for n, w in enumerate(["Visibility","Engagement","Conversion","Growth"]))}</div>
-{cap("Search engine optimisation", "", checks(["Technical SEO","On-page optimisation","Content strategy","Local SEO","Keyword research","Competitor analysis","Search performance tracking"], True))}
-{cap("Search engine marketing", "", checks(["Google Ads","Search campaigns","Display advertising","Shopping campaigns","Remarketing","Conversion optimisation"], True))}
-{cap("Social media marketing", "Instagram, Facebook, LinkedIn, YouTube, X and other relevant platforms.", checks(["Account management","Content calendars","Creative campaigns","Community engagement","Social advertising","Performance reporting"], True))}
-{cap("Performance marketing", "", checks(["Lead generation campaigns","Customer acquisition","Conversion rate optimisation","Landing page design","Sales funnel development","Campaign analytics","Marketing automation"], True))}
+<div id="seo">{cap("Search engine optimisation", "", checks(["Technical SEO","On-page optimisation","Content strategy","Local SEO","Keyword research","Competitor analysis","Search performance tracking"], True))}</div>
+<div id="sem">{cap("Search engine marketing", "", checks(["Google Ads","Search campaigns","Display advertising","Shopping campaigns","Remarketing","Conversion optimisation"], True))}</div>
+<div id="social">{cap("Social media marketing", "Instagram, Facebook, LinkedIn, YouTube, X and other relevant platforms.", checks(["Account management","Content calendars","Creative campaigns","Community engagement","Social advertising","Performance reporting"], True))}</div>
+<div id="performance">{cap("Performance marketing", "", checks(["Lead generation campaigns","Customer acquisition","Conversion rate optimisation","Landing page design","Sales funnel development","Campaign analytics","Marketing automation"], True))}</div>
 </div></section>
-<section class="section bg-black"><div class="wrap"><div class="grid g3">
+<section class="section bg-grey" id="funnel"><div class="wrap">
+{head("Our growth framework", "The TEAM3 marketing funnel.", "Every campaign is planned against four stages — with the channels and the measures that matter at each one.")}
+<div class="rv">{funnel_svg()}</div>
+</div></section>
+<section class="section bg-black" id="more"><div class="wrap"><div class="grid g3">
 <div class="card rv"><span class="ic">{ic("users")}</span><h3>Influencer marketing</h3><p>Creator identification, influencer partnerships, campaign management, branded content, audience analysis and campaign performance measurement.</p></div>
 <div class="card rv d1"><span class="ic">{ic("ai")}</span><h3>AI-powered marketing</h3><p>AI-assisted content creation, personalised communication, automated campaign workflows, audience segmentation and customer journey optimisation.</p></div>
 <div class="card rv d2"><span class="ic">{ic("megaphone")}</span><h3>Other marketing services</h3><p>Email marketing, WhatsApp Business campaigns with appropriate consent, online reputation management, content marketing, video marketing and digital public relations.</p></div>
@@ -858,12 +989,12 @@ def page_academy():
 {head("Proposed learning programmes", "Twelve programmes for the AI-powered economy.")}
 <div class="grid g3">{"".join(f'<div class="card rv d{n%3}"><span class="num">{n+1:02d}</span><h3 style="margin-top:34px">{E(t)}</h3><p>{E(p)}</p></div>' for n, (t, p) in enumerate(progs))}</div>
 </div></section>
-<section class="section bg-grey"><div class="wrap">
+<section class="section bg-grey" id="formats"><div class="wrap">
 {head("Learning formats", "Learn the way that works for you.")}
 <div class="rv">{chips(["Online Learning","Classroom Training","Corporate Workshops","College Programmes","Live Projects","Skill Assessments"])}</div>
 <div class="grid g2" style="margin-top:56px">
-<div class="panel rv"><div class="art art-red"></div><div class="art art-dots"></div><span class="eyebrow gold plain">AI for enterprises</span><h3 style="margin-top:14px">Customised corporate training.</h3><p>For management teams, marketing departments, software developers, finance teams, HR professionals and operational staff.</p></div>
-<div class="panel rv d1"><div class="art art-gold"></div><div class="art art-lines"></div><span class="eyebrow gold plain">AI for educational institutions</span><h3 style="margin-top:14px">Industry-ready graduates.</h3><p>Industry-oriented workshops, practical projects, innovation challenges, faculty development programmes and entrepreneurship training.</p></div>
+<div class="panel photo rv" id="enterprise"><img class="art" src="assets/img/photos/presentation.webp" alt="" loading="lazy"><div class="art shade"></div><span class="eyebrow gold plain">AI for enterprises</span><h3 style="margin-top:14px">Customised corporate training.</h3><p>For management teams, marketing departments, software developers, finance teams, HR professionals and operational staff.</p></div>
+<div class="panel photo rv d1" id="institutions"><img class="art" src="assets/img/photos/library.webp" alt="" loading="lazy"><div class="art shade"></div><span class="eyebrow gold plain">AI for educational institutions</span><h3 style="margin-top:14px">Industry-ready graduates.</h3><p>Industry-oriented workshops, practical projects, innovation challenges, faculty development programmes and entrepreneurship training.</p></div>
 </div></div></section>
 {cta_band("Build skills for the AI-powered economy.", "Join a programme — or partner with TEAM3 Academy to bring AI learning to your organisation.", btn("Explore Learning Programmes", "#programmes", "red") + btn("Become a Training Partner", "contact.html?service=Academy", "ghost", False))}
 '''
@@ -906,7 +1037,7 @@ def page_work():
 def page_industries():
     body = f'''
 {page_hero("Industries", "Industries we serve", "Industry knowledge. <span class='grad'>Technology without boundaries.</span>", "Every industry has unique challenges. TEAM3 combines creative thinking and technology capabilities to develop relevant solutions across different business sectors.")}
-<section class="section bg-grey"><div class="wrap">{ind_cards(INDUSTRIES)}</div></section>
+<section class="section bg-grey"><div class="wrap">{ind_cards(INDUSTRIES, True)}</div></section>
 <section class="section" id="consulting"><div class="wrap">
 {head("Business consulting & product innovation", "Turning ideas <span class='grad'>into enterprises.</span>", "TEAM3 helps entrepreneurs and established businesses identify new opportunities, develop innovative products and bring commercially viable solutions to market.")}
 {cap("Business consulting services", "", checks(["Business concept development","Market feasibility studies","Business model design","Competitive intelligence","Commercial strategy","Go-to-market planning","Franchise model development","Investor presentation design","Business process transformation","Technology adoption strategy","International market development"], True))}
@@ -925,7 +1056,7 @@ def page_careers():
     tech = ['Full-stack developers', 'Mobile app developers', 'AI engineers', 'AI agent developers', 'Cloud engineers', 'Data engineers', 'Software architects', 'QA engineers']
     body = f'''
 {page_hero("Careers", "Careers", "Come imagine <span class='grad'>the future with us.</span>", "At TEAM3, creativity and technology come together to solve meaningful challenges. We are building a culture where designers, developers, AI engineers, strategists and entrepreneurs can collaborate, learn and create.", btn("Submit Your Profile", "#apply", "red") + btn("Partner with us", "partners.html", "ghost", False))}
-<section class="section"><div class="wrap">
+<section class="section" id="talent"><div class="wrap">
 {head("Talent communities", "Two communities. One team.")}
 <div class="grid g2">
 <div class="card rv"><span class="ic">{ic("pen")}</span><h3>Creative &amp; marketing</h3><ul class="bullets" style="margin-top:18px">{"".join(f"<li>{E(r)}</li>" for r in creative)}</ul></div>
@@ -933,6 +1064,10 @@ def page_careers():
 </div>
 <div class="rv" style="margin-top:56px"><h3>Work opportunities</h3><div style="margin-top:20px">{chips(["Full-time employment","Internships","Freelance projects","Remote collaboration","Consulting assignments","Project-based partnerships"])}</div>
 <p class="muted" style="margin-top:22px">Specific vacancies will be published when recruitment requirements are confirmed.</p></div>
+</div></section>
+<section class="section bg-black" id="culture"><div class="wrap">
+{head("Life at TEAM3", "Learn. Collaborate. <span class='grad'>Create.</span>", "A culture where creative and technical people work side by side — with real projects, mentoring and AI-first tools from day one.", gold=True)}
+<div class="culture">{"".join(f'<figure class="rv d{n}"><img src="assets/img/photos/{k}.webp" alt="" loading="lazy"><figcaption><b>{E(t)}</b><span>{E(d)}</span></figcaption></figure>' for n, (k, t, d) in enumerate([("team_laptops", "Collaborate", "Cross-functional teams of designers, engineers and strategists."), ("coders_pair", "Learn", "Mentoring, TEAM3 Academy courses and AI-first tooling."), ("whiteboard", "Create", "Ideas move quickly from whiteboard to working product."), ("highfive", "Grow", "Real client work, recognition and room to lead.")]))}</div>
 </div></section>
 
 <section class="section bg-grey" id="apply"><div class="wrap"><div class="cap contact-grid" style="border:0;padding:0">
@@ -991,12 +1126,13 @@ def page_gallery():
 
 def product_visual(pr, n):
     slug, name, tag, cat, icon, *_ = pr
-    return (f'<div class="pvis t{(n % 6) + 1}" aria-hidden="true"><span class="pic">{ic(icon)}</span>'
-            f'<b>{E(name)}</b><span class="pcat">{E(cat)}</span><span class="orb o1"></span><span class="orb o2"></span></div>')
+    return (f'<figure class="pshot"><div class="bchrome" aria-hidden="true"><i></i><i></i><i></i><span>{E(name.lower().replace(" ", ""))}.app</span></div>'
+            f'<img src="assets/img/products/{slug}.webp" alt="{E(name)} — illustrative interface" width="1440" height="860" loading="lazy">'
+            f'<figcaption>Illustrative interface</figcaption></figure>')
 
 
 def page_products():
-    idx = ''.join(f'<a class="pidx" href="#{p[0]}"><span class="pic">{ic(p[4])}</span><b>{E(p[1])}</b><span>{E(p[3])}</span></a>' for p in PRODUCTS)
+    idx = ''.join(f'<a class="pidx" href="#{p[0]}"><img src="assets/img/products/{p[0]}-t.webp" alt="" width="480" height="288" loading="lazy"><b>{E(p[1])}</b><span>{E(p[3])}</span></a>' for p in PRODUCTS)
     blocks = ''
     for n, pr in enumerate(PRODUCTS):
         slug, name, tag, cat, icon, desc, feats, aud = pr
@@ -1012,7 +1148,7 @@ def page_products():
 {page_hero("Products", "Our Products", "Platforms built by TEAM3. <span class='grad'>Ready to scale.</span>", "Ten digital platforms for collaboration, sales intelligence, trade, energy, marketing, procurement and community — designed, engineered and powered with AI by TEAM3 for the Collabiz and Unite Group businesses.", btn("Explore the products", "#products", "light") + btn("Request a demo", "contact.html?service=Apps&msg=" + quote("Product demo request") + "#enquiry", "ghost", False))}
 <section class="section tight" id="products"><div class="wrap">
 <h2 class="sr-only">All products</h2>
-<div class="pindex">{idx}</div>
+<div class="pindex shots">{idx}</div>
 </div></section>
 <section class="section" style="padding-top:0"><div class="wrap prods">{blocks}</div></section>
 <section class="section bg-black"><div class="wrap">
@@ -1058,12 +1194,24 @@ def page_clients():
     return layout('clients.html', 'Our Clients', 'TEAM3 clients: Collabiz and Unite Group businesses, NIRD, Accenture, Air India, Dr. Reddy’s, Madhucon and 100+ organisations since 2004.', body)
 
 
+PARTNER_ORGS = [('Nurolabs', 'nurolabs'), ('Partner Group', 'partner-group')]
+
+
+def partner_logos(dark=False):
+    return ('<div class="plogos">' + ''.join(f'<div class="plogo rv d{n}"><span class="pl-{k}">{E(t)}</span></div>' for n, (t, k) in enumerate(PARTNER_ORGS)) +
+            '<a class="plogo join rv" href="partners.html#register"><span>Your company?</span><small>Become a partner →</small></a></div>')
+
+
 def page_partners():
     types = ["Creative partner", "Software development partner", "AI technology partner", "Marketing agency", "Business consultant", "Training institution", "Freelance professional", "International representative", "Manufacturing partner", "Franchise partner"]
     tiles = [("pen", "Creative partners"), ("code", "Software development partners"), ("ai", "AI technology partners"), ("megaphone", "Marketing agencies"), ("compass", "Business consultants"), ("cap", "Training institutions"), ("users", "Freelance professionals"), ("globe", "International representatives"), ("factory", "Manufacturing partners"), ("rocket", "Franchise partners")]
     benefits = [("Access to business opportunities", "Qualified projects from TEAM3 and the Collabiz network."), ("Collaborative project development", "Deliver together, with clear roles and shared tools."), ("Technology resources", "Platforms, AI tooling and engineering support."), ("Marketing support", "Co-branded campaigns and visibility across our channels."), ("Shared expertise", "Branding, technology and AI know-how under one roof."), ("Agreed commercial incentives", "Transparent commissions and revenue share.")]
     body = f"""
 {page_hero("Partners", "TEAM3 Partner Network", "Connect. Collaborate. <span class='grad'>Create opportunities.</span>", "TEAM3 believes that the future of business lies in collaboration. Our partner ecosystem brings together creative professionals, technology companies, consultants, entrepreneurs, investors and industry specialists.", btn("Become a TEAM3 Partner", "#register", "red") + btn("See partner benefits", "#benefits", "ghost", False))}
+<section class="section tight" id="our-partners"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow">Our partners</span><h2 style="margin-top:16px">Building together.</h2></div><p class="lead rv d1">Organisations we collaborate with to deliver branding, technology and AI for our clients.</p></div>
+{partner_logos()}
+</div></section>
 <section class="section"><div class="wrap">
 {head("Partnership opportunities", "Ten ways to partner.")}
 <div class="grid g4 ptypes">{"".join(f'<div class="card rv d{n%4}"><span class="ic">{ic(i)}</span><h3 style="font-size:18px">{E(t)}</h3></div>' for n, (i, t) in enumerate(tiles))}</div>

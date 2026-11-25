@@ -165,6 +165,7 @@ LEGAL = [
                              'Tools such as the project scope estimator and service recommender give indicative guidance only.']),
         ('Intellectual property', ['The TEAM3 name, footprint symbol, logo, tagline “Step beyond imagination.”, and the design and content of this website are the property of TEAM3 WEBLOGICS PVT. LTD. or its licensors. They may not be copied or used without our written permission. Names of clients and third-party products belong to their respective owners.']),
         ('Acceptable use', ['You agree not to misuse the website — for example by attempting unauthorised access, submitting false information, sending spam through our forms, or interfering with its operation.']),
+        ('Photography and imagery', ['Stock photography on this website is sourced from Unsplash and used under the Unsplash License, which permits free commercial use. Product interface images are illustrative designs created by TEAM3. Archive photographs and publications are from the TEAM3 company archive.']),
         ('Third-party links', ['The website may link to third-party sites. We are not responsible for their content or practices.']),
         ('Liability', ['We take care to keep the website accurate and available, but it is provided “as is”. To the extent permitted by law, TEAM3 is not liable for losses arising from use of, or inability to use, the website.']),
         ('Governing law', ['These terms are governed by the laws of India. The courts at Hyderabad, Telangana shall have jurisdiction.']),
