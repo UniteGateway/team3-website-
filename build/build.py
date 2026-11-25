@@ -1152,11 +1152,22 @@ def page_gallery():
     return layout('gallery.html', 'Gallery', 'TEAM3 gallery: NIRD launches with the President of India, publications, print works, campaigns and corporate films.', body)
 
 
+PRODUCT_SHOT = {
+    'collabiz': ('collabiz.app', 'Live app · home page'), 'solbid': ('solbid.app', 'Live app · welcome screen'),
+    'bizo': ('bizo.one', 'Home page'),
+}
+
+
+def shot_meta(slug, name):
+    return PRODUCT_SHOT.get(slug, (name.lower().replace(' ', '') + '.app', 'Home page design'))
+
+
 def product_visual(pr, n):
     slug, name, tag, cat, icon, *_ = pr
-    return (f'<figure class="pshot"><div class="bchrome" aria-hidden="true"><i></i><i></i><i></i><span>{E(name.lower().replace(" ", ""))}.app</span></div>'
-            f'<img src="assets/img/products/{slug}.webp" alt="{E(name)} — illustrative interface" width="1440" height="860" loading="lazy">'
-            f'<figcaption>Illustrative interface</figcaption></figure>')
+    url, cap_ = shot_meta(slug, name)
+    return (f'<figure class="pshot"><div class="bchrome" aria-hidden="true"><i></i><i></i><i></i><span>{E(url)}</span></div>'
+            f'<img src="assets/img/products/{slug}.webp" alt="{E(name)} — {E(cap_.lower())}" width="1440" height="860" loading="lazy">'
+            f'<figcaption>{E(cap_)}</figcaption></figure>')
 
 
 def page_products():
@@ -1385,8 +1396,8 @@ def page_product(pr):
     body = f"""
 {page_hero(name, cat, E(name) + ". <span class='grad'>" + E(tag) + ".</span>", E(desc), btn("Request a demo", demo, "red") + btn("All products", "products.html", "ghost", False), photo='laptop_dark', parent=('products.html', 'Products'))}
 <section class="section"><div class="wrap">
-<figure class="pshot big rv"><div class="bchrome" aria-hidden="true"><i></i><i></i><i></i><span>{E(name.lower().replace(" ", ""))}.app</span></div>
-<img src="assets/img/products/{slug}.webp" alt="{E(name)} — illustrative interface" width="1440" height="860"><figcaption>Illustrative interface</figcaption></figure>
+<figure class="pshot big rv"><div class="bchrome" aria-hidden="true"><i></i><i></i><i></i><span>{E(shot_meta(slug, name)[0])}</span></div>
+<img src="assets/img/products/{slug}.webp" alt="{E(name)} — {E(shot_meta(slug, name)[1].lower())}" width="1440" height="860"><figcaption>{E(shot_meta(slug, name)[1])}</figcaption></figure>
 </div></section>
 <section class="section bg-grey"><div class="wrap">
 {head("Key features", "What " + E(name) + " does.")}
