@@ -651,7 +651,7 @@ def page_index():
 <div class="stats">
 <div class="stat"><b data-count="2004">2004</b><span>Established</span></div>
 <div class="stat"><b data-count="22">22<sup>+</sup></b><span>Years of brand heritage</span></div>
-<div class="stat"><b data-count="100">100<sup>+</sup></b><span>Historically served clients</span></div>
+<div class="stat"><b data-count="300">300<sup>+</sup></b><span>Clients served</span></div>
 <div class="stat"><b>360<sup>°</sup></b><span>Creative &amp; technology solutions</span></div>
 </div></div></section>
 
@@ -698,7 +698,7 @@ def page_index():
 {ind_cards(INDUSTRIES[:8])}</div></section>
 
 <section class="section tight"><div class="wrap">
-<div class="head center rv"><span class="eyebrow">Our clients</span><h2>Trusted by more than 100 organisations.</h2><p class="lead">From the Collabiz and Unite Group businesses to national institutions and international companies.</p></div>
+<div class="head center rv"><span class="eyebrow">Our clients</span><h2>Trusted by more than 300 organisations.</h2><p class="lead">From the Collabiz and Unite Group businesses to national institutions and international companies.</p></div>
 </div>{client_marquee()}<div class="wrap center" style="margin-top:36px">{link("Meet our clients", "clients.html")}</div>
 <div class="wrap" style="margin-top:72px"><div class="head split" style="margin-bottom:32px"><div class="rv"><span class="eyebrow">Our partners</span><h2 style="margin-top:16px;font-size:clamp(28px,3.2vw,40px)">Building together.</h2></div><div class="rv d1">{link("Partner network", "partners.html")}</div></div>{partner_logos()}</div></section>
 
@@ -1039,7 +1039,7 @@ def page_work():
 <div class="works">{cards}</div>
 </div></section>
 <section class="section bg-grey" id="heritage"><div class="wrap">
-<div class="head split"><div class="rv"><span class="eyebrow">Heritage &amp; clientele</span><h2 style="margin-top:16px">More than 100 clients across India and international markets.</h2></div>
+<div class="head split"><div class="rv"><span class="eyebrow">Heritage &amp; clientele</span><h2 style="margin-top:16px">More than 300 clients across India and international markets.</h2></div>
 <div class="rv d1"><p class="lead">From the Collabiz and Unite Group businesses to national institutions and global companies.</p><div class="actions" style="margin-top:22px">{btn("Meet our clients", "clients.html", "red")}{btn("Open the gallery", "gallery.html", "ghost", False)}</div></div></div>
 </div></section>
 {cta_band("Your project could be next.", "Let’s create the work you’ll be proud to show.", btn("Start a Project", "contact.html", "red"))}
@@ -1179,7 +1179,7 @@ def page_clients():
     heritage = ''.join(f'<div class="row rv"><b>{E(n)}</b><span>{E(m)}</span><i>{i+1:02d}</i></div>' for i, (n, m) in enumerate(CLIENTS))
     films = ''.join(gallery_tile(g, n) for n, g in enumerate(x for x in GALLERY if x[1] == 'films'))
     body = f"""
-{page_hero("Clients", "Our Clients", "Trusted by more than <span class='grad'>100 organisations.</span>", "Our clientele spans sectors from national to international level — from the Collabiz and Unite Group businesses to government institutions, healthcare, pharma, aviation and global technology companies.")}
+{page_hero("Clients", "Our Clients", "Trusted by more than <span class='grad'>300 organisations.</span>", "Our clientele spans sectors from national to international level — from the Collabiz and Unite Group businesses to government institutions, healthcare, pharma, aviation and global technology companies.")}
 {subnav([("group","Collabiz & Unite Group"),("institutions","Institutions"),("heritage","Heritage clientele"),("films","Film clients")])}
 <section class="section" id="group"><div class="wrap">
 {head("Collabiz & Unite Group", "Group businesses <span class='grad'>we build for.</span>", "TEAM3 is the branding, technology and AI partner to the Collabiz and Unite Group businesses — from strategy and identity to platforms, apps and intelligent automation.")}
@@ -1194,7 +1194,7 @@ def page_clients():
 </div></section>
 <section class="section bg-grey" id="heritage"><div class="wrap">
 <div class="head split"><div class="rv"><span class="eyebrow">Heritage clientele</span><h2 style="margin-top:16px">National to international.</h2></div>
-<p class="lead rv d1">A few of our prestigious clients from a database of more than 100, as listed in the TEAM3 company presentation.</p></div>
+<p class="lead rv d1">A few of our prestigious clients from more than 300 organisations served since 2004.</p></div>
 <div class="rows">{heritage}</div>
 </div></section>
 <section class="section" id="films"><div class="wrap">
@@ -1204,7 +1204,7 @@ def page_clients():
 {cta_band("Join our clients.", "Let’s build your brand, technology and intelligence — together.", btn("Start a Project", "contact.html", "red") + btn("Become a partner", "partners.html", "ghost", False))}
 {LIGHTBOX}
 """
-    return layout('clients.html', 'Our Clients', 'TEAM3 clients: Collabiz and Unite Group businesses, NIRD, Accenture, Air India, Dr. Reddy’s, Madhucon and 100+ organisations since 2004.', body)
+    return layout('clients.html', 'Our Clients', 'TEAM3 clients: Collabiz and Unite Group businesses, NIRD, Accenture, Air India, Dr. Reddy’s, Madhucon and 300+ organisations since 2004.', body)
 
 
 PARTNER_ORGS = [('Nurolabs', 'nurolabs'), ('Partner Group', 'partner-group')]
