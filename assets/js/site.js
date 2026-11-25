@@ -144,20 +144,64 @@
     est.addEventListener('change', calc); est.addEventListener('input', calc);
   }
 
-  /* ---------- Enquiry form (prototype: compose + copy) ---------- */
-  var form = d.getElementById('enquiry');
-  if (form) {
+  /* ---------- Forms: enquiry, meeting, partner, career ----------
+     Delivery order: POST to data-endpoint (if configured) → mailto (if data-email) → copy to clipboard. */
+  var cfg = d.body.dataset || {};
+  var LABELS = { name: 'Full name', company: 'Company', email: 'Email', phone: 'Phone / WhatsApp', service: 'Service required', budget: 'Estimated budget',
+    message: 'Message', topic: 'Topic', date: 'Preferred date', time: 'Preferred time (IST)', mode: 'Meeting mode', location: 'City / country',
+    role: 'Role', opportunity: 'Opportunity type', experience: 'Experience', portfolio: 'Portfolio / profile', partner_type: 'Partner type' };
+  var SVC = {};
+  var svcSel = d.getElementById('f-service');
+  if (svcSel) Array.prototype.forEach.call(svcSel.options, function (o) { SVC[o.value] = o.text; });
+
+  function compose(form, kind) {
+    var f = new FormData(form), lines = ['TEAM3 WEBLOGICS — ' + kind, ''];
+    f.forEach(function (v, k) {
+      if (k === '_gotcha' || k === 'consent' || !String(v).trim()) return;
+      lines.push((LABELS[k] || k) + ': ' + (k === 'service' && SVC[v] ? SVC[v] : v));
+    });
+    lines.push('', 'Sent from ' + location.href.split('?')[0]);
+    return lines.join('\n');
+  }
+  function success(form, msg) {
+    var box = d.createElement('div'); box.className = 'form-ok'; box.setAttribute('role', 'status'); box.tabIndex = -1;
+    box.innerHTML = '<span class="tick"></span><h3>Thank you.</h3><p></p><button type="button" class="btn ghost sm">Send another</button>';
+    box.querySelector('p').textContent = msg;
+    box.querySelector('button').addEventListener('click', function () { box.remove(); form.reset(); form.hidden = false; minToday(); });
+    form.hidden = true; form.parentNode.insertBefore(box, form.nextSibling); box.focus();
+  }
+  d.querySelectorAll('form[data-form]').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!form.reportValidity()) return;
-      var f = new FormData(form), lines = ['TEAM3 WEBLOGICS — Project Enquiry', ''];
-      [['name', 'Full name'], ['company', 'Company'], ['email', 'Email'], ['phone', 'Phone / WhatsApp'], ['service', 'Service required'], ['budget', 'Estimated budget'], ['message', 'Requirements']].forEach(function (p) { lines.push(p[1] + ': ' + (f.get(p[0]) || '—')); });
-      var txt = lines.join('\n');
-      var done = function () { toast('Enquiry copied — paste it into your email or WhatsApp.'); };
-      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(done, function () { fallback(txt); done(); });
-      else { fallback(txt); done(); }
+      if (form._gotcha && form._gotcha.value) return; // spam trap
+      var kind = form.getAttribute('data-form'), txt = compose(form, kind), btn = form.querySelector('[type=submit]');
+      if (cfg.endpoint) {
+        btn.disabled = true; btn.style.opacity = '.6';
+        var fd = new FormData(form); fd.append('_subject', 'TEAM3 website — ' + kind); fd.append('form', kind);
+        fetch(cfg.endpoint, { method: 'POST', body: fd, headers: { Accept: 'application/json' } })
+          .then(function (r) { if (!r.ok) throw new Error(r.status); success(form, 'Your ' + kind.toLowerCase() + ' has reached TEAM3. We’ll reply within one business day.'); })
+          .catch(function () { toast('Couldn’t send just now — your details were copied instead.'); copy(txt); })
+          .then(function () { btn.disabled = false; btn.style.opacity = ''; });
+      } else if (cfg.email) {
+        location.href = 'mailto:' + cfg.email + '?subject=' + encodeURIComponent('TEAM3 website — ' + kind) + '&body=' + encodeURIComponent(txt);
+        success(form, 'Your email app should now open with your ' + kind.toLowerCase() + ' ready to send.');
+      } else {
+        copy(txt);
+        success(form, 'Your ' + kind.toLowerCase() + ' has been copied. Paste it into an email or WhatsApp message to TEAM3 and we’ll take it from there.');
+      }
+    });
+  });
+  function copy(txt) {
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).catch(function () { fallback(txt); });
+    else fallback(txt);
+  }
+  function minToday() {
+    d.querySelectorAll('input[data-min-today]').forEach(function (i) {
+      var t = new Date(); t.setDate(t.getDate() + 1); i.min = t.toISOString().slice(0, 10);
     });
   }
+  minToday();
   function fallback(t) { var a = d.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; d.body.appendChild(a); a.select(); try { d.execCommand('copy'); } catch (e) {} a.remove(); }
   function toast(msg) {
     var t = d.querySelector('.toast'); if (!t) { t = d.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); d.body.appendChild(t); }
@@ -167,6 +211,77 @@
   // Preselect service from ?service=
   var q = new URLSearchParams(location.search).get('service'), sel = d.getElementById('f-service');
   if (q && sel) Array.prototype.forEach.call(sel.options, function (o) { if (o.value === q) sel.value = q; });
+  var qm = new URLSearchParams(location.search).get('msg'), ta = d.getElementById('f-msg');
+  if (qm && ta && !ta.value) ta.value = qm.slice(0, 1000);
+
+  /* ---------- TEAM3 Assistant: guided, rule-based enquiry helper ---------- */
+  var asst = d.getElementById('asst');
+  if (asst) {
+    var fab = asst.querySelector('.asst-fab'), panel = asst.querySelector('.asst-panel'), log = asst.querySelector('.asst-log'),
+        inForm = asst.querySelector('.asst-in'), input = inForm.querySelector('input'), started = false, topic = null;
+    var T = {
+      brand: { l: 'Build or refresh a brand', svc: 'Branding', page: 'branding.html', say: 'We cover the whole journey: research and positioning, naming, identity design, packaging and brand guidelines, then the website and launch campaign.' },
+      web: { l: 'A website or online store', svc: 'Web', page: 'technology.html#web', say: 'We design and build corporate websites, e-commerce, portals, marketplaces and progressive web apps. Every site is mobile-first, accessible, secure and SEO-ready.' },
+      app: { l: 'A mobile app or SaaS product', svc: 'Apps', page: 'technology.html#apps', say: 'We take products from idea and feasibility through UI/UX, architecture, development, QA and launch, then keep improving them. iOS, Android, cross-platform and SaaS.' },
+      ai: { l: 'AI, agents & automation', svc: 'AI', page: 'ai.html', say: 'We start with an AI readiness assessment, then build generative AI, RAG knowledge systems and AI agents. Human approval and audit trails are built in.' },
+      mkt: { l: 'More customers & leads', svc: 'Marketing', page: 'marketing.html', say: 'Our digital marketing covers SEO, Google Ads, social media, performance campaigns, influencer marketing and AI-powered automation, all measured against real conversions.' },
+      it: { l: 'ERP, CRM or IT modernisation', svc: 'Technology', page: 'technology.html#enterprise', say: 'We build custom enterprise software (ERP, CRM, HRMS, inventory, workflow) and help with architecture, integration, cloud migration and cybersecurity.' },
+      film: { l: 'Corporate film or video', svc: 'Media', page: 'branding.html#media', say: 'We produce corporate films, ad films, product videos, animation, motion graphics and AI-assisted video, from script and storyboard to final edit.' },
+      learn: { l: 'AI training for my team', svc: 'Academy', page: 'academy.html', say: 'TEAM3 Academy offers AI Foundation, Prompt Engineering, Generative AI, AI Agent Development and more, delivered online, in the classroom or as corporate workshops.' },
+      partner: { l: 'Partner with TEAM3', svc: 'Partnership', page: 'careers.html#register', say: 'The TEAM3 Partner Network is open to creative, technology and AI partners, agencies, consultants, trainers and international representatives.' },
+      job: { l: 'Careers at TEAM3', svc: 'Careers', page: 'careers.html#apply', say: 'We welcome designers, developers, AI engineers, marketers and strategists, for full-time roles, internships and freelance projects.' }
+    };
+    var KW = [['job', /career|job|hiring|vacanc|intern|resume|cv\b|work for/i], ['partner', /partner|franchise|reseller|white.?label|collaborat/i],
+      ['learn', /train|course|learn|academy|workshop|class|student|college/i], ['ai', /\bai\b|artificial|agent|automat|chatbot|gpt|llm|rag|machine learning/i],
+      ['app', /\bapp\b|mobile|android|ios|saas|product|marketplace|platform/i], ['web', /website|web ?site|e-?commerce|online store|portal|landing/i],
+      ['it', /erp|crm|software|cloud|security|cyber|server|it\b|hrms|inventory|iot|rfid/i], ['mkt', /seo|marketing|ads|lead|social|instagram|google|customer|sales|grow/i],
+      ['film', /film|video|animation|shoot|photo|commercial|motion/i], ['brand', /brand|logo|identity|packag|name|design|rebrand|advertis|campaign/i]];
+    function add(html, who) { var m = d.createElement('div'); m.className = 'msg ' + (who || 'bot'); m.innerHTML = html; log.appendChild(m); log.scrollTop = log.scrollHeight; return m; }
+    function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function choices(list) {
+      var w = add('', 'opts-row');
+      list.forEach(function (c) { var b = d.createElement('button'); b.type = 'button'; b.className = 'qr'; b.textContent = c[1]; b.addEventListener('click', function () { w.remove(); add(esc(c[1]), 'me'); c[0](); }); w.appendChild(b); });
+    }
+    function menu() {
+      choices(Object.keys(T).map(function (k) { return [function () { pick(k); }, T[k].l]; }).concat([[other, 'Something else']]));
+    }
+    function pick(k, text) {
+      topic = k; var t = T[k];
+      setTimeout(function () {
+        add(esc(t.say));
+        add('<a class="asst-link" href="' + t.page + '">See how we do it →</a>');
+        choices([[function () { go(k, text); }, k === 'job' ? 'Submit my profile' : k === 'partner' ? 'Register as a partner' : 'Send an enquiry'],
+                 [function () { location.href = 'contact.html#meeting'; }, 'Book a discovery call'],
+                 [function () { add('Sure. What else can I help with?'); menu(); }, 'Ask about something else']]);
+      }, 350);
+    }
+    function go(k, text) {
+      var t = T[k];
+      if (k === 'job' || k === 'partner') { location.href = t.page; return; }
+      location.href = 'contact.html?service=' + encodeURIComponent(t.svc) + (text ? '&msg=' + encodeURIComponent(text) : '') + '#enquiry';
+    }
+    function other() { setTimeout(function () { add('Tell me in a sentence what you’re looking for, and I’ll point you to the right team.'); input.focus(); }, 300); }
+    function open(o) {
+      panel.hidden = !o; fab.setAttribute('aria-expanded', String(o)); asst.classList.toggle('open', o);
+      if (o && !started) { started = true; add('Hi! I’m the TEAM3 assistant. 👋<br>What would you like to build?'); menu(); }
+      if (o) setTimeout(function () { input.focus(); }, 50);
+    }
+    fab.addEventListener('click', function () { open(panel.hidden); });
+    asst.querySelector('.asst-x').addEventListener('click', function () { open(false); fab.focus(); });
+    d.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) open(false); });
+    inForm.addEventListener('submit', function (e) {
+      e.preventDefault(); var v = input.value.trim(); if (!v) return; input.value = '';
+      add(esc(v), 'me'); log.querySelectorAll('.opts-row').forEach(function (r) { r.remove(); });
+      var hit = null; KW.some(function (k) { if (k[1].test(v)) { hit = k[0]; return true; } });
+      if (/price|cost|budget|quote|how much/i.test(v)) {
+        setTimeout(function () { add('Every project is scoped individually. Our <a class="asst-link" href="contact.html#estimate">project scope estimator</a> gives you an indicative tier and timeline in seconds, and we confirm commercials after a short discovery call.'); choices([[function () { location.href = 'contact.html#meeting'; }, 'Book a discovery call'], [menu2, 'Explore services']]); }, 350);
+      } else if (/contact|call|phone|email|address|where|location|office|meet/i.test(v)) {
+        setTimeout(function () { add('TEAM3 WEBLOGICS is based in Hyderabad, India, and works with clients across India and international markets. You can <a class="asst-link" href="contact.html#enquiry">send an enquiry</a> or <a class="asst-link" href="contact.html#meeting">book a discovery call</a>.'); }, 350);
+      } else if (hit) { pick(hit, v); }
+      else { setTimeout(function () { add('Thanks! I’ll pass that to our team. Choose the closest area so it reaches the right people:'); choices(Object.keys(T).map(function (k) { return [function () { pick(k, v); }, T[k].l]; })); }, 350); }
+    });
+    function menu2() { add('Here’s what we do:'); menu(); }
+  }
 
   d.querySelectorAll('.menu a').forEach(function (a) { a.addEventListener('click', function () { root.classList.remove('nav-open'); d.body.style.overflow = ''; burger && burger.setAttribute('aria-expanded', 'false'); closeAll(); }); });
 

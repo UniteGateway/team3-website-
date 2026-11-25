@@ -5,10 +5,29 @@ Shared header/footer + page content live here; run `python3 build/build.py`
 from the repo root to regenerate every *.html page in the repository root.
 """
 import os
+import sys
 import html
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from content import ARTICLES, LEGAL  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 E = html.escape
+
+# --------------------------------------------------------------------------- site config
+# Fill these in before going live. Empty values are simply not shown on the site.
+SITE = {
+    'url': 'https://www.team3weblogics.com',
+    'company': 'TEAM3 WEBLOGICS PVT. LTD.',
+    'address': 'Hyderabad, India',
+    'email': '',            # e.g. 'hello@team3weblogics.com'
+    'phone': '',            # e.g. '+91 40 0000 0000'
+    'whatsapp': '',         # digits only with country code, e.g. '919800000000'
+    # Form backend: any endpoint that accepts a POST of form fields (Formspree, Getform,
+    # Basin, a CRM webhook, or your own API). Leave empty to use the offline fallback
+    # (opens an email if 'email' is set, otherwise copies the enquiry to the clipboard).
+    'form_endpoint': '',
+}
 
 # --------------------------------------------------------------------------- icons
 _P = {
@@ -61,6 +80,44 @@ def btn(label, href, cls='red', arrow=True):
 
 def link(label, href):
     return f'<a class="link" href="{href}">{E(label)}{ARROW}</a>'
+
+
+HONEYPOT = '<div class="hp" aria-hidden="true"><label>Leave this empty<input name="_gotcha" tabindex="-1" autocomplete="off"></label></div>'
+
+
+def consent_field(prefix):
+    return (f'<div class="field full"><label class="consent"><input type="checkbox" name="consent" value="yes" required>'
+            f'<span>I agree that TEAM3 may use these details to respond to my request, as described in the <a href="legal.html#privacy">Privacy Policy</a>.</span></label></div>')
+
+
+def form_note():
+    if SITE['form_endpoint']:
+        return '<p class="note">We reply within one business day.</p>'
+    if SITE['email']:
+        return f'<p class="note">This opens your email app with your details filled in, addressed to {E(SITE["email"])}.</p>'
+    return '<p class="note">Your details are copied so you can paste them into an email or WhatsApp message to TEAM3.</p>'
+
+
+def footer_contact():
+    bits = [E(SITE['company']), E(SITE['address'])]
+    if SITE['email']:
+        bits.append(f'<a href="mailto:{E(SITE["email"])}" style="color:#fff">{E(SITE["email"])}</a>')
+    if SITE['phone']:
+        bits.append(E(SITE['phone']))
+    bits.append(f'<a href="{SITE["url"]}" style="color:#fff">{E(SITE["url"].split("//")[1])}</a>')
+    return '<br>'.join(bits)
+
+
+def contact_lines(dark=False):
+    out = [f'<p class="muted">{E(SITE["address"])}</p>']
+    if SITE['email']:
+        out.append(f'<p><a class="link" href="mailto:{E(SITE["email"])}">{E(SITE["email"])}</a></p>')
+    if SITE['phone']:
+        out.append(f'<p><a class="link" href="tel:{E(SITE["phone"].replace(" ", ""))}">{E(SITE["phone"])}</a></p>')
+    if SITE['whatsapp']:
+        out.append(f'<p><a class="link" href="https://wa.me/{E(SITE["whatsapp"])}" rel="noopener">WhatsApp us</a></p>')
+    out.append(f'<p><a class="link" href="{SITE["url"]}">{E(SITE["url"].split("//")[1])}{ARROW}</a></p>')
+    return ''.join(out)
 
 
 def checks(items, two=False):
@@ -186,7 +243,7 @@ FOOTER = '''<footer class="site-footer"><div class="wrap">
 <div class="f-brand"><img class="f-logo" src="assets/img/wordmark-light.png" alt="TEAM3" width="891" height="130" loading="lazy">
 <p class="claim">Branding. Technology.<br><span class="gold-t">Intelligence.</span></p>
 <p>An integrated creative and technology company. Established in 2004. Building intelligent solutions for the future.</p>
-<p style="margin-top:18px">TEAM3 WEBLOGICS PVT. LTD.<br>Hyderabad, India · <a href="https://www.team3weblogics.com" style="color:#fff">www.team3weblogics.com</a></p></div>
+<p style="margin-top:18px">__FOOTCONTACT__</p></div>
 <div class="f-col"><h5>Company</h5><a href="about.html">About Us</a><a href="about.html#journey">Our Journey</a><a href="work.html">Our Work</a><a href="careers.html">Careers</a><a href="contact.html">Contact</a></div>
 <div class="f-col"><h5>Services</h5><a href="branding.html">Branding</a><a href="branding.html#advertising">Advertising</a><a href="technology.html">IT &amp; Apps</a><a href="ai.html#agents">AI Agents</a><a href="marketing.html">Digital Marketing</a></div>
 <div class="f-col"><h5>Explore</h5><a href="academy.html">AI Academy</a><a href="careers.html#partners">Partner Network</a><a href="industries.html">Industries</a><a href="insights.html">Insights</a><a href="industries.html#innovation">Innovation</a></div>
@@ -197,8 +254,19 @@ FOOTER = '''<footer class="site-footer"><div class="wrap">
 </div></footer>'''
 
 
-def layout(fname, title, desc, body):
+ASSISTANT = '''<div class="asst" id="asst">
+<button class="asst-fab" type="button" aria-expanded="false" aria-controls="asst-panel"><img src="assets/img/symbol.png" alt="" width="382" height="540"><span>Ask TEAM3</span></button>
+<div class="asst-panel" id="asst-panel" role="dialog" aria-label="TEAM3 enquiry assistant" hidden>
+<div class="asst-top"><img src="assets/img/symbol.png" alt="" width="382" height="540"><div><b>TEAM3 Assistant</b><span>Guided enquiry · usually replies instantly</span></div><button type="button" class="asst-x" aria-label="Close assistant">&times;</button></div>
+<div class="asst-log" aria-live="polite"></div>
+<form class="asst-in"><input type="text" placeholder="Type your question…" aria-label="Your message" autocomplete="off"><button type="submit" aria-label="Send">''' + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' + '''</button></form>
+</div></div>'''
+
+
+def layout(fname, title, desc, body, og_type='website'):
     full_title = 'TEAM3 WEBLOGICS — Branding, Technology & Artificial Intelligence' if fname == 'index.html' else f'{title} | TEAM3 WEBLOGICS'
+    canon = SITE['url'] + '/' + ('' if fname == 'index.html' else fname)
+    data = f' data-endpoint="{E(SITE["form_endpoint"])}" data-email="{E(SITE["email"])}" data-wa="{E(SITE["whatsapp"])}"'
     return f'''<!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
@@ -207,11 +275,14 @@ def layout(fname, title, desc, body):
 <title>{E(full_title)}</title>
 <meta name="description" content="{E(desc)}">
 <meta name="theme-color" content="#000000">
-<meta property="og:type" content="website">
+<link rel="canonical" href="{canon}">
+<meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="TEAM3 WEBLOGICS">
+<meta property="og:url" content="{canon}">
 <meta property="og:title" content="{E(full_title)}">
 <meta property="og:description" content="{E(desc)}">
-<meta property="og:image" content="assets/img/logo-full.jpg">
+<meta property="og:image" content="{SITE['url']}/assets/img/logo-full.jpg">
+<link rel="manifest" href="site.webmanifest">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
@@ -221,12 +292,13 @@ def layout(fname, title, desc, body):
 <link rel="stylesheet" href="assets/css/site.css">
 <script type="application/ld+json">{{"@context":"https://schema.org","@type":"Organization","name":"TEAM3 WEBLOGICS PVT. LTD.","url":"https://www.team3weblogics.com","logo":"https://www.team3weblogics.com/assets/img/logo-full.jpg","foundingDate":"2004","slogan":"Step beyond imagination.","address":{{"@type":"PostalAddress","addressLocality":"Hyderabad","addressCountry":"IN"}}}}</script>
 </head>
-<body>
+<body{data}>
 {header(fname)}
 <main id="main">
 {body}
 </main>
-{FOOTER}
+{FOOTER.replace("__FOOTCONTACT__", footer_contact())}
+{ASSISTANT}
 <script src="assets/js/site.js" defer></script>
 </body>
 </html>
@@ -278,11 +350,6 @@ AGENTS = [('Research Agent', 'Market and competitor research'), ('Lead Generatio
           ('Project Agent', 'Task coordination and progress monitoring'), ('Innovation Agent', 'Product research and concept generation'),
           ('Branding Agent', 'Brand concepts and campaign creation'), ('Executive Agent', 'Management reporting and decision support')]
 
-INSIGHTS = [('ARTIFICIAL INTELLIGENCE', 'How AI agents are transforming business operations', 'art-red'),
-            ('BRANDING', 'Why every business needs a strong brand strategy', 'art-gold'),
-            ('TECHNOLOGY', 'From business idea to scalable digital product', 'art-mesh'),
-            ('DIGITAL MARKETING', 'The future of AI-powered customer acquisition', 'art-ink')]
-
 
 def svc_cards(items, dark=False):
     out = ''
@@ -295,8 +362,32 @@ def ind_cards(items):
     return '<div class="ind">' + ''.join(f'<div class="it rv"><span class="ic">{ic(i)}</span><b>{E(t)}</b><span>{E(s)}</span></div>' for i, t, s in items) + '</div>'
 
 
-def insight_cards():
-    return ''.join(f'<a class="post rv d{n}" href="insights.html"><div class="cover"><span class="{c}"></span></div><div class="body"><small>{E(k)}</small><h3>{E(t)}</h3><span class="link">Read article{ARROW}</span></div></a>' for n, (k, t, c) in enumerate(INSIGHTS))
+def insight_cards(exclude=None):
+    return ''.join(f'<a class="post rv d{n}" href="{a["slug"]}.html"><div class="cover"><span class="{a["cover"]}"></span></div><div class="body"><small>{E(a["cat"])} · {a["mins"]} MIN READ</small><h3>{E(a["title"])}</h3><span class="link">Read article{ARROW}</span></div></a>'
+                   for n, a in enumerate(x for x in ARTICLES if x['slug'] != exclude))
+
+
+def render_blocks(paras):
+    out = ''
+    for p in paras:
+        if isinstance(p, list):
+            out += '<ul class="checks">' + ''.join(f'<li>{i}</li>' for i in p) + '</ul>'
+        else:
+            out += f'<p>{p}</p>'
+    return out
+
+
+def page_article(a):
+    secs = ''.join(f'<h2>{E(h)}</h2>{render_blocks(ps)}' for h, ps in a['body'])
+    body = f'''
+{page_hero("Insights", a["cat"].title() + " · " + str(a["mins"]) + " min read", E(a["title"]), E(a["lead"]))}
+<article class="section prose-wrap"><div class="wrap"><div class="prose rv">{secs}
+<div class="byline"><img src="assets/img/symbol.png" alt="" width="382" height="540"><div><b>TEAM3 Insights</b><span>TEAM3 WEBLOGICS · Hyderabad</span></div></div>
+</div></div></article>
+<section class="section bg-grey"><div class="wrap">{head("Keep reading", "More ideas worth exploring.")}<div class="grid g3">{insight_cards(a["slug"])}</div></div></section>
+{cta_band("Turn insight into action.", "Talk to our strategists and engineers about what this means for your business.", btn("Start a conversation", "contact.html", "red"))}
+'''
+    return layout(a['slug'] + '.html', a['title'], a['lead'], body, 'article')
 
 
 def client_marquee():
@@ -736,7 +827,7 @@ def page_careers():
     creative = ['Brand strategists', 'Graphic designers', 'UI/UX designers', 'Creative directors', 'Content writers', 'Digital marketers', 'Video editors', 'Business consultants']
     tech = ['Full-stack developers', 'Mobile app developers', 'AI engineers', 'AI agent developers', 'Cloud engineers', 'Data engineers', 'Software architects', 'QA engineers']
     body = f'''
-{page_hero("Careers", "Careers", "Come imagine <span class='grad'>the future with us.</span>", "At TEAM3, creativity and technology come together to solve meaningful challenges. We are building a culture where designers, developers, AI engineers, strategists and entrepreneurs can collaborate, learn and create.", btn("Submit Your Profile", "contact.html?service=Careers", "red") + btn("Partner with us", "#partners", "ghost", False))}
+{page_hero("Careers", "Careers", "Come imagine <span class='grad'>the future with us.</span>", "At TEAM3, creativity and technology come together to solve meaningful challenges. We are building a culture where designers, developers, AI engineers, strategists and entrepreneurs can collaborate, learn and create.", btn("Submit Your Profile", "#apply", "red") + btn("Partner with us", "#register", "ghost", False))}
 <section class="section"><div class="wrap">
 {head("Talent communities", "Two communities. One team.")}
 <div class="grid g2">
@@ -744,9 +835,28 @@ def page_careers():
 <div class="card rv d1"><span class="ic">{ic("code")}</span><h3>Technology &amp; AI</h3><ul class="bullets" style="margin-top:18px">{"".join(f"<li>{E(r)}</li>" for r in tech)}</ul></div>
 </div>
 <div class="rv" style="margin-top:56px"><h3>Work opportunities</h3><div style="margin-top:20px">{chips(["Full-time employment","Internships","Freelance projects","Remote collaboration","Consulting assignments","Project-based partnerships"])}</div>
-<p class="muted" style="margin-top:22px">Specific vacancies will be published when recruitment requirements are confirmed.</p>
-<div class="actions">{btn("Submit Your Profile", "contact.html?service=Careers", "red")}</div></div>
+<p class="muted" style="margin-top:22px">Specific vacancies will be published when recruitment requirements are confirmed.</p></div>
 </div></section>
+
+<section class="section bg-grey" id="apply"><div class="wrap"><div class="cap contact-grid" style="border:0;padding:0">
+<div class="rv"><span class="eyebrow">Careers portal</span><h2 style="margin-top:16px">Submit your profile.</h2>
+<p class="lead" style="margin-top:20px">Join a TEAM3 talent community. When a role, internship or project matches your profile, we’ll be in touch.</p></div>
+<div class="tool rv d1">
+<form class="form" id="career-form" data-form="Career Profile" novalidate>
+{HONEYPOT}
+<div class="field"><label for="c-name">Full name</label><input id="c-name" name="name" autocomplete="name" required></div>
+<div class="field"><label for="c-email">Email address</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+<div class="field"><label for="c-phone">Phone / WhatsApp</label><input id="c-phone" name="phone" type="tel" autocomplete="tel"></div>
+<div class="field"><label for="c-city">City / country</label><input id="c-city" name="location" autocomplete="address-level2"></div>
+<div class="field"><label for="c-role">Role you’re interested in</label><select id="c-role" name="role">{"".join(f"<option>{E(r[:-1] if r.endswith('s') else r)}</option>" for r in creative + tech)}<option>Other</option></select></div>
+<div class="field"><label for="c-type">Opportunity type</label><select id="c-type" name="opportunity">{"".join(f"<option>{E(o)}</option>" for o in ["Full-time employment","Internship","Freelance project","Remote collaboration","Consulting assignment","Project-based partnership"])}</select></div>
+<div class="field"><label for="c-exp">Years of experience</label><select id="c-exp" name="experience"><option>Student / fresher</option><option>1 – 3 years</option><option>3 – 6 years</option><option>6 – 10 years</option><option>10+ years</option></select></div>
+<div class="field"><label for="c-link">Portfolio / LinkedIn / CV link</label><input id="c-link" name="portfolio" type="url" placeholder="https://"></div>
+<div class="field full"><label for="c-msg">Tell us about yourself</label><textarea id="c-msg" name="message" required></textarea></div>
+{consent_field("c")}
+<div class="field full"><button class="btn red" type="submit">Submit Your Profile{ARROW}</button>{form_note()}</div>
+</form></div>
+</div></div></section>
 <section class="section bg-black" id="partners"><div class="wrap">
 {head("TEAM3 Partner Network", "Connect. Collaborate. <span class='grad'>Create opportunities.</span>", "TEAM3 believes that the future of business lies in collaboration. Our proposed partner ecosystem brings together creative professionals, technology companies, consultants, entrepreneurs, investors and industry specialists.", gold=True)}
 <div class="grid g2">
@@ -754,7 +864,20 @@ def page_careers():
 <div class="card rv d1"><span class="ic">{ic("rocket")}</span><h3>Partner benefits</h3><p>Access to business opportunities, collaborative project development, technology resources, marketing support, shared expertise and agreed commercial incentives.</p></div>
 </div>
 <p class="lead rv" style="margin-top:36px">The partner network can integrate with <b style="color:#fff">COLLABIZ</b> for opportunity discovery, protected leads, project collaboration, partner onboarding and commission tracking.</p>
-<div class="actions">{btn("Become a TEAM3 Partner", "contact.html?service=Partnership", "red")}</div>
+<div class="tool rv" id="register" style="margin-top:56px">
+<h3>Partner registration</h3>
+<form class="form" id="partner-form" data-form="Partner Registration" style="margin-top:26px" novalidate>
+{HONEYPOT}
+<div class="field"><label for="p-name">Full name</label><input id="p-name" name="name" autocomplete="name" required></div>
+<div class="field"><label for="p-company">Company / practice</label><input id="p-company" name="company" autocomplete="organization"></div>
+<div class="field"><label for="p-email">Email address</label><input id="p-email" name="email" type="email" autocomplete="email" required></div>
+<div class="field"><label for="p-phone">Phone / WhatsApp</label><input id="p-phone" name="phone" type="tel" autocomplete="tel"></div>
+<div class="field"><label for="p-type">Partner type</label><select id="p-type" name="partner_type">{"".join(f"<option>{E(o)}</option>" for o in ["Creative partner","Software development partner","AI technology partner","Marketing agency","Business consultant","Training institution","Freelance professional","International representative","Manufacturing partner","Franchise partner"])}</select></div>
+<div class="field"><label for="p-loc">City / country</label><input id="p-loc" name="location"></div>
+<div class="field full"><label for="p-msg">How would you like to collaborate?</label><textarea id="p-msg" name="message" required></textarea></div>
+{consent_field("p")}
+<div class="field full"><button class="btn red" type="submit">Become a TEAM3 Partner{ARROW}</button>{form_note()}</div>
+</form></div>
 </div></section>
 '''
     return layout('careers.html', 'Careers & Partner Network', 'Careers at TEAM3 across creative, marketing, technology and AI — and the TEAM3 Partner Network.', body)
@@ -765,7 +888,7 @@ def page_insights():
     body = f'''
 {page_hero("Insights", "Insights & Knowledge Centre", "Ideas worth <span class='grad'>exploring.</span>", "Discover perspectives on branding, artificial intelligence, technology, marketing and the future of business.")}
 <section class="section"><div class="wrap">
-<div class="grid g4">{insight_cards()}</div>
+<div class="grid g2">{insight_cards()}</div>
 <div class="rv" style="margin-top:64px"><h3>More topics coming soon</h3><div style="margin-top:18px">{chips(cats)}</div></div>
 </div></section>
 {cta_band("Have a question worth exploring?", "Our strategists and engineers are happy to talk.", btn("Start a conversation", "contact.html", "red"))}
@@ -789,14 +912,15 @@ def page_contact():
 <section class="section"><div class="wrap"><div class="cap contact-grid" style="border:0;padding:0">
 <div class="rv">
 <span class="eyebrow">Get in touch</span>
-<h3 style="margin-top:18px">TEAM3 WEBLOGICS PVT. LTD.</h3>
-<p class="muted" style="margin-top:10px">Hyderabad, India</p>
-<p style="margin-top:10px"><a class="link" href="https://www.team3weblogics.com">www.team3weblogics.com{ARROW}</a></p>
+<h3 style="margin-top:18px">{E(SITE['company'])}</h3>
+<div class="contact-lines" style="margin-top:14px">{contact_lines()}</div>
 <ul class="bullets" style="margin-top:30px">{"".join(f"<li>{E(x)}</li>" for x in ["Global business enquiries","Technology consulting","Branding projects","Partnership opportunities","Training programmes"])}</ul>
+<div class="actions" style="margin-top:28px">{btn("Book a meeting", "#meeting", "ghost", False)}</div>
 </div>
 <div class="tool rv d1">
 <h3>Tell us about your project</h3>
-<form class="form" id="enquiry" style="margin-top:26px" novalidate>
+<form class="form" id="enquiry" data-form="Project Enquiry" style="margin-top:26px" novalidate>
+{HONEYPOT}
 <div class="field"><label for="f-name">Full name</label><input id="f-name" name="name" autocomplete="name" required></div>
 <div class="field"><label for="f-company">Company name</label><input id="f-company" name="company" autocomplete="organization"></div>
 <div class="field"><label for="f-email">Email address</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
@@ -804,8 +928,27 @@ def page_contact():
 <div class="field"><label for="f-service">Service required</label><select id="f-service" name="service">{"".join(f'<option value="{k}">{E(labels[k])}</option>' for k in services)}</select></div>
 <div class="field"><label for="f-budget">Estimated project budget</label><select id="f-budget" name="budget"><option>To be discussed</option><option>Small project</option><option>Mid-size project</option><option>Large / enterprise programme</option><option>Ongoing retainer</option></select></div>
 <div class="field full"><label for="f-msg">Tell us about your requirements</label><textarea id="f-msg" name="message" required></textarea></div>
-<div class="field full"><button class="btn red" type="submit">Copy Project Enquiry{ARROW}</button>
-<p class="note">Demonstration only. Live submissions require a connected website backend.</p></div>
+{consent_field("f")}
+<div class="field full"><button class="btn red" type="submit">Send Project Enquiry{ARROW}</button>{form_note()}</div>
+</form></div>
+</div></div></section>
+
+<section class="section bg-black" id="meeting"><div class="wrap"><div class="cap contact-grid" style="border:0;padding:0">
+<div class="rv"><span class="eyebrow gold">Online appointment scheduling</span><h2 style="margin-top:16px">Book a discovery call.</h2>
+<p class="lead" style="margin-top:20px">Pick a topic and a preferred slot. We’ll confirm the meeting by email — usually within one business day.</p>
+<ul class="bullets" style="margin-top:28px">{"".join(f"<li>{E(x)}</li>" for x in ["30-minute discovery call","Video call, phone or in person in Hyderabad","Times shown in India Standard Time (IST)"])}</ul></div>
+<div class="tool rv d1">
+<form class="form" id="meeting-form" data-form="Meeting Request" novalidate>
+{HONEYPOT}
+<div class="field"><label for="m-name">Full name</label><input id="m-name" name="name" autocomplete="name" required></div>
+<div class="field"><label for="m-email">Email address</label><input id="m-email" name="email" type="email" autocomplete="email" required></div>
+<div class="field"><label for="m-phone">Phone / WhatsApp</label><input id="m-phone" name="phone" type="tel" autocomplete="tel"></div>
+<div class="field"><label for="m-topic">Topic</label><select id="m-topic" name="topic">{"".join(f"<option>{E(labels[k])}</option>" for k in services)}</select></div>
+<div class="field"><label for="m-date">Preferred date</label><input id="m-date" name="date" type="date" required data-min-today></div>
+<div class="field"><label for="m-slot">Preferred time (IST)</label><select id="m-slot" name="time"><option>10:00 – 12:00</option><option>12:00 – 14:00</option><option>14:00 – 16:00</option><option>16:00 – 18:00</option></select></div>
+<div class="field full"><label for="m-mode">Meeting mode</label><div class="seg" id="m-mode"><label><input type="radio" name="mode" value="Video call" checked><span>Video call</span></label><label><input type="radio" name="mode" value="Phone"><span>Phone</span></label><label><input type="radio" name="mode" value="In person (Hyderabad)"><span>In person</span></label></div></div>
+{consent_field("m")}
+<div class="field full"><button class="btn red" type="submit">Request Meeting{ARROW}</button>{form_note()}</div>
 </form></div>
 </div></div></section>
 
@@ -829,30 +972,54 @@ def page_contact():
 
 
 def page_legal():
-    secs = [('privacy', 'Privacy Policy'), ('terms', 'Terms of Use'), ('cookies', 'Cookie Policy'), ('responsible-ai', 'Responsible AI Policy')]
-    ai_p = ['Human approval for sensitive actions', 'Role-based permissions and least-privilege access', 'Audit trails for agent activity', 'Data protection and confidentiality by design', 'Transparent, explainable outcomes where possible', 'Continuous monitoring of agent performance']
+    toc = ''.join(f'<a href="#{i}">{E(t)}</a>' for i, t, _ in LEGAL)
+    secs = ''
+    for i, t, parts in LEGAL:
+        secs += f'<section class="legal-sec" id="{i}"><h2>{E(t)}</h2>' + ''.join(f'<h3>{E(h)}</h3>{render_blocks(ps)}' for h, ps in parts) + '</section>'
     body = f'''
 {page_hero("Legal", "Legal", "Policies &amp; <span class='grad'>principles.</span>", "Our commitments on privacy, terms of use, cookies and the responsible use of artificial intelligence.")}
-<section class="section legal"><div class="wrap">
-<div class="notice rv"><b>Draft.</b>&nbsp;Final policy text will be published once reviewed by TEAM3’s legal advisors before the website goes live.</div>
-{"".join(f'<h2 id="{i}">{E(t)}</h2><p>This policy is being finalised for the 2026 relaunch of TEAM3 WEBLOGICS PVT. LTD. For questions in the meantime, please reach us through the <a class="red" href="contact.html">contact page</a>.</p>' for i, t in secs[:3])}
-<h2 id="responsible-ai">Responsible AI Policy</h2>
-<p>TEAM3 develops sustainable and ethical solutions. Every AI and agent deployment we deliver is built on the following principles:</p>
-<div style="margin-top:22px;max-width:760px">{checks(ai_p)}</div>
+{subnav([(i, t) for i, t, _ in LEGAL])}
+<section class="section"><div class="wrap prose legal">
+<p class="muted small">Last updated: November 2026</p>
+{secs}
 </div></section>
 '''
     return layout('legal.html', 'Legal & Policies', 'TEAM3 privacy, terms, cookie and responsible AI policies.', body)
+
+
+def page_404():
+    body = f'''<section class="hero page-hero" style="min-height:70vh"><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
+<div class="wrap"><span class="eyebrow gold">Error 404</span><h1 style="margin-top:22px">This step goes <span class="grad">beyond imagination.</span></h1>
+<p class="lead" style="margin-top:24px">The page you’re looking for has moved or doesn’t exist.</p>
+<div class="actions">{btn("Back to home", "index.html", "light")}{btn("Contact us", "contact.html", "ghost", False)}</div></div></section>'''
+    return layout('404.html', 'Page not found', 'Page not found.', body).replace('<meta name="viewport"', '<meta name="robots" content="noindex">\n<meta name="viewport"', 1)
+
+
+def write_extras(names):
+    urls = ''.join(f'<url><loc>{SITE["url"]}/{"" if n == "index.html" else n}</loc></url>' for n in names if n != '404.html')
+    files = {
+        'sitemap.xml': f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n',
+        'robots.txt': f'User-agent: *\nAllow: /\nSitemap: {SITE["url"]}/sitemap.xml\n',
+        'site.webmanifest': '{"name":"TEAM3 WEBLOGICS","short_name":"TEAM3","start_url":"index.html","display":"standalone","background_color":"#000000","theme_color":"#000000","icons":[{"src":"assets/img/favicon.png","sizes":"192x192","type":"image/png"}]}\n',
+    }
+    for n, c in files.items():
+        with open(os.path.join(ROOT, n), 'w', encoding='utf-8') as f:
+            f.write(c)
 
 
 PAGES = {
     'index.html': page_index, 'about.html': page_about, 'branding.html': page_branding, 'technology.html': page_technology,
     'ai.html': page_ai, 'marketing.html': page_marketing, 'academy.html': page_academy, 'work.html': page_work,
     'industries.html': page_industries, 'careers.html': page_careers, 'insights.html': page_insights,
-    'contact.html': page_contact, 'legal.html': page_legal,
+    'contact.html': page_contact, 'legal.html': page_legal, '404.html': page_404,
 }
+for _a in ARTICLES:
+    PAGES[_a['slug'] + '.html'] = (lambda a=_a: page_article(a))
 
 if __name__ == '__main__':
     for name, fn in PAGES.items():
         with open(os.path.join(ROOT, name), 'w', encoding='utf-8') as f:
             f.write(fn())
         print('wrote', name)
+    write_extras(PAGES)
+    print('wrote sitemap.xml, robots.txt, site.webmanifest')

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.team3weblogics.com/sitemap.xml
