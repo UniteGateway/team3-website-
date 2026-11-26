@@ -235,7 +235,7 @@ MENUS = [
         ('about.html#story', 'Our story', 'Two decades of creativity and code', _ph('presentation')),
         ('about.html#meaning', 'The meaning of 3', 'Clients · Team · Management', _ph('hands_stack')),
         ('team.html', 'Our team', 'The people behind TEAM3', 'team/team-group-t.webp'),
-        ('about.html#founder', 'Our founder', 'Dr. Ravi Chandra', _ph('office_glass')),
+        ('about.html#founder', 'Our founder', 'Dr. Ravi Chandra', 'team/founder-t.webp'),
         ('about.html#journey', 'Our journey', '2004 to the intelligent era', _ph('earth_night')),
         ('advisory.html', 'Advisory board', 'Guided by experience', _ph('boardroom')),
     ]),
