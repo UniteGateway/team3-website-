@@ -1101,3 +1101,5 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 .pidx b .pstatus{margin:6px 0 0;font-size:10px;padding:4px 8px}
 .pidx b{display:flex;flex-direction:column;align-items:flex-start}
 .pidx:hover .pstatus{background:#fff}
+.person .foot .fp,.founder .foot .fp{background:#E9EAEE}
+.person .foot,.founder>.foot{filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.22))}
