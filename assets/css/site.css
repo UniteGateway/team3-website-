@@ -1103,3 +1103,21 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 .pidx:hover .pstatus{background:#fff}
 .person .foot .fp,.founder .foot .fp{background:#E9EAEE}
 .person .foot,.founder>.foot{filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.22))}
+/* Social sample pages */
+.sprofs{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.sprof{background:#fff;border-radius:var(--r);overflow:hidden;scroll-margin-top:140px}
+.sp-cover{height:120px;position:relative;background:linear-gradient(120deg,var(--sc),#000 140%)}
+.sp-ic{position:absolute;right:20px;top:18px;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.18);display:grid;place-items:center;color:#fff}
+.sp-ic svg{width:22px;height:22px}
+.sp-badge{position:absolute;left:20px;top:20px;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.45);color:#fff;font:600 12px/1 var(--b)}
+.sp-body{padding:0 26px 26px;position:relative}
+.sp-av{width:84px;height:84px;object-fit:contain;padding:12px;border-radius:50%;background:#000;border:4px solid #fff;margin-top:-42px}
+.sp-head h2{font-size:24px;margin-top:10px}
+.sp-sub{color:var(--muted);font-size:14px;margin-top:4px}
+.sp-desc{margin-top:14px;font-size:15.5px}
+.sp-stats{display:flex;gap:26px;margin-top:16px;padding:14px 0;border-block:1px solid var(--line)}
+.sp-stats b{display:block;font:700 15px/1.2 var(--h)}.sp-stats span{font-size:12.5px;color:var(--muted)}
+.sp-posts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:16px}
+.sp-posts img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}
+.btn.sp-follow{--bg:var(--sc);--fg:#fff;cursor:default;opacity:.9}
+@media (max-width:860px){.sprofs{grid-template-columns:1fr}}

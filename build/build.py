@@ -28,7 +28,7 @@ SITE = {
     'phones': ['+91 90522 70203', '+91 96676 60773'],
     'whatsapp': '919667660773',
     # Social profile URLs — icons without a URL show as 'coming soon' in the footer.
-    'social': {'linkedin': '', 'instagram': '', 'facebook': '', 'x': '', 'youtube': ''},
+    'social': {'linkedin': 'social.html#linkedin', 'instagram': 'social.html#instagram', 'facebook': 'social.html#facebook', 'x': 'social.html#x', 'youtube': 'social.html#youtube'},
     # Form backend: any endpoint that accepts a POST of form fields (Formspree, Getform,
     # Basin, a CRM webhook, or your own API). Leave empty to use the offline fallback
     # (opens an email if 'email' is set, otherwise copies the enquiry to the clipboard).
@@ -353,7 +353,7 @@ ASSISTANT = '''<div class="asst" id="asst">
 
 
 # Pages with placeholder content are kept out of search results until real details are added.
-NOINDEX_PAGES = {'team.html', 'advisory.html'}
+NOINDEX_PAGES = {'team.html', 'advisory.html', 'social.html'}
 
 
 def layout(fname, title, desc, body, og_type='website'):
@@ -1646,8 +1646,11 @@ def person_social(name, links):
     for k in ['linkedin', 'x', 'email']:
         svg = f'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">{SOCIAL_ICONS[k]}</svg>'
         label = f'{name} on {SOCIAL_NAMES[k]}'
-        if links.get(k):
-            out += f'<a class="soc sm" href="{E(links[k])}" rel="noopener" aria-label="{E(label)}">{svg}</a>'
+        url = links.get(k)
+        if not url or url == '#':
+            url = f'mailto:{SITE["email"]}' if k == 'email' else f'social.html#{k}'
+        if url:
+            out += f'<a class="soc sm" href="{E(url)}" rel="noopener" aria-label="{E(label)}">{svg}</a>'
         else:
             out += f'<span class="soc sm soon" role="img" aria-label="{E(label)} (coming soon)" title="Coming soon">{svg}</span>'
     return f'<div class="socials">{out}</div>'
@@ -1696,6 +1699,41 @@ def page_advisory():
 </div></div></section>
 """
     return layout('advisory.html', 'Advisory Board', 'The TEAM3 Solutions advisory board: senior advisors in technology and AI, branding, finance, international business, education, sustainability, healthcare and governance.', body)
+
+
+
+SOCIAL_PAGES = [
+    ('linkedin', 'LinkedIn', '#0A66C2', 'Company updates, case studies, careers and thought leadership on branding, technology and AI.', ['team_office', 'presentation', 'highfive'], 'Professionals, partners and job seekers'),
+    ('instagram', 'Instagram', '#B02A6B', 'Behind-the-scenes from the studio, brand launches, campaign creatives and life at TEAM3.', ['palette', 'dm_creative', 'interior_office'], 'Creative work, culture and campaigns'),
+    ('facebook', 'Facebook', '#0B5FCC', 'News, events, TEAM3 Academy workshops and community stories.', ['classroom', 'conference', 'people_group'], 'Events, Academy and community'),
+    ('x', 'X (Twitter)', '#111111', 'Quick takes on AI, digital marketing and technology — plus product announcements.', ['ai_letters', 'analytics_laptop', 'robot_pepper'], 'News, AI and product updates'),
+    ('youtube', 'YouTube', '#C40000', 'Corporate films, product demos, AI explainers and TEAM3 Academy lessons.', ['clapper', 'video_edit', 'photographer'], 'Films, demos and tutorials'),
+]
+
+
+def page_social():
+    cards = ''
+    for k, name, col, desc, photos, focus in SOCIAL_PAGES:
+        svg = f'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">{SOCIAL_ICONS[k]}</svg>'
+        posts = ''.join(f'<img src="assets/img/photos/{ph}-t.webp" alt="" loading="lazy">' for ph in photos)
+        cards += f"""<article class="sprof rv" id="{k}" style="--sc:{col}">
+<div class="sp-cover"><span class="sp-ic">{svg}</span><span class="sp-badge">Sample page · launching soon</span></div>
+<div class="sp-body"><img class="sp-av" src="assets/img/symbol-sm.webp" alt="" width="80" height="112">
+<div class="sp-head"><h2>TEAM3 Solutions</h2><p class="sp-sub">on {E(name)} · Branding · Technology · AI</p></div>
+<p class="sp-desc">{E(desc)}</p>
+<ul class="sp-stats"><li><b>—</b><span>Followers</span></li><li><b>—</b><span>Posts</span></li><li><b>{E(focus)}</b><span>Focus</span></li></ul>
+<div class="sp-posts">{posts}</div>
+<div class="actions" style="margin-top:22px"><span class="btn sp-follow" aria-disabled="true">Follow — coming soon</span><a class="btn ghost" href="contact.html">Contact TEAM3</a></div></div>
+</article>"""
+    body = f"""
+{page_hero("Social media", "Social media", "Follow <span class='grad'>TEAM3.</span>", "Our official social channels are launching soon. Until then, reach us directly by email or WhatsApp.", btn("WhatsApp us", f"https://wa.me/{SITE['whatsapp']}", "red") + btn("Email us", f"mailto:{SITE['email']}", "ghost", False), photo='dm_creative')}
+{subnav([(k, n) for k, n, *_ in SOCIAL_PAGES])}
+<section class="section bg-grey"><div class="wrap">
+<p class="sample-note rv">Preview: these are sample profile pages. Links will point to TEAM3’s official accounts once they go live.</p>
+<div class="sprofs">{cards}</div>
+</div></section>
+"""
+    return layout('social.html', 'Social media', 'TEAM3 Solutions on LinkedIn, Instagram, Facebook, X and YouTube — official channels launching soon.', body)
 
 
 def page_insights():
@@ -1870,7 +1908,7 @@ PAGES = {
     'industries.html': page_industries, 'careers.html': page_careers, 'insights.html': page_insights,
     'contact.html': page_contact, 'legal.html': page_legal, '404.html': page_404,
     'gallery.html': page_gallery, 'clients.html': page_clients, 'partners.html': page_partners,
-    'products.html': page_products, 'consulting.html': page_consulting, 'team.html': page_team, 'advisory.html': page_advisory,
+    'products.html': page_products, 'consulting.html': page_consulting, 'social.html': page_social, 'team.html': page_team, 'advisory.html': page_advisory,
 }
 for _p in PRODUCTS:
     PAGES[product_href(_p[0])] = (lambda p=_p: page_product(p))
