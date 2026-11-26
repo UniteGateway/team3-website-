@@ -1089,3 +1089,15 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 @media (max-width:640px){.logo .tagline{font-size:9px}}
 @media (min-width:1301px){.logo .tagline{font-size:8.4px}}
 .f-brand img.f-logo{width:150px}
+/* Product status badges */
+.pstatus{display:inline-flex;align-items:center;gap:6px;vertical-align:middle;margin-left:8px;padding:5px 10px;border-radius:999px;font:700 11px/1 var(--b);letter-spacing:.04em;white-space:nowrap;background:#EEF2F7;color:#334155}
+.pstatus::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st-pre-launch{background:#E7F6EC;color:#14632F}
+.st-pilot{background:#E6F0FB;color:#124E8C}
+.st-in-development{background:#FFF4E0;color:#7A4A00}
+.st-concept{background:#F1ECFB;color:#5B3FA8}
+.st-coming-soon{background:#F1F1F3;color:#55555A}
+.pbody .pstatus{margin:0 0 0 14px}
+.pidx b .pstatus{margin:6px 0 0;font-size:10px;padding:4px 8px}
+.pidx b{display:flex;flex-direction:column;align-items:flex-start}
+.pidx:hover .pstatus{background:#fff}

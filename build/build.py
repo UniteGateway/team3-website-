@@ -1158,6 +1158,16 @@ PRODUCT_SHOT = {
 }
 
 
+# Product stages: COLLABIZ/SOLBID from their DEVELOPMENT_STATUS/PROGRESS files; others from COLLABIZ ventures-data.
+PRODUCT_STATUS = {'collabiz': 'Pre-launch', 'solbid': 'Pre-launch', 'bizo': 'Pilot', 'prizo': 'Pilot', 'sungate': 'Pilot',
+                  'leaddna': 'In development', 'hnw': 'Concept', 'adbuz': 'Coming soon', 'unite-exim': 'Coming soon', 'beyou': 'Coming soon'}
+
+
+def status_badge(slug):
+    st = PRODUCT_STATUS.get(slug)
+    return f'<span class="pstatus st-{slugify(st)}">{E(st)}</span>' if st else ''
+
+
 def shot_meta(slug, name):
     return PRODUCT_SHOT.get(slug, (name.lower().replace(' ', '') + '.app', 'Home page design'))
 
@@ -1171,14 +1181,14 @@ def product_visual(pr, n):
 
 
 def page_products():
-    idx = ''.join(f'<a class="pidx" href="{product_href(p[0])}"><img src="assets/img/products/{p[0]}-t.webp" alt="" width="480" height="288" loading="lazy"><b>{E(p[1])}</b><span>{E(p[3])}</span></a>' for p in PRODUCTS)
+    idx = ''.join(f'<a class="pidx" href="{product_href(p[0])}"><img src="assets/img/products/{p[0]}-t.webp" alt="" width="480" height="288" loading="lazy"><b>{E(p[1])} {status_badge(p[0])}</b><span>{E(p[3])}</span></a>' for p in PRODUCTS)
     blocks = ''
     for n, pr in enumerate(PRODUCTS):
         slug, name, tag, cat, icon, desc, feats, aud = pr
         demo = f'contact.html?service=Apps&msg={quote("Demo request: " + name)}#enquiry'
         blocks += f"""<article class="prod rv{' rev' if n % 2 else ''}" id="{slug}">
 {product_visual(pr, n)}
-<div class="pbody"><span class="eyebrow">{E(cat)}</span><h2>{E(name)}</h2><p class="ptag">{E(tag)}</p><p class="lead">{E(desc)}</p>
+<div class="pbody"><span class="eyebrow">{E(cat)}</span>{status_badge(slug)}<h2>{E(name)}</h2><p class="ptag">{E(tag)}</p><p class="lead">{E(desc)}</p>
 <div style="margin-top:26px">{checks(feats, True)}</div>
 <p class="pfor"><b>Built for</b> {E(aud)}</p>
 <div class="actions" style="margin-top:28px">{btn("Request a demo", demo, "red")}{btn("View product details", product_href(slug), "ghost", False)}</div></div>
@@ -1400,6 +1410,7 @@ def page_product(pr):
 <img src="assets/img/products/{slug}.webp" alt="{E(name)} — {E(shot_meta(slug, name)[1].lower())}" width="1440" height="860"><figcaption>{E(shot_meta(slug, name)[1])}</figcaption></figure>
 </div></section>
 <section class="section bg-grey"><div class="wrap">
+<p class="rv" style="margin-bottom:18px">Status: {status_badge(slug)}</p>
 {head("Key features", "What " + E(name) + " does.")}
 <div class="grid g4">{"".join(f'<div class="card rv d{n}"><span class="num">{n + 1:02d}</span><h3 style="margin-top:26px;font-size:20px">{E(f)}</h3></div>' for n, f in enumerate(feats))}</div>
 </div></section>
