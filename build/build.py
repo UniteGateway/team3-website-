@@ -204,7 +204,7 @@ def cta_band(title, lead, buttons):
 
 
 HERO_PHOTOS = {'About Us': 'team_office', 'Branding': 'palette', 'Technology': 'code_laptop', 'Artificial Intelligence': 'ai_letters',
-               'Products': 'laptop_dark', 'Digital Marketing': 'dm_tiles', 'Academy': 'students_laptop', 'Our Work': 'flatlay',
+               'Products': 'laptop_dark', 'Digital Marketing': 'dm_creative', 'Academy': 'students_laptop', 'Our Work': 'flatlay',
                'Clients': 'handshake', 'Industries': 'engineer_factory', 'Careers': 'friends_laptops', 'Partners': 'hands_stack',
                'Insights': 'open_office', 'Contact': 'office_glass', 'Consulting': 'boardroom', 'Our Team': 'team_laptops', 'Advisory Board': 'boardroom'}
 
@@ -269,7 +269,7 @@ MENUS = [
     ('marketing.html', 'Marketing', 'Visibility. Engagement. Conversion. Growth.', 'Data, creativity and technology working together to win the right customers.', [
         ('marketing.html#seo', 'Search engine optimisation', 'Technical, local, content SEO', _ph('analytics_laptop')),
         ('marketing.html#sem', 'Search & performance ads', 'Google Ads, remarketing, CRO', _ph('ux_sketch')),
-        ('marketing.html#social', 'Social media marketing', 'Content, community, social ads', _ph('dm_tiles')),
+        ('marketing.html#social', 'Social media marketing', 'Content, community, social ads', _ph('dm_creative')),
         ('marketing.html#performance', 'Performance marketing', 'Leads, funnels, automation', _ph('dashboard')),
         ('marketing.html#more', 'Influencer & AI marketing', 'Creators and personalisation', _ph('photographer')),
         ('marketing.html#funnel', 'Our growth framework', 'The TEAM3 marketing funnel', _ph('meeting_hands')),
@@ -475,7 +475,7 @@ AGENTS = [('Research Agent', 'Market and competitor research'), ('Lead Generatio
           ('Branding Agent', 'Brand concepts and campaign creation'), ('Executive Agent', 'Management reporting and decision support')]
 
 
-SVC_PHOTOS = ['whiteboard', 'sketch_tablet', 'code_laptop', 'phone_app', 'ai_letters', 'robot_pepper', 'dm_tiles', 'students_laptop',
+SVC_PHOTOS = ['palette', 'sketch_tablet', 'code_laptop', 'phone_app', 'ai_letters', 'robot_pepper', 'dm_creative', 'students_laptop',
               'clapper', 'planning', 'servers', 'ux_sketch']
 
 

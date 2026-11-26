@@ -114,7 +114,7 @@ ARTICLES = [
         'slug': 'insight-ai-customer-acquisition',
         'cat': 'DIGITAL MARKETING',
         'title': 'The future of AI-powered customer acquisition',
-        'cover': 'art-ink', 'photo': 'dm_tiles', 'photo2': ('analytics_laptop', 'Faster learning loops: campaigns measured and improved against real conversion data.'),
+        'cover': 'art-ink', 'photo': 'dm_creative', 'photo2': ('analytics_laptop', 'Faster learning loops: campaigns measured and improved against real conversion data.'),
         'mins': 5,
         'lead': 'AI is changing how customers search, discover and decide. The businesses that win will combine automation with genuine relevance — and respect for the customer’s attention and consent.',
         'body': [
