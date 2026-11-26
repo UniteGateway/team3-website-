@@ -334,5 +334,18 @@
     }
   }
 
+  /* ---------- Hero background video (desktop only, respects reduced motion) ---------- */
+  var hv = d.querySelector('.hero-video');
+  if (hv) {
+    var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var saveData = navigator.connection && navigator.connection.saveData;
+    if (!calm && !saveData && window.innerWidth > 640) {
+      [['webm', 'video/webm'], ['mp4', 'video/mp4']].forEach(function (t) {
+        var s = d.createElement('source'); s.src = hv.getAttribute('data-src-' + t[0]); s.type = t[1]; hv.appendChild(s);
+      });
+      hv.load(); var pr = hv.play(); if (pr && pr.catch) pr.catch(function () {});
+    }
+  }
+
   var y = d.getElementById('yr'); if (y) y.textContent = new Date().getFullYear();
 })();

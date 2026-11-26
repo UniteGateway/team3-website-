@@ -648,7 +648,7 @@ def roadmap():
 # --------------------------------------------------------------------------- pages
 def page_index():
     body = f'''
-<section class="hero hero-home"><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
+<section class="hero hero-home has-video"><video class="hero-video" muted loop playsinline preload="none" poster="assets/video/hero-team-poster.webp" aria-hidden="true" data-src-webm="assets/video/hero-team.webm" data-src-mp4="assets/video/hero-team.mp4"></video><div class="hero-video-shade"></div><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
 <div class="wrap hero-layout solo"><div>
 <span class="eyebrow gold rv">Established 2004. Reimagined for the future.</span>
 <h1 class="display rv d1" style="margin-top:26px"><span class="l">We build brands.</span><span class="l">We build technology.</span><span class="l grad">We build the future.</span></h1>
