@@ -345,10 +345,11 @@
     v.muted = true; v.defaultMuted = true; v.autoplay = true; v.playsInline = true;
     v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('autoplay', '');
     v.preload = 'auto';
-    v.src = v.getAttribute(window.innerWidth > 640 ? 'data-src-mp4' : 'data-src-mobile');
+    if (!v.hasAttribute('data-eager')) v.src = v.getAttribute(window.innerWidth > 640 ? 'data-src-mp4' : 'data-src-mobile');
     v.addEventListener('canplay', function () { if (v.paused) tryPlay(v); }, { once: true });
     tryPlay(v);
   }
+  if (lite) d.querySelectorAll('video[data-eager]').forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); v.preload = 'none'; });
   // If autoplay was blocked (e.g. iPhone Low Power Mode), start on the first interaction.
   ['touchstart', 'scroll', 'click', 'keydown'].forEach(function (ev) {
     window.addEventListener(ev, function () {

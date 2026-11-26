@@ -1167,3 +1167,9 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
   .reel-band.split .vcap.band{position:relative;left:auto;bottom:auto;width:auto;grid-column:1;grid-row:1;align-self:end;padding:clamp(24px,3vw,44px)}
 }
 @media (max-width:640px){.reel-band.split .reel-shade{background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.6) 40%,transparent 62%)}}
+/* Never show the browser's own play button / controls on background videos */
+.hero-video::-webkit-media-controls,.reel-video::-webkit-media-controls,
+.hero-video::-webkit-media-controls-panel,.reel-video::-webkit-media-controls-panel,
+.hero-video::-webkit-media-controls-overlay-play-button,.reel-video::-webkit-media-controls-overlay-play-button,
+.hero-video::-webkit-media-controls-start-playback-button,.reel-video::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none;opacity:0!important}
+.hero-video,.reel-video{pointer-events:none}

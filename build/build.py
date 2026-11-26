@@ -580,8 +580,12 @@ SERVICE_LINKS = {'Branding': 'branding.html', 'Technology': 'technology.html', '
 
 
 def reel_video(name, cls='reel-video'):
-    return (f'<video class="{cls}" id="rv-{name}" muted loop playsinline preload="none" poster="assets/video/reel-{name}-poster.jpg" aria-hidden="true" '
-            f'data-reel="{name}" data-src-mp4="assets/video/reel-{name}.mp4" data-src-mobile="assets/video/reel-{name}-m.mp4"></video>')
+    eager = cls == 'hero-video'
+    attrs = 'autoplay muted loop playsinline disablepictureinpicture disableremoteplayback ' + ('preload="auto"' if eager else 'preload="none"')
+    sources = (f'<source src="assets/video/reel-{name}-m.mp4" type="video/mp4" media="(max-width: 640px)">'
+               f'<source src="assets/video/reel-{name}.mp4" type="video/mp4">') if eager else ''
+    return (f'<video class="{cls}" id="rv-{name}" {attrs} poster="assets/video/reel-{name}-poster.jpg" aria-hidden="true" tabindex="-1" '
+            f'data-reel="{name}" data-src-mp4="assets/video/reel-{name}.mp4" data-src-mobile="assets/video/reel-{name}-m.mp4"{" data-eager" if eager else ""}>{sources}</video>')
 
 
 def reel_captions(name, cls='vcap', links=None):
