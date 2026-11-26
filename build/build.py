@@ -572,6 +572,42 @@ def pillars_block():
         f'<div class="pillar rv d{n}">{foot(*PILLAR_FEET[n])}<span class="big">{n+1}</span><h3>{E(t)}</h3><p>{E(p)}</p></div>' for n, (t, p) in enumerate(PILLARS)) + '</div>'
 
 
+# --------------------------------------------------------------------------- captioned video reels
+import json as _json
+REELS = _json.load(open(os.path.join(ROOT, 'build', 'reels.json')))
+SERVICE_LINKS = {'Branding': 'branding.html', 'Technology': 'technology.html', 'Artificial Intelligence': 'ai.html',
+                 'Digital Marketing': 'marketing.html', 'Consulting': 'consulting.html', 'Media & Film': 'branding.html#media'}
+
+
+def reel_video(name, cls='reel-video'):
+    return (f'<video class="{cls}" id="rv-{name}" muted loop playsinline preload="none" poster="assets/video/reel-{name}-poster.jpg" aria-hidden="true" '
+            f'data-reel="{name}" data-src-mp4="assets/video/reel-{name}.mp4" data-src-mobile="assets/video/reel-{name}-m.mp4"></video>')
+
+
+def reel_captions(name, cls='vcap', links=None):
+    caps = REELS[name]['captions']; n = len(caps)
+    items = ''
+    for k, c in enumerate(caps):
+        href = c.get('href') or (links or {}).get(c['title'])
+        more = f'<a class="vc-link" href="{href}">Explore{ARROW}</a>' if href else ''
+        items += (f'<li data-t="{c["t"]}"{" class=on" if k == 0 else ""}><span class="vc-n">{k + 1:02d} <i>/ {n:02d}</i></span>'
+                  f'<b>{E(c["title"])}</b><span class="vc-sub">{E(c["sub"])}</span>{more}</li>')
+    return f'<div class="{cls}" data-for="rv-{name}" aria-live="off"><ol>{items}</ol><div class="vc-prog"><i></i></div></div>'
+
+
+def reel_index(name, links=None):
+    return ('<div class="vc-index" data-for="rv-' + name + '">' + ''.join(
+        f'<button type="button" data-t="{c["t"]}"{" class=on" if k == 0 else ""}>{E(c["title"])}</button>' for k, c in enumerate(REELS[name]['captions'])) + '</div>')
+
+
+def reel_band(name, eyebrow, title, lead, links=None, split=False):
+    return f"""<section class="section reel-sec"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow">{E(eyebrow)}</span><h2 style="margin-top:16px">{title}</h2></div><p class="lead rv d1">{lead}</p></div>
+<div class="reel-band rv{' split' if split else ''}">{reel_video(name)}<div class="reel-shade"></div>{reel_captions(name, 'vcap band', links)}</div>
+{reel_index(name, links)}
+</div></section>"""
+
+
 # --------------------------------------------------------------------------- infographics
 def _arc(cx, cy, r1, r2, a0, a1):
     import math
@@ -648,7 +684,7 @@ def roadmap():
 # --------------------------------------------------------------------------- pages
 def page_index():
     body = f'''
-<section class="hero hero-home has-video"><video class="hero-video" muted loop playsinline preload="none" poster="assets/video/hero-india-poster.webp" aria-hidden="true" data-src-mp4="assets/video/hero-india.mp4" data-src-mobile="assets/video/hero-india-m.mp4"></video><div class="hero-video-shade"></div><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
+<section class="hero hero-home has-video">{reel_video('values', 'hero-video')}<div class="hero-video-shade"></div><div class="hero-glow"><i></i><i></i></div><div class="hero-grid-lines"></div>
 <div class="wrap hero-layout solo"><div>
 <span class="eyebrow gold rv">Established 2004. Reimagined for the future.</span>
 <h1 class="display rv d1" style="margin-top:26px"><span class="l">We build brands.</span><span class="l">We build technology.</span><span class="l grad">We build the future.</span></h1>
@@ -656,6 +692,7 @@ def page_index():
 <p class="hero-tagline rv d3">One partner. <span class="gold-t">Infinite possibilities.</span></p>
 <div class="actions rv d3">{btn("Explore Our Services", "#services", "light")}{btn("Start a Project", "contact.html", "ghost", False)}</div>
 </div>
+{reel_captions("values", "vcap hero-cap")}
 </div><span class="scroll-cue" aria-hidden="true"></span></section>
 
 <section class="section tight"><div class="wrap">
@@ -668,6 +705,7 @@ def page_index():
 <div class="stat"><b>360<sup>°</sup></b><span>Creative &amp; technology solutions</span></div>
 </div></div></section>
 
+{reel_band("services", "What we do", "One partner. <span class='grad'>Every capability.</span>", "Branding, technology, AI, marketing, consulting and film — delivered by one integrated team.", SERVICE_LINKS)}
 <section class="section bg-grey" id="services"><div class="wrap">
 {head("What we do", "Everything your business needs to move forward.", "From an idea on paper to a globally scalable business, we help organisations imagine, create, launch, automate and grow.")}
 <div class="grid g4">{svc_cards(SERVICES)}</div>
@@ -1195,6 +1233,7 @@ def page_products():
 </article>"""
     body = f"""
 {page_hero("Products", "Our Products", "Platforms built by TEAM3. <span class='grad'>Ready to scale.</span>", "Ten digital platforms for collaboration, sales intelligence, trade, energy, marketing, procurement and community — designed, engineered and powered with AI by TEAM3 for the Collabiz and Unite Group businesses.", btn("Explore the products", "#products", "light") + btn("Request a demo", "contact.html?service=Apps&msg=" + quote("Product demo request") + "#enquiry", "ghost", False))}
+{reel_band("products", "Product showcase", "Ten platforms. <span class='grad'>One team behind them.</span>", "A quick tour of every TEAM3 product — tap a name to jump to it.", split=True)}
 <section class="section tight" id="products"><div class="wrap">
 <h2 class="sr-only">All products</h2>
 <div class="pindex shots">{idx}</div>

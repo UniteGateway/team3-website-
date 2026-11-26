@@ -334,20 +334,48 @@
     }
   }
 
-  /* ---------- Hero background video (desktop only, respects reduced motion) ---------- */
-  var hv = d.querySelector('.hero-video');
-  if (hv) {
-    var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var saveData = navigator.connection && navigator.connection.saveData;
-    var cellular = navigator.connection && navigator.connection.type === 'cellular';
-    if (!calm && !saveData && !cellular) {
-      var srcs = window.innerWidth > 640 ? [['mp4', 'video/mp4']] : [['mobile', 'video/mp4']];
-      srcs.forEach(function (t) {
-        var s = d.createElement('source'); s.src = hv.getAttribute('data-src-' + t[0]); s.type = t[1]; hv.appendChild(s);
-      });
-      hv.load(); var pr = hv.play(); if (pr && pr.catch) pr.catch(function () {});
-    }
+  /* ---------- Captioned video reels (hero, services, products) ---------- */
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var conn = navigator.connection || {};
+  var lite = calm || conn.saveData || conn.type === 'cellular';
+  function startVideo(v) {
+    if (v._started || lite) return; v._started = true;
+    var s = d.createElement('source'); s.type = 'video/mp4';
+    s.src = v.getAttribute(window.innerWidth > 640 ? 'data-src-mp4' : 'data-src-mobile'); v.appendChild(s);
+    v.load(); var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
   }
+  d.querySelectorAll('video[data-src-mp4]').forEach(function (v) {
+    var caps = d.querySelectorAll('[data-for="' + v.id + '"]');
+    var items = [], times = [];
+    caps.forEach(function (c) { c.querySelectorAll('[data-t]').forEach(function (el) { items.push(el); }); });
+    if (caps[0]) caps[0].querySelectorAll('[data-t]').forEach(function (el) { times.push(parseFloat(el.getAttribute('data-t'))); });
+    var bar = caps[0] && caps[0].querySelector('.vc-prog i'), cur = -1;
+    function show(k) {
+      if (k === cur) return; cur = k;
+      items.forEach(function (el) { el.classList.toggle('on', parseFloat(el.getAttribute('data-t')) === times[k]); });
+    }
+    function sync() {
+      var t = v.currentTime + 0.4, k = 0;
+      for (var i = 0; i < times.length; i++) if (t >= times[i]) k = i;
+      show(k);
+      if (bar && v.duration) bar.style.width = (v.currentTime / v.duration * 100) + '%';
+    }
+    v.addEventListener('timeupdate', sync);
+    caps.forEach(function (c) {
+      c.addEventListener('click', function (e) {
+        var b = e.target.closest('button[data-t]'); if (!b) return;
+        var t = parseFloat(b.getAttribute('data-t'));
+        if (v.readyState > 0 && !v.paused) { v.currentTime = t + 0.05; } else { show(times.indexOf(t)); }
+      });
+    });
+    // No video (reduced motion / data saver): step the captions on a timer unless motion is reduced
+    if (lite && !calm && times.length > 1) {
+      var step = (times[1] - times[0]) * 1000, k = 0;
+      setInterval(function () { k = (k + 1) % times.length; show(k); }, step);
+    }
+    if (v.classList.contains('hero-video') || !('IntersectionObserver' in window)) startVideo(v);
+    else new IntersectionObserver(function (es, ob) { es.forEach(function (en) { if (en.isIntersecting) { startVideo(v); ob.disconnect(); } }); }, { rootMargin: '200px' }).observe(v);
+  });
 
   var y = d.getElementById('yr'); if (y) y.textContent = new Date().getFullYear();
 })();

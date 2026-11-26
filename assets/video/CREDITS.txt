@@ -1,1 +1,4 @@
-hero-india: edited from Mixkit free stock videos #23006, #101534, #101535, #101547, #101555 (desktop) and #101540, #101541, #101543, #101545, #23006 (mobile) — Mixkit License (free commercial use)
+Video reels built by build/reels.py from Mixkit free stock videos (Mixkit License, free commercial use).
+values: 23006, 921, 101536, 101547, 2378
+services: 921, 101547, 47051, 41278, 23006, 46353
+products: TEAM3 product home-page images
