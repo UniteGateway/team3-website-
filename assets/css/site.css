@@ -1123,7 +1123,7 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 @media (max-width:860px){.sprofs{grid-template-columns:1fr}}
 /* Homepage hero video */
 .hero.has-video{isolation:isolate}
-.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-4;background:#000 url(../video/hero-team-poster.webp) center/cover no-repeat}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-4;background:#000 url(../video/hero-ink-poster.webp) center/cover no-repeat}
 .hero-video-shade{position:absolute;inset:0;z-index:-3;background:linear-gradient(90deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.78) 45%,rgba(0,0,0,.45) 100%),linear-gradient(0deg,rgba(0,0,0,.65),transparent 45%)}
 .hero.has-video .hero-glow{opacity:.55}
 .hero.has-video .hero-grid-lines{opacity:.5}
