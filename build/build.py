@@ -322,7 +322,7 @@ def header(active):
                 f'<div class="mi-grid c{cols}{" dense" if n > 6 else ""}">{cards}</div></div></div></li>')
     return f'''<a class="skip" href="#main">Skip to content</a>
 <header class="site-header"><div class="wrap nav">
-<a class="logo" href="index.html" aria-label="TEAM3 Solutions home"><img class="sym" src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><span><img class="wm wm-d" src="assets/img/wordmark-dark-sm.webp" alt="TEAM3" width="420" height="61"><img class="wm wm-l" src="assets/img/wordmark-light-sm.webp" alt="TEAM3" width="420" height="61"><span class="tag">SOLUTIONS</span></span></a>
+<a class="logo" href="index.html" aria-label="TEAM3 Solutions home"><img class="sym" src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><span><img class="wm wm-d" src="assets/img/wordmark-dark-sm.webp" alt="TEAM3" width="420" height="61"><img class="wm wm-l" src="assets/img/wordmark-light-sm.webp" alt="TEAM3" width="420" height="61"><span class="tag">SOLUTIONS · SINCE 2004</span><span class="tagline">Step beyond imagination.</span></span></a>
 <ul class="menu" id="menu">{lis}<li class="nav-btns"><a class="btn sm nav-partner" href="partners.html"{' aria-current="page"' if active == 'partners.html' else ''}>Partners</a><a class="btn red sm nav-cta" href="contact.html">Let’s Build Something</a></li></ul>
 <button class="burger" type="button" aria-label="Menu" aria-controls="menu" aria-expanded="false"><span></span><span></span></button>
 </div></header>'''

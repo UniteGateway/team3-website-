@@ -1070,3 +1070,9 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 .sample-note{display:inline-block;margin-bottom:28px;padding:8px 14px;border-radius:999px;background:#FFF8E6;border:1px solid #F5DFA3;color:#5c4400;font-size:13.5px;font-weight:600}
 .person .foot .fp img{object-position:center 20%}
 .founder>.foot{width:min(100%,400px);height:auto;justify-self:center}
+/* Logo lockup: Since 2004 + tagline */
+.logo .tag{letter-spacing:.14em;font-size:8px;margin-top:5px;white-space:nowrap}
+.logo .tagline{display:block;margin-top:3px;font:italic 400 10px/1 Georgia,'Times New Roman',serif;color:var(--gold-ink);white-space:nowrap;letter-spacing:.01em}
+.on-dark .logo .tagline,.nav-open .logo .tagline{color:var(--gold)}
+.nav-open .logo .tagline{color:var(--gold-ink)}
+@media (max-width:640px){.logo .tag,.logo .tagline{display:block}.logo .tag{font-size:7px}.logo .tagline{font-size:9px}}
