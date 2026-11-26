@@ -120,9 +120,9 @@ TEAM = [
     ('Nanda Gopal', 'Director – Global Operations', 'Leads TEAM3’s global delivery and operations — bringing projects, partners and teams together across India and international markets.', 'team/p-tech.webp', '#8FCFDD', {'linkedin': '#', 'x': '#', 'email': '#'}),
     ('Madhuri Kiranmai', 'Director – Corporate Affairs', 'Oversees corporate affairs, governance and stakeholder relations for TEAM3 and its partner businesses.', 'team/p-brand.webp', '#F5A06B', {'linkedin': '#', 'x': '#', 'email': '#'}),
     ('Surya Vidiyala', 'Director – International (USA)', 'Leads TEAM3’s international business from the United States — partnerships, clients and expansion across North America.', 'team/p-consult.webp', '#D2D2D6', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Akhil Ponnada', 'Director – Information Technology', 'Leads technology for TEAM3 and the Unite Group platforms — engineering, cloud infrastructure and the digital products behind COLLABIZ, BIZO, LeadDNA and more.', 'team/p-product.webp', '#E6DAB0', {'linkedin': '#', 'x': '#', 'email': '#'}),
     ('Daniel Brooks', 'Head of AI & Data', 'Designs AI agents, data platforms and analytics for enterprises in India, the US and the UK — with responsible-AI governance built in from day one.', 'team/team-4.webp', '#A9B8E6', {'linkedin': '#', 'x': '#', 'email': '#'}),
     ('Sarah Thompson', 'Head of Digital Marketing', 'Performance marketer with 12 years in SEO, paid media and marketing automation. Measures every campaign against leads and revenue, not likes.', 'team/team-6.webp', '#F2C25A', {'linkedin': '#', 'x': '#', 'email': '#'}),
-    ('Akhil Ponnada', 'Head of Product', 'Young product leader who owns the roadmap for COLLABIZ, LeadDNA, BIZO and the other Unite Group platforms — turning customer feedback into features.', 'team/p-product.webp', '#E6DAB0', {'linkedin': '#', 'x': '#', 'email': '#'}),
     ('Meera Iyer', 'Head of TEAM3 Academy', 'Educator and learning designer who has trained 5,000+ students and professionals in AI and digital skills through workshops, colleges and corporate programmes.', 'team/team-8.webp', '#A9D2AE', {'linkedin': '#', 'x': '#', 'email': '#'}),
 ]
 
