@@ -654,10 +654,17 @@ def page_index():
 <h1 class="display rv d1" style="margin-top:26px"><span class="l">We build brands.</span><span class="l">We build technology.</span><span class="l grad">We build the future.</span></h1>
 <p class="lead rv d2" style="margin-top:30px">From powerful brand identities to intelligent software, from creative advertising to autonomous AI agents, TEAM3 brings strategy, creativity and technology together to transform businesses.</p>
 <p class="hero-tagline rv d3">One partner. <span class="gold-t">Infinite possibilities.</span></p>
+<a class="fp-badge rv d3" href="about.html#journey"><img src="assets/img/symbol-sm.webp" alt="" width="80" height="112"><span><b>22 years of footprints</b><small>Since 2004 · Hyderabad to the world</small></span></a>
 <div class="actions rv d3">{btn("Explore Our Services", "#services", "light")}{btn("Start a Project", "contact.html", "ghost", False)}</div>
 </div>
 </div><span class="scroll-cue" aria-hidden="true"></span></section>
 
+<section class="fp-band" aria-label="22 years of footprints"><div class="wrap fp-in">
+<div class="fp-num rv"><span class="n">22</span><span class="y">years of<br>footprints</span></div>
+<div class="fp-trail rv d1"><div class="fp-steps" aria-hidden="true">{"".join(f'<img src="assets/img/symbol-sm.webp" alt="" style="--i:{i}">' for i in range(6))}</div>
+<div class="fp-line"><span>2004</span><i></i><span>2026</span></div>
+<p>Two decades of brands, platforms, publications and films — every step a footprint. <b>Step beyond imagination.</b></p></div>
+</div></section>
 <section class="section tight"><div class="wrap">
 <div class="head split"><div class="rv"><span class="eyebrow">Our heritage</span><h2 style="margin-top:16px">More than two decades of imagination.</h2></div>
 <p class="lead rv d1">Since 2004, TEAM3 has brought creative communication and information technology together under one roof — now reimagined for the age of artificial intelligence.</p></div>
