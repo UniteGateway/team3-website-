@@ -1128,3 +1128,4 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 .hero.has-video .hero-glow{opacity:.55}
 .hero.has-video .hero-grid-lines{opacity:.5}
 @media (prefers-reduced-motion:reduce){.hero-video{display:block}}
+@media (max-width:640px){.hero-video-shade{background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.72) 55%,rgba(0,0,0,.85) 100%)}}
