@@ -341,7 +341,7 @@
     var saveData = navigator.connection && navigator.connection.saveData;
     var cellular = navigator.connection && navigator.connection.type === 'cellular';
     if (!calm && !saveData && !cellular) {
-      var srcs = window.innerWidth > 640 ? [['webm', 'video/webm'], ['mp4', 'video/mp4']] : [['mobile', 'video/mp4']];
+      var srcs = window.innerWidth > 640 ? [['mp4', 'video/mp4']] : [['mobile', 'video/mp4']];
       srcs.forEach(function (t) {
         var s = d.createElement('source'); s.src = hv.getAttribute('data-src-' + t[0]); s.type = t[1]; hv.appendChild(s);
       });
