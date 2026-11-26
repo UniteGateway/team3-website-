@@ -337,13 +337,28 @@
   /* ---------- Captioned video reels (hero, services, products) ---------- */
   var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var conn = navigator.connection || {};
-  var lite = calm || conn.saveData || conn.type === 'cellular';
+  var lite = calm || conn.saveData;
+  function tryPlay(v) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () { v._blocked = true; }); }
   function startVideo(v) {
     if (v._started || lite) return; v._started = true;
-    var s = d.createElement('source'); s.type = 'video/mp4';
-    s.src = v.getAttribute(window.innerWidth > 640 ? 'data-src-mp4' : 'data-src-mobile'); v.appendChild(s);
-    v.load(); var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+    // iOS Safari autoplays only muted, inline videos; set the properties as well as the attributes.
+    v.muted = true; v.defaultMuted = true; v.autoplay = true; v.playsInline = true;
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('autoplay', '');
+    v.preload = 'auto';
+    v.src = v.getAttribute(window.innerWidth > 640 ? 'data-src-mp4' : 'data-src-mobile');
+    v.addEventListener('canplay', function () { if (v.paused) tryPlay(v); }, { once: true });
+    tryPlay(v);
   }
+  // If autoplay was blocked (e.g. iPhone Low Power Mode), start on the first interaction.
+  ['touchstart', 'scroll', 'click', 'keydown'].forEach(function (ev) {
+    window.addEventListener(ev, function () {
+      d.querySelectorAll('video[data-src-mp4]').forEach(function (v) { if (v._started && v.paused) tryPlay(v); });
+    }, { passive: true, once: true });
+  });
+  // Pause when the tab is hidden; resume when visible.
+  d.addEventListener('visibilitychange', function () {
+    d.querySelectorAll('video[data-src-mp4]').forEach(function (v) { if (!v._started) return; if (d.hidden) v.pause(); else tryPlay(v); });
+  });
   d.querySelectorAll('video[data-src-mp4]').forEach(function (v) {
     var caps = d.querySelectorAll('[data-for="' + v.id + '"]');
     var items = [], times = [];
