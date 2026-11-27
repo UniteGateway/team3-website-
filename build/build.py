@@ -1926,7 +1926,7 @@ def write_extras(names):
     urls = ''.join(f'<url><loc>{SITE["url"]}/{"" if n == "index.html" else n}</loc></url>' for n in names if n != '404.html' and n not in NOINDEX_PAGES)
     files = {
         'sitemap.xml': f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n',
-        'robots.txt': f'User-agent: *\nAllow: /\nSitemap: {SITE["url"]}/sitemap.xml\n',
+        'robots.txt': f'User-agent: *\nAllow: /\nDisallow: /weekend/\nDisallow: /api/\nSitemap: {SITE["url"]}/sitemap.xml\n',
         'site.webmanifest': '{"name":"TEAM3 Solutions","short_name":"TEAM3","start_url":"index.html","display":"standalone","background_color":"#000000","theme_color":"#000000","icons":[{"src":"assets/img/favicon.png","sizes":"192x192","type":"image/png"}]}\n',
     }
     files['_headers'] = '/*\n' + ''.join(f'  {k}: {v}\n' for k, v in security_headers().items()) + \
