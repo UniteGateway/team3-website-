@@ -121,3 +121,20 @@ a{color:inherit}
 .stage .blk{-webkit-user-select:none;user-select:none}
 .stage .blk.editing,.stage .blk.editing *{-webkit-user-select:text;user-select:text}
 .stage .hnd,.stage .np-page{touch-action:none}
+/* phones */
+.new input,.new select{min-width:0;max-width:100%}
+.new input[type=date]{-webkit-appearance:none;appearance:none;min-height:38px}
+@media (max-width:640px){
+  .top{flex-wrap:wrap;padding:10px 14px;gap:8px}
+  .top .brand{flex-basis:100%}
+  .top .grow{display:none}
+  .top .who{flex-basis:100%;order:2}
+  .top .btn{order:3}
+  .dash{padding:18px 14px 60px}
+  .new{grid-template-columns:1fr 1fr;padding:14px;gap:10px}
+  .new .btn,.new label:nth-of-type(5){grid-column:1/-1;justify-content:center}
+  .new .btn{padding:11px}
+  .tgrid{grid-template-columns:1fr 1fr;gap:10px}
+  .tcard .pv{height:200px}
+  .tcard .pv .mini{transform:scale(.68);transform-origin:center}
+}

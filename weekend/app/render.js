@@ -50,7 +50,8 @@ export function pageEl(page, opts = {}) {
 }
 
 export function nextSaturday(d = new Date()) {
-  const x = new Date(d); x.setDate(x.getDate() + ((6 - x.getDay() + 7) % 7)); return x.toISOString().slice(0, 10);
+  const x = new Date(d); x.setDate(x.getDate() + ((6 - x.getDay() + 7) % 7));
+  return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`; // local date, not UTC
 }
 export function longDate(iso) {
   try { return new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase(); } catch { return iso; }
