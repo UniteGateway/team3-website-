@@ -28,7 +28,7 @@ async function commons(q) {
     if (!/image\/(jpeg|png|webp)/.test(ii.mime || '') || (ii.width || 0) < 800) return null;
     const lic = strip(m.LicenseShortName?.value) || 'Free licence';
     if (/non-?commercial|\bNC\b/i.test(lic)) return null;
-    return { url: ii.thumburl || ii.url, thumb: (ii.thumburl || ii.url).replace(/\/\d+px-/, '/400px-'), title: strip(m.ObjectName?.value) || p.title.replace(/^File:/, ''),
+    return { url: ii.thumburl || ii.url, thumb: (ii.thumburl || ii.url).replace(/\/\d+px-/, '/500px-'), title: strip(m.ObjectName?.value) || p.title.replace(/^File:/, ''),
       creator: strip(m.Artist?.value).slice(0, 80) || 'Wikimedia Commons contributor', license: lic, license_url: m.LicenseUrl?.value, source_url: ii.descriptionurl,
       provider: 'Wikimedia Commons', width: ii.thumbwidth || ii.width, height: ii.thumbheight || ii.height };
   }).filter(Boolean);
