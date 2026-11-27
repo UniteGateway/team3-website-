@@ -67,7 +67,9 @@ function rerenderBlock(b) {
 }
 function markOverflow(el) {
   if (!el.classList.contains('b-text')) return;
-  const t = el.firstElementChild; el.classList.toggle('over', !!t && (t.scrollHeight > el.clientHeight + 2 || t.scrollWidth > el.clientWidth + 2 || el.scrollHeight > el.clientHeight + 2));
+  const t = el.firstElementChild; if (!t) return;
+  const multi = parseInt(el.style.columnCount || '1', 10) > 1;
+  el.classList.toggle('over', multi ? el.scrollWidth > el.clientWidth + 2 : (t.scrollHeight > el.clientHeight + 2 || el.scrollHeight > el.clientHeight + 2));
 }
 function drawHandles() {
   $$('.hnd', wrap).forEach((h) => h.remove());
@@ -543,7 +545,7 @@ function applyAI(p, data) {
 }
 async function aiFill(p = page()) {
   if (aiBusy) return toast('AI is already working on a page…');
-  if (!aiEnabled) return toast('AI is not set up yet — add ANTHROPIC_API_KEY in Vercel, then redeploy.', 5000);
+  if (!aiEnabled) return quickFill(p);
   if (editing) stopEdit();
   const i = ed.pages.indexOf(p); p.topic = p.topic || defaultTopic(p, i);
   const { texts, imgs } = aiSlots(p);
@@ -575,21 +577,89 @@ async function aiFill(p = page()) {
   } catch (e) { setAIStatus(''); toast(e.message || 'AI failed', 5000); }
   finally { aiBusy = false; renderPages(); }
 }
+/* News auto-fill without AI: real headlines + short feed summaries, credited; photos by headline keywords */
+async function quickFill(p = page()) {
+  if (aiBusy) return toast('Already filling a page…');
+  if (editing) stopEdit();
+  const i = ed.pages.indexOf(p); p.topic = p.topic || defaultTopic(p, i);
+  const { texts } = aiSlots(p);
+  if (!texts.length) return toast('No story boxes on this page to fill.');
+  aiBusy = true; setAIStatus(`Loading ${p.topic} news for page ${i + 1}…`);
+  try {
+    const d = await api(`/api/weekend-news?topic=${encodeURIComponent(p.topic)}${p.aiQ ? '&q=' + encodeURIComponent(p.aiQ) : ''}`);
+    const used = new Set(ed.pages.filter((x) => x !== p && x.ai).flatMap((x) => (x.ai.used || [])));
+    let pool = (d.items || []).filter((it) => !used.has(it.title));
+    if (!pool.length) throw new Error('No news available right now — try another topic.');
+    pool = [...pool.filter((it) => it.summary), ...pool.filter((it) => !it.summary)];
+    const take = () => pool.shift();
+    const byId = new Map(p.blocks.map((b) => [b.id, b]));
+    const overlapX = (a, b) => Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) > 20;
+    const heads = texts.filter((s) => s.kind === 'headline').sort((a, b) => (b.h * b.w) - (a.h * a.w) || a.y - b.y);
+    const bodies = texts.filter((s) => s.kind === 'body'), decks = texts.filter((s) => s.kind === 'deck');
+    const owner = new Map(); // body/deck/photo id -> headline id
+    const below = (h, s) => s.y >= h.y + h.h - 4 && s.y - (h.y + h.h) < 520 && overlapX(h, s);
+    for (const s of [...bodies, ...decks]) { const h = heads.filter((x) => below(x, s)).sort((a, b) => (s.y - a.y) - (s.y - b.y))[0]; if (h) owner.set(s.id, h.id); }
+    const usedTitles = [], para = (t) => `<p>${esc(t)}</p>`, src = (it) => `<p><i>Source: ${esc(it.source)}.</i></p>`;
+    const story = new Map(); let n = 0;
+    for (const h of heads) {
+      const it = take(); if (!it) break; story.set(h.id, it); usedTitles.push(it.title);
+      byId.get(h.id).html = esc(it.title); n++;
+    }
+    for (const dk of decks) { const it = story.get(owner.get(dk.id)); if (it) { byId.get(dk.id).html = esc(it.summary ? it.summary.split(/(?<=[.!?])\s/)[0] : `Reported by ${it.source}`); n++; } }
+    for (const br of texts.filter((s) => s.kind === 'briefs')) {
+      const b = byId.get(br.id), label = (b.html.match(/^<p[^>]*>.*?(In brief|Think beyond).*?<\/p>/i) || [''])[0];
+      const k = Math.max(3, Math.min(8, Math.floor((br.words || 120) / 28))); const items = [];
+      for (let j = 0; j < k && pool.length; j++) { const x = take(); usedTitles.push(x.title); items.push(`<p><b>${esc(x.title)}</b><br><i>${esc(x.source)}</i></p>`); }
+      if (items.length) { b.html = label + items.join(''); n++; }
+    }
+    for (const t of texts.filter((s) => s.kind === 'teaser')) {
+      const x = take(); if (!x) break; usedTitles.push(x.title);
+      const short = x.title.length > 60 ? x.title.slice(0, 57).replace(/\s+\S*$/, '') + '…' : x.title;
+      byId.get(t.id).html = `<b>${esc(short)}</b><br><i>${esc(x.source)}</i>`; n++;
+    }
+    const seenStory = new Set();
+    for (const bd of bodies.sort((a, b) => a.y - b.y || a.x - b.x)) {
+      const b = byId.get(bd.id), it = story.get(owner.get(bd.id)); let html = '', words = 0;
+      if (it && !seenStory.has(it.title)) { seenStory.add(it.title); html += (it.summary ? para(it.summary) : '') + src(it); words += (it.summary || '').split(/\s+/).length + 3; }
+      let extra = 0;
+      while (words < (bd.words || 80) * 0.8 && pool.length && extra++ < 6) {
+        const x = take(); usedTitles.push(x.title);
+        html += `<p><b>${esc(x.title)}</b>${x.summary ? ' — ' + esc(x.summary) : ''} <i>(${esc(x.source)})</i></p>`;
+        words += (x.title + ' ' + (x.summary || '')).split(/\s+/).length + 2;
+      }
+      if (html) { b.html = html; n++; }
+    }
+    // photos: search words from the story headline the photo belongs to
+    let ni = 0;
+    for (const b of p.blocks.filter((x) => x.type === 'image' && !isAd(x) && !x.lock)) {
+      const h = heads.filter((x) => overlapX(x, b) && Math.abs(b.y - (x.y + x.h)) < 160).sort((a, c) => Math.abs(b.y - a.y) - Math.abs(b.y - c.y))[0]
+        || heads.slice().sort((a, c) => Math.hypot(a.x - b.x, a.y - b.y) - Math.hypot(c.x - b.x, c.y - b.y))[0];
+      const it = h && story.get(h.id), q = it ? keywords(it.title) : (p.aiQ || p.topic);
+      if (q) { b.q = q; b.aiQ = true; b.src = ''; b.credit = ''; delete b.source; ni++; }
+    }
+    p.ai = { topic: p.topic, at: Date.now(), mode: 'feeds', used: usedTitles };
+    commit(); if (ed.pages[cur] === p) renderStage();
+    setAIStatus(`✓ ${n} boxes filled on page ${i + 1}. Loading ${ni} photos…`);
+    if (ni) await autoImages([p]);
+    setAIStatus(`✓ Page ${i + 1} auto-filled from ${p.topic} news. Rewrite in your own words before printing.`);
+  } catch (e) { setAIStatus(''); toast(e.message || 'Auto-fill failed', 5000); }
+  finally { aiBusy = false; renderPages(); }
+}
 function setAIStatus(t) { const el = $('#aiStatus'); if (el) el.textContent = t; if (t) $('#saved').textContent = t.length > 40 ? t.slice(0, 40) + '…' : t; }
 function maybeAutoAI() {
   const p = page();
-  if (ed.autoAI && aiEnabled && !p.ai && NEWS_TEMPLATES.has(p.template) && !aiBusy) aiFill(p);
+  if (ed.autoAI && !p.ai && NEWS_TEMPLATES.has(p.template) && !aiBusy) aiFill(p);
 }
 function renderAIPanel() {
   const box = $('#aiPanel'); if (!box) return; const p = page();
-  box.innerHTML = `<h3>✨ AI editor</h3>
-${aiEnabled ? '' : '<p class="note" style="margin:0">AI needs an Anthropic API key on the server (ANTHROPIC_API_KEY in Vercel). Until then, use the news list below.</p>'}
+  box.innerHTML = `<h3>✨ Auto editor</h3>
+<p class="muted" style="margin:0">${aiEnabled ? 'Mode: <b>AI writing</b> — original stories written from today’s news.' : 'Mode: <b>News auto-fill</b> — real headlines and short summaries from free feeds, each credited to its source. (Add an Anthropic API key later for AI-written stories.)'}</p>
 <label>Page ${cur + 1} topic<select id="aiTopic">${['india', ...TOPIC_CYCLE].map((t) => `<option value="${t}" ${t === (p.topic || defaultTopic(p, cur)) ? 'selected' : ''}>${t[0].toUpperCase() + t.slice(1)}</option>`).join('')}</select></label>
 <label>Focus (optional)<input id="aiQ" placeholder="e.g. Hyderabad metro, IT jobs" value="${esc(p.aiQ || '')}"></label>
 <label>Instructions (optional)<input id="aiInstr" placeholder="e.g. positive local stories, avoid politics"></label>
-<button class="btn red" id="aiGo" ${aiEnabled ? '' : 'disabled'}>✨ Fill this page with AI</button>
-<label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="aiAuto" ${ed.autoAI ? 'checked' : ''} ${aiEnabled ? '' : 'disabled'} style="width:auto">Auto-fill news pages when I open them</label>
-<p class="muted" id="aiStatus">${p.ai ? `Filled by AI · ${esc(p.ai.topic || '')} · ${new Date(p.ai.at).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}` : ''}</p>
+<button class="btn red" id="aiGo">✨ ${aiEnabled ? 'Fill this page with AI' : 'Auto-fill this page'}</button>
+<label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="aiAuto" ${ed.autoAI ? 'checked' : ''} style="width:auto">Auto-fill news pages when I open them</label>
+<p class="muted" id="aiStatus">${p.ai ? `${p.ai.mode === 'feeds' ? 'Auto-filled' : 'Filled by AI'} · ${esc(p.ai.topic || '')} · ${new Date(p.ai.at).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}` : ''}</p>
 <p class="muted">AI writes original copy using only facts from today’s free news feeds, credits sources, and finds free-licence photos. Always check facts before printing.</p>`;
   $('#aiTopic').onchange = (e) => { p.topic = e.target.value; scheduleSave(); };
   $('#aiQ').onchange = (e) => { p.aiQ = e.target.value.trim(); scheduleSave(); };
@@ -605,6 +675,6 @@ api('/api/weekend-ai').then((d) => { aiEnabled = !!d.enabled; renderAIPanel(); s
 function start() {
   if (params.get('auto') !== '1') return maybeAutoAI();
   history.replaceState(null, '', `?id=${ed.id}`);
-  if (ed.autoAI && aiEnabled) { autoImages(ed.pages.filter((p) => !NEWS_TEMPLATES.has(p.template))).then(() => maybeAutoAI()); }
+  if (ed.autoAI) { autoImages(ed.pages.filter((p) => !NEWS_TEMPLATES.has(p.template))).then(() => maybeAutoAI()); }
   else autoImages(ed.pages);
 }

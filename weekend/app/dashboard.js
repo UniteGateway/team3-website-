@@ -6,7 +6,7 @@ const $ = (s) => document.querySelector(s);
 const nf = $('#nf'); nf.date.value = nextSaturday();
 api('/api/weekend-me').then((d) => { $('#who').textContent = d.email || ''; }).catch(() => {});
 $('#out').onclick = signOut;
-api('/api/weekend-ai').then((d) => { const c = nf.ai; if (d.enabled) c.checked = true; else { c.disabled = true; $('#aiOptWrap').title = 'Add ANTHROPIC_API_KEY in Vercel to enable AI'; $('#aiOptWrap').style.opacity = .5; } }).catch(() => {});
+nf.ai.checked = true;
 
 function mini(page) { const w = document.createElement('div'); w.className = 'mini'; w.appendChild(pageEl(page)); return w; }
 const fmt = (t) => new Date(t).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
