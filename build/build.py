@@ -1944,6 +1944,7 @@ def write_extras(names):
         '$schema': 'https://openapi.vercel.sh/vercel.json',
         'cleanUrls': False,
         'trailingSlash': False,
+        'functions': {'api/weekend-ai.js': {'maxDuration': 120}},
         'headers': [
             {'source': '/((?!weekend/).*)', 'headers': hdrs},
             {'source': '/weekend/(.*)', 'headers': [h if h['key'] != 'Content-Security-Policy' else {'key': h['key'], 'value': h['value'].replace("img-src 'self' data:", "img-src 'self' data: blob: https:")} for h in hdrs]

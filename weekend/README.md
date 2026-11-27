@@ -19,3 +19,10 @@ Images tab / ✨ Auto images: free-licence photos from Openverse (commercial use
 Print / PDF: browser print → Save as PDF; the page size is set to 13.5 × 21 in automatically (margins none, background graphics on).
 
 Editions are saved in the browser (IndexedDB). Use Export/Import (.json) to back up or move them between computers.
+
+## AI editor (optional)
+Add `ANTHROPIC_API_KEY` (from console.anthropic.com → API keys) in Vercel → Environment Variables (Production) and redeploy.
+Then in the editor: **✨ AI fill page** (or the AI & News tab) writes original copy for the page's headlines, decks, stories,
+briefs, teasers and captions from today's free news feeds, credits the sources, and loads free-licence photos.
+Tick "Auto-fill news pages when I open them" (or the checkbox when creating an edition) to fill each news page as you open it.
+Model: claude-opus-5-5 at low effort with server-side refusal fallback. Roughly US$0.05–0.10 per page.

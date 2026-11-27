@@ -6,7 +6,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { requireSession, json } from './_auth.js';
 import { loadNews } from './_news.js';
-export const config = { runtime: 'edge' };
+// Node.js runtime (the Anthropic SDK needs it); Web-standard GET/POST handlers. maxDuration is set in vercel.json.
 
 const MODEL = 'claude-opus-5-5';
 
@@ -59,12 +59,16 @@ How to work:
 const enc = new TextEncoder();
 const line = (o) => enc.encode(JSON.stringify(o) + '\n');
 
-export default async function handler(request) {
+export async function GET(request) {
+  const denied = await requireSession(request);
+  if (denied) return denied;
+  return json({ enabled: !!process.env.ANTHROPIC_API_KEY, model: MODEL });
+}
+
+export async function POST(request) {
   const denied = await requireSession(request);
   if (denied) return denied;
   const enabled = !!process.env.ANTHROPIC_API_KEY;
-  if (request.method === 'GET') return json({ enabled, model: MODEL });
-  if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
   if (!enabled) return json({ error: 'AI is not set up yet: add ANTHROPIC_API_KEY in Vercel and redeploy.' }, 503);
 
   let body;

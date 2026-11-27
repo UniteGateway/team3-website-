@@ -3,6 +3,8 @@
   "private": true,
   "description": "TEAM3 Solutions static site + Weekend News Studio edge functions",
   "dependencies": {
-    "@anthropic-ai/sdk": "1.8.0"
-  }
+    "@anthropic-ai/sdk": "1.8.0",
+    "@opentelemetry/api": "1.10.0"
+  },
+  "type": "module"
 }

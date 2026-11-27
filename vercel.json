@@ -2,6 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": false,
   "trailingSlash": false,
+  "functions": {
+    "api/weekend-ai.js": {
+      "maxDuration": 120
+    }
+  },
   "headers": [
     {
       "source": "/((?!weekend/).*)",
