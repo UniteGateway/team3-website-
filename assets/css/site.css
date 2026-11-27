@@ -1178,3 +1178,17 @@ a.soc:hover{background:var(--red-ui);border-color:var(--red-ui);transform:transl
 .story-quote{margin:10px 0 0;padding:26px 28px;border-left:4px solid var(--red);background:var(--grey);border-radius:0 18px 18px 0;font:800 clamp(22px,2vw,26px)/1.3 var(--h);letter-spacing:-.025em}
 .story-quote::before{display:none}
 .story-quote span{display:block;margin-top:10px;font:500 16px/1.55 var(--b);letter-spacing:0;color:var(--muted)}
+/* service detail pages */
+.checks.linked a{color:inherit;text-decoration:none;display:inline-flex;gap:8px;align-items:baseline;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+.checks.linked a .go{color:var(--red-ui,#DA1220);transition:transform .2s}
+.checks.linked a:hover,.checks.linked a:focus-visible{color:var(--red-ui,#DA1220);border-color:currentColor}
+.checks.linked a:hover .go{transform:translateX(3px)}
+a.row.linked{color:inherit;text-decoration:none;cursor:pointer}
+a.row.linked:hover b,a.row.linked:focus-visible b{color:var(--red-ui,#DA1220)}
+.svc-over{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.svc-fig{margin:0}.svc-vis{width:100%;height:auto;display:block;border-radius:28px;box-shadow:0 30px 60px -30px rgba(0,0,0,.25)}
+.svc-fig figcaption{font-size:13px;color:#6E6E73;margin-top:12px;text-align:center}
+.svc-ideal{display:flex;gap:16px;align-items:center;margin-top:28px;padding:18px 20px;border-radius:16px;background:#F5F5F7}
+.svc-ideal .ic{flex:none;margin:0}.svc-ideal small{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6E6E73}.svc-ideal b{font-size:16px}
+.roadmap.six{grid-template-columns:repeat(6,1fr)}
+@media (max-width:860px){.svc-over{grid-template-columns:1fr;gap:40px}.roadmap.six{grid-template-columns:1fr 1fr}}

@@ -69,6 +69,9 @@ _P = {
     'chev': '<path d="M6 9l6 6 6-6"/>',
     'layers': '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
     'pen': '<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',
+    'clock': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    'grid': '<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
+    'nodes': '<circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5v4M12 11.5l-5.5 5.5M12 11.5l5.5 5.5"/>',
     'search': '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
 }
 
@@ -902,8 +905,8 @@ def page_technology():
 {page_hero("Technology", "Information Technology", "Technology engineered <span class='grad'>around your business.</span>", "From customised applications to enterprise platforms, we help organisations transform complex requirements into practical and scalable digital systems.", btn("Discuss Your IT Requirements", "contact.html?service=Technology", "red") + btn("Turn your idea into an app", "#apps", "ghost", False))}
 {subnav([("enterprise","Enterprise software"),("consulting","IT consulting"),("stack","Stack"),("web","Web"),("apps","Apps & products"),("cloud","Cloud & security"),("iot","Smart tech & IoT")])}
 <section class="section"><div class="wrap">
-<div id="enterprise">{cap("Enterprise software development", "Systems that improve efficiency, enhance customer experiences and support long-term growth.", checks(["Custom software development","Enterprise resource planning (ERP)","Customer relationship management (CRM)","Human resource management systems","Inventory and warehouse management","Procurement management","Manufacturing management","Financial management platforms","Project management systems","Business workflow automation"], True))}</div>
-<div id="consulting">{cap("IT consulting", "Architecture and strategy before a single line of code.", checks(["Technology architecture","Digital transformation consulting","Software requirement analysis","Technology modernisation","System integration","IT infrastructure planning","Technology feasibility studies","Product engineering consulting"], True))}</div>
+<div id="enterprise">{cap("Enterprise software development", "Systems that improve efficiency, enhance customer experiences and support long-term growth.", checks_links(["Custom software development","Enterprise resource planning (ERP)","Customer relationship management (CRM)","Human resource management systems","Inventory and warehouse management","Procurement management","Manufacturing management","Financial management platforms","Project management systems","Business workflow automation"], "enterprise", True))}</div>
+<div id="consulting">{cap("IT consulting", "Architecture and strategy before a single line of code.", checks_links(["Technology architecture","Digital transformation consulting","Software requirement analysis","Technology modernisation","System integration","IT infrastructure planning","Technology feasibility studies","Product engineering consulting"], "consulting", True))}</div>
 {cap("IT support and maintenance", "", '<p class="lead" style="color:var(--ink)">Application maintenance, performance optimisation, system monitoring, version upgrades, technical support and dedicated development resources.</p>')}
 </div></section>
 
@@ -913,7 +916,7 @@ def page_technology():
 
 <section class="section" id="web"><div class="wrap">
 {head("Web design & development", "Your digital presence. Designed for performance.", "Websites that combine compelling visual experiences, reliable technology and measurable business objectives.")}
-{rows(web)}
+{rows_links(web, "web")}
 <div class="grid g3" style="margin-top:40px">{"".join(f'<div class="card rv"><span class="ic">{ic(i)}</span><h3 style="font-size:19px">{t}</h3></div>' for i, t in [("phone","Mobile responsive"),("users","Accessible"),("shield","Secure"),("search","SEO-ready"),("rocket","High performance"),("layers","Future scalable")])}</div>
 <div class="actions">{btn("Build Your Website", "contact.html?service=Web", "red")}</div>
 </div></section>
@@ -921,7 +924,7 @@ def page_technology():
 <section class="section bg-grey" id="apps"><div class="wrap">
 {head("Mobile app & digital product development", "From imagination <span class='grad'>to application.</span>", "We transform business ideas into intuitive, scalable and commercially viable digital products — combining business strategy, user experience, product architecture, software engineering and ongoing optimisation.")}
 <div class="grid g2">
-<div class="card rv"><span class="ic">{ic("phone")}</span><h3>App development services</h3><div style="margin-top:20px">{checks(["Android applications","iOS applications","Cross-platform mobile applications","Progressive web applications","Enterprise mobility solutions","Consumer applications","Subscription-based applications","AI-powered applications","Super apps and multi-service platforms"])}</div></div>
+<div class="card rv"><span class="ic">{ic("phone")}</span><h3>App development services</h3><div style="margin-top:20px">{checks_links(["Android applications","iOS applications","Cross-platform mobile applications","Progressive web applications","Enterprise mobility solutions","Consumer applications","Subscription-based applications","AI-powered applications","Super apps and multi-service platforms"], "apps")}</div></div>
 <div class="stack">
 <div class="card rv d1"><span class="ic">{ic("cart")}</span><h3>Marketplace development</h3><p>B2B, B2C and C2C marketplaces, service aggregation, bidding platforms, e-commerce, franchise platforms, lead exchanges and business collaboration applications.</p></div>
 <div class="card rv d2"><span class="ic">{ic("layers")}</span><h3>SaaS product development</h3><p>Multi-tenant architecture, subscription management, user onboarding, role-based access, billing integrations, dashboards, API ecosystems and white-label platforms.</p></div>
@@ -935,7 +938,7 @@ def page_technology():
 
 <section class="section" id="cloud"><div class="wrap">
 {head("Cloud, data & cybersecurity", "Reliable technology. Secure infrastructure.", "Dependable digital infrastructure that supports business continuity, growth and secure technology adoption.")}
-{rows(cloud)}
+{rows_links(cloud, "cloud")}
 <div class="actions">{btn("Modernise Your Infrastructure", "contact.html?service=Cloud", "red")}</div>
 </div></section>
 
@@ -1966,6 +1969,158 @@ for _n in AGENT_DETAIL:
     PAGES[agent_href(_n)] = (lambda n=_n: page_agent(n))
 for _a in ARTICLES:
     PAGES[_a['slug'] + '.html'] = (lambda a=_a: page_article(a))
+
+
+# --------------------------------------------------------------------------- service detail pages (build/services.py)
+from services import GROUPS as SVC_GROUPS, ITEMS as SVC_ITEMS  # noqa: E402
+
+SVC_WHY = {
+    'apps': 'Great apps are more than code. We start with your users and business model, design an experience people enjoy, and engineer an app that is fast, secure and easy to grow.',
+    'web': 'Your website is often the first impression of your business. We combine brand-led design, clear content and modern engineering to build sites that load fast and convert.',
+    'enterprise': 'Off-the-shelf software rarely fits perfectly. We study how your teams work, then configure or build systems that remove manual effort and give leadership real-time visibility.',
+    'consulting': 'Technology decisions are business decisions. Our consultants give you independent, practical advice — and the team to implement it when you are ready.',
+    'cloud': 'Reliable, secure infrastructure keeps your business running. We design, automate and monitor environments that scale with demand and protect your data.',
+}
+
+SVC_ALIAS = {'Progressive web apps': ('apps', 'Progressive web applications')}
+
+
+def svc_href(group, title):
+    return f'{group}-{slugify(title)}.html'
+
+
+def svc_index():
+    out = {}
+    for g, items in SVC_ITEMS.items():
+        for n, it in enumerate(items):
+            out[it[0]] = (g, n)
+    return out
+
+
+def svc_link(title, group=None):
+    if title in SVC_ALIAS:
+        group, title = SVC_ALIAS[title]
+    return svc_href(group, title) if group and any(t == title for t, *_ in SVC_ITEMS.get(group, [])) else None
+
+
+def checks_links(items, group, two=False):
+    lis = ''
+    for i in items:
+        h = svc_link(i, group)
+        lis += f'<li><a href="{h}">{E(i)}<span class="go" aria-hidden="true">→</span></a></li>' if h else f'<li>{E(i)}</li>'
+    return f'<ul class="checks linked{" two" if two else ""}">{lis}</ul>'
+
+
+def rows_links(pairs, group):
+    out = '<div class="rows">'
+    for n, (a, b) in enumerate(pairs, 1):
+        h = svc_link(a, group)
+        tag = f'a href="{h}"' if h else 'div'
+        out += f'<{tag} class="row rv{" linked" if h else ""}"><b>{E(a)}</b><span>{E(b)}</span><i>{"%02d" % n}</i></{tag.split()[0]}>'
+    return out + '</div>'
+
+
+def _hub(title):
+    w, lines = title.split(), ['']
+    for x in w:
+        if len(lines[-1]) + len(x) > 14 and lines[-1]:
+            lines.append('')
+        lines[-1] = (lines[-1] + ' ' + x).strip()
+    lines = lines[:3]
+    n = len(lines)
+    return ''.join(f'<tspan x="300" dy="{4 - (n - 1) * 8 if i == 0 else 16}">{E(l)}</tspan>' for i, l in enumerate(lines)) + f'</text><text x="300" y="{300 + (n - 1) * 8 + 14}" text-anchor="middle" font-size="10.5" fill="#fff" opacity=".85">TEAM3'
+
+
+def _short(s, n=26):
+    return s if len(s) <= n else s[:n - 1].rstrip() + '…'
+
+
+def svc_visual(style, col, title, feats):
+    """Illustrative SVG for a service page: phone / browser / dashboard / diagram / nodes."""
+    f = [E(_short(x)) for x in feats]
+    t = E(_short(title, 30))
+    g = f'<defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{col}"/><stop offset="1" stop-color="#ED1726"/></linearGradient></defs>'
+    if style == 'phone':
+        rows = ''.join(f'<g transform="translate(0,{232 + k * 52})"><rect x="200" width="200" height="42" rx="10" fill="#F4F4F5"/><circle cx="222" cy="21" r="10" fill="{col}" opacity="{1 - k * .12:.2f}"/><text x="240" y="26" font-size="11.5" fill="#1D1D1F">{x}</text></g>' for k, x in enumerate(f[:5]))
+        art = (f'<rect x="180" y="40" width="240" height="500" rx="38" fill="#0B0B0C"/><rect x="190" y="50" width="220" height="480" rx="30" fill="#fff"/>'
+               f'<rect x="262" y="58" width="76" height="16" rx="8" fill="#0B0B0C"/><rect x="190" y="50" width="220" height="164" rx="30" fill="url(#sg)"/><rect x="190" y="150" width="220" height="64" fill="url(#sg)"/>'
+               f'<text x="210" y="120" font-size="12" fill="#fff" opacity=".8">TEAM3 · App</text><text x="210" y="148" font-size="17" font-weight="800" fill="#fff">{t}</text>'
+               f'<rect x="210" y="166" width="90" height="26" rx="13" fill="#fff"/><text x="225" y="183" font-size="11" font-weight="700" fill="{col}">Get started</text>{rows}'
+               f'<g transform="translate(40,120)"><rect width="120" height="74" rx="14" fill="#fff" stroke="#E5E5EA"/><text x="14" y="28" font-size="11" fill="#6E6E73">Active users</text><text x="14" y="56" font-size="22" font-weight="800" fill="#1D1D1F">↑ Growth</text></g>'
+               f'<g transform="translate(440,360)"><rect width="124" height="74" rx="14" fill="#fff" stroke="#E5E5EA"/><circle cx="24" cy="37" r="12" fill="{col}"/><text x="44" y="34" font-size="11" fill="#6E6E73">Notification</text><text x="44" y="50" font-size="11" font-weight="700" fill="#1D1D1F">Order ready</text></g>')
+    elif style == 'browser':
+        cards = ''.join(f'<g transform="translate({70 + k * 160},356)"><rect width="148" height="120" rx="12" fill="#F4F4F5"/><rect x="14" y="16" width="30" height="30" rx="8" fill="{col}" opacity="{1 - k * .2:.2f}"/><text x="14" y="76" font-size="11.5" font-weight="700" fill="#1D1D1F">{_short(x, 20)}</text><rect x="14" y="88" width="100" height="6" rx="3" fill="#D1D1D6"/><rect x="14" y="100" width="70" height="6" rx="3" fill="#D1D1D6"/></g>' for k, x in enumerate(f[:3]))
+        art = (f'<rect x="40" y="50" width="520" height="460" rx="18" fill="#fff" stroke="#E5E5EA"/><rect x="40" y="50" width="520" height="40" rx="18" fill="#F4F4F5"/><rect x="40" y="72" width="520" height="18" fill="#F4F4F5"/>'
+               f'<circle cx="66" cy="70" r="6" fill="#FF5F57"/><circle cx="86" cy="70" r="6" fill="#FEBC2E"/><circle cx="106" cy="70" r="6" fill="#28C840"/><rect x="140" y="60" width="300" height="20" rx="10" fill="#fff"/>'
+               f'<rect x="70" y="110" width="460" height="226" rx="14" fill="url(#sg)"/><text x="96" y="176" font-size="12" fill="#fff" opacity=".85">Welcome</text><text x="96" y="210" font-size="24" font-weight="800" fill="#fff">{t}</text>'
+               f'<rect x="96" y="238" width="200" height="8" rx="4" fill="#fff" opacity=".6"/><rect x="96" y="254" width="150" height="8" rx="4" fill="#fff" opacity=".6"/><rect x="96" y="282" width="110" height="32" rx="16" fill="#fff"/><text x="114" y="303" font-size="12" font-weight="700" fill="{col}">Enquire now</text>{cards}')
+    elif style == 'dashboard':
+        bars = ''.join(f'<rect x="{250 + k * 38}" y="{470 - h}" width="22" height="{h}" rx="5" fill="{col if k % 2 else "#ED1726"}" opacity="{.55 + k * .05:.2f}"/>' for k, h in enumerate([80, 120, 96, 150, 132, 176, 160, 196]))
+        side = ''.join(f'<g transform="translate(60,{150 + k * 40})"><rect width="14" height="14" rx="4" fill="#fff" opacity=".5"/><text x="24" y="12" font-size="11" fill="#fff" opacity=".85">{_short(x, 16)}</text></g>' for k, x in enumerate(f[:6]))
+        kpi = ''.join(f'<g transform="translate({222 + k * 112},120)"><rect width="100" height="74" rx="12" fill="#fff" stroke="#E5E5EA"/><text x="12" y="26" font-size="10" fill="#6E6E73">{["Orders", "Revenue", "On time"][k]}</text><rect x="12" y="40" width="{[60, 70, 50][k]}" height="14" rx="4" fill="{col}" opacity=".85"/></g>' for k in range(3))
+        art = (f'<rect x="40" y="60" width="520" height="440" rx="18" fill="#F7F7F8" stroke="#E5E5EA"/><rect x="40" y="60" width="160" height="440" rx="18" fill="url(#sg)"/><rect x="180" y="60" width="20" height="440" fill="url(#sg)"/>'
+               f'<text x="60" y="110" font-size="14" font-weight="800" fill="#fff">{E(_short(title, 18))}</text>{side}{kpi}'
+               f'<rect x="222" y="214" width="320" height="270" rx="12" fill="#fff" stroke="#E5E5EA"/><text x="238" y="240" font-size="11" fill="#6E6E73">Performance</text>{bars}')
+    else:
+        pts = [(300 + 205 * __import__('math').cos(a), 290 + 190 * __import__('math').sin(a)) for a in [(-90 + k * 60) * 3.14159 / 180 for k in range(6)]]
+        lines = ''.join(f'<line x1="300" y1="290" x2="{x:.0f}" y2="{y:.0f}" stroke="{col}" stroke-width="2" stroke-dasharray="{"6 6" if style == "nodes" else "0"}" opacity=".6"/>' for x, y in pts)
+        ring = f'<circle cx="300" cy="290" r="205" fill="none" stroke="#E5E5EA" stroke-width="2"/>' if style == 'nodes' else ''
+        nodes = ''.join(f'<g transform="translate({x - 90:.0f},{y - 22:.0f})"><rect width="180" height="44" rx="22" fill="#fff" stroke="{col}" stroke-width="1.6"/><circle cx="22" cy="22" r="8" fill="{col}"/><text x="38" y="27" font-size="11" font-weight="700" fill="#1D1D1F">{_short(f[k] if k < len(f) else "", 22)}</text></g>' for k, (x, y) in enumerate(pts))
+        hub = (f'<circle cx="300" cy="290" r="84" fill="url(#sg)"/><circle cx="300" cy="290" r="100" fill="none" stroke="{col}" opacity=".25" stroke-width="8"/>'
+               f'<text x="300" y="290" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">{_hub(title)}</text>')
+        art = ring + lines + hub + nodes
+    return (f'<svg class="svc-vis" viewBox="0 0 600 580" role="img" aria-label="Illustration: {E(title)} — {E(", ".join(feats[:5]))}" font-family="Inter, sans-serif">'
+            f'{g}<rect width="600" height="580" rx="28" fill="#FAFAFA"/>{art}</svg>')
+
+
+def page_service(group, n):
+    parent, gtitle, style, col, steps, deliv, tech = SVC_GROUPS[group]
+    title, icon, intro, feats, ideal = SVC_ITEMS[group][n]
+    href = svc_href(group, title)
+    photo = f'svc_{group}_{n}'
+    svc = {'apps': 'Apps', 'web': 'Web', 'cloud': 'Cloud'}.get(group, 'Technology')
+    ask = f'contact.html?service={svc}&msg={quote("Enquiry: " + title)}#enquiry'
+    items = SVC_ITEMS[group]
+    rel = [items[(n + k) % len(items)] for k in range(1, 5)]
+    rel_items = [(svc_href(group, r[0]), f'photos/svc_{group}_{items.index(r)}-t.webp', gtitle, r[0], _short(r[2], 70)) for r in rel]
+    step_txt = {'Discover': 'Goals, users and success measures.', 'Design': 'Flows, screens and a clickable prototype.', 'Build': 'Agile sprints with weekly demos.', 'Test': 'Devices, performance and security.',
+                'Launch': 'Go-live, store or server release.', 'Grow': 'Analytics-led improvements.', 'Plan content': 'Sitemap, messages and SEO plan.', 'Develop': 'Fast, secure and accessible build.',
+                'Optimise': 'Speed, SEO and conversion tuning.', 'Process study': 'Map how work happens today.', 'Solution design': 'Modules, roles and reports.', 'Configure & build': 'Set up and customise in sprints.',
+                'Data migration': 'Clean and move existing data.', 'Training': 'Hands-on sessions and SOPs.', 'Support': 'Help desk and improvements.', 'Assess': 'Understand the current state.',
+                'Analyse': 'Find gaps, risks and options.', 'Recommend': 'Clear, costed recommendations.', 'Roadmap': 'Phased plan and budget.', 'Implement': 'Deliver with your team.', 'Review': 'Measure and adjust.',
+                'Migrate': 'Move workloads with minimal downtime.', 'Secure': 'Controls, access and encryption.', 'Monitor': 'Alerts, logs and dashboards.'}
+    body = f"""
+{page_hero(title, gtitle, E(title) + '.', E(intro), btn("Discuss your requirement", ask, "red") + btn("All " + gtitle + " services", parent, "ghost", False), photo=photo, parent=(parent, gtitle))}
+<section class="section"><div class="wrap"><div class="svc-over">
+<div class="rv"><span class="eyebrow">Overview</span><h2 style="margin-top:16px">{E(title)} by TEAM3.</h2>
+<p class="lead" style="margin-top:18px">{E(SVC_WHY[group])}</p>
+<p style="margin-top:18px">Since 2004 TEAM3 has combined creative design and engineering under one roof — so strategy, design, development and support for your project stay with one accountable team.</p>
+<div class="svc-ideal"><span class="ic">{ic(icon)}</span><div><small>Ideal for</small><b>{E(ideal)}</b></div></div>
+<div class="actions">{btn("Get a proposal", ask, "red")}{btn("Book a discovery call", "contact.html#meeting", "ghost", False)}</div></div>
+<figure class="rv d1 svc-fig">{svc_visual(style, col, title, feats)}<figcaption>Illustrative concept — every solution is designed around your brand and requirements.</figcaption></figure>
+</div></div></section>
+<section class="section bg-grey"><div class="wrap">
+{head("Key capabilities", "What’s included.", "Core capabilities we typically deliver — scoped to your needs and budget.")}
+<div class="grid g3">{"".join(f'<div class="card rv d{k % 3}"><span class="ic">{ic(icon)}</span><span class="num" style="position:absolute;top:32px;right:32px">{k + 1:02d}</span><h3 style="font-size:20px">{E(x)}</h3></div>' for k, x in enumerate(feats))}</div>
+</div></section>
+<section class="section bg-black"><div class="wrap">
+{head("How we deliver", "A clear, proven process.", gold=True)}
+<ol class="roadmap six">{"".join(f'<li class="rv d{i % 4}"><span class="rm-n">{i + 1:02d}</span><b>{E(s)}</b><p>{E(step_txt.get(s, ""))}</p></li>' for i, s in enumerate(steps))}</ol>
+</div></section>
+<section class="section"><div class="wrap"><div class="cap" style="border:0;padding:0">
+<div class="rv"><span class="eyebrow">Deliverables</span><h2 style="margin-top:16px">What you receive.</h2><div style="margin-top:24px">{checks(deliv)}</div></div>
+<div class="rv d1"><span class="eyebrow">Technology</span><h2 style="margin-top:16px">Tools we work with.</h2><p class="muted" style="margin-top:14px">We choose the stack that fits your goals, team and budget — typical options include:</p><div style="margin-top:24px">{chips(tech)}</div></div>
+</div></div></section>
+{rel_cards(rel_items, "More " + gtitle.lower() + " services")}
+{cta_band("Let’s build your " + E(title.lower()) + ".", "Share your idea or requirement — we’ll respond with a practical plan, timeline and estimate.", btn("Discuss your requirement", ask, "red") + btn("Estimate your project", "contact.html#estimate", "ghost", False))}
+"""
+    return layout(href, title, f'{title} by TEAM3 Solutions, Hyderabad — {intro}', body)
+
+
+for _g, _items in SVC_ITEMS.items():
+    for _n in range(len(_items)):
+        PAGES[svc_href(_g, _items[_n][0])] = (lambda g=_g, n=_n: page_service(g, n))
+
 
 if __name__ == '__main__':
     for name, fn in PAGES.items():
