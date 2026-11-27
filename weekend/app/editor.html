@@ -11,13 +11,14 @@
 <button class="btn sm" id="undo" title="Undo (Ctrl+Z)">↶ Undo</button><button class="btn sm" id="redo" title="Redo (Ctrl+Y)">↷ Redo</button>
 <select id="zoom" aria-label="Zoom"><option value="fit">Fit width</option><option value="page">Whole page</option><option value=".5">50%</option><option value=".75">75%</option><option value="1">100%</option></select>
 <button class="btn sm" id="gridBtn" aria-pressed="false" title="Show grid and snap">Grid</button>
+<button class="btn sm" id="aiTop" title="Write this page with AI from today’s news">✨ AI fill page</button>
 <button class="btn sm" id="autoImg" title="Fill empty photo boxes with free-licence images">✨ Auto images</button>
 <span class="grow"></span><span class="saved" id="saved">Saved</span>
 <button class="btn sm" id="exportBtn">Export</button>
 <button class="btn sm red" id="printBtn" title="Print or save as PDF at 13.5 × 21 in">🖨 Print / PDF</button>
 </header>
 <aside class="side" aria-label="Pages, insert, news and images">
-<div class="tabs" role="tablist"><button role="tab" data-t="pages" aria-selected="true">Pages</button><button role="tab" data-t="insert" aria-selected="false">Insert</button><button role="tab" data-t="news" aria-selected="false">News</button><button role="tab" data-t="images" aria-selected="false">Images</button></div>
+<div class="tabs" role="tablist"><button role="tab" data-t="pages" aria-selected="true">Pages</button><button role="tab" data-t="insert" aria-selected="false">Insert</button><button role="tab" data-t="news" aria-selected="false">✨ AI &amp; News</button><button role="tab" data-t="images" aria-selected="false">Images</button></div>
 <div class="pane" data-p="pages">
 <div class="row"><select id="addTpl" aria-label="Template for new page"></select><button class="btn sm red" id="addPage">+ Add page</button></div>
 <div class="pages" id="pages"></div></div>
@@ -35,6 +36,8 @@
 <p class="muted">Tip: drag image files from your computer straight onto a photo box or onto the page.</p>
 </div>
 <div class="pane" data-p="news" hidden>
+<div id="aiPanel" style="display:grid;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--line)"></div>
+<h3>Today’s headlines</h3>
 <label>Topic<select id="topic"><option value="india">India</option><option value="hyderabad">Hyderabad & Telangana</option><option value="world">World</option><option value="business">Business</option><option value="technology">Technology</option><option value="sport">Sport</option><option value="entertainment">Entertainment</option><option value="science">Science</option><option value="health">Health</option></select></label>
 <div class="row"><input id="nq" placeholder="Or search news…" aria-label="Search news"><button class="btn sm dark" id="nGo">Load</button></div>
 <p class="muted">Free feeds (BBC, Google News). Select a headline or story box on the page, then use the buttons. Always rewrite and credit the source.</p>

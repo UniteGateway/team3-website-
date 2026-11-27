@@ -284,7 +284,7 @@ async function autoImages(pages = [page()]) {
   toast(`Loading ${targets.length} free-licence photo${targets.length > 1 ? 's' : ''}…`);
   const used = new Set(pages.flatMap((p) => p.blocks.map((b) => b.src).filter(Boolean))); let n = 0;
   for (const [p, b] of targets) {
-    const q = nearestHeadline(p, b) || b.q || 'newspaper';
+    const q = (b.aiQ && b.q) || nearestHeadline(p, b) || b.q || 'newspaper';
     try { let items = await searchImages(q); if (!items.length && b.q && q !== b.q) items = await searchImages(b.q);
       const it = items.find((x) => !used.has(x.url)); if (it) { used.add(it.url); setImage(b, it.url, creditOf(it), it.title); b.source = it.source_url; n++; }
     } catch { /* keep going */ }
@@ -344,7 +344,7 @@ function renderPages() {
       else if (a === 'dup') { const c = structuredClone(p); c.id = uid(); c.blocks.forEach((b) => (b.id = uid())); ed.pages.splice(i + 1, 0, c); cur = i + 1; }
       else if (a === 'del') { if (!confirm(`Delete page ${i + 1}?`)) return; ed.pages.splice(i, 1); cur = Math.min(cur, ed.pages.length - 1); }
       else { if (cur === i) return; cur = i; }
-      sel = null; editing = null; commit(); renderAll();
+      sel = null; editing = null; commit(); renderAll(); maybeAutoAI();
     };
     d.onkeydown = (e) => { if (e.key === 'Enter') d.click(); };
     box.appendChild(d);
@@ -484,5 +484,127 @@ addEventListener('afterprint', () => { $('#print-root').innerHTML = ''; });
 
 /* ---------------------------------------------------------------- start */
 function renderAll() { renderStage(); renderPages(); }
+/* ---------------------------------------------------------------- AI editor: fill a page with original news copy + photos */
+const NEWS_TEMPLATES = new Set(['front', 'news']);
+const TOPIC_CYCLE = ['hyderabad', 'business', 'technology', 'sport', 'entertainment', 'world', 'health', 'science'];
+let aiEnabled = false, aiBusy = false;
+const stripTags = (h) => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+function defaultTopic(p, i) { return p.topic || (p.template === 'front' ? 'india' : TOPIC_CYCLE[Math.max(0, ed.pages.filter((x, k) => k < i && x.template === 'news').length) % TOPIC_CYCLE.length]); }
+function capacity(b) {
+  const s = b.style || {}, size = s.size || 10, lh = s.lh || 1.3, pad = (s.pad || 0) * 2, cols = s.cols || 1, gap = (s.gap ?? 12) * (cols - 1);
+  const lines = Math.max(1, Math.floor((b.h - pad) / (size * lh))), cpl = Math.max(4, Math.floor((b.w - pad - gap) / (size * 0.5)));
+  return { lines, chars: lines * cpl };
+}
+function aiSlots(p) {
+  const texts = [], imgs = [];
+  for (const b of p.blocks) {
+    if (b.lock) continue;
+    if (b.type === 'image') { if (!isAd(b) && b.w >= 60) imgs.push({ id: b.id, x: b.x, y: b.y, w: b.w, h: b.h }); continue; }
+    if (b.type !== 'text' || b.y < 50 || b.y + b.h > 1478) continue;
+    const s = b.style || {}, size = s.size || 10, txt = stripTags(b.html), c = capacity(b);
+    if (size >= 40 || /^(VOL\.|PAGE \d)|CLASSIFIEDS|TENDERS|Advertisement/i.test(txt) || s.upper) continue;
+    let kind = null;
+    if (/In brief|Think beyond|Short brief/i.test(txt)) kind = 'briefs';
+    else if (/Teaser headline|Inside: page/i.test(txt)) kind = 'teaser';
+    else if (size >= 16) kind = 'headline';
+    else if (s.italic && size >= 11) kind = 'deck';
+    else if (s.italic && size < 9) kind = 'caption';
+    else if (b.h >= 60 && b.w >= 120) kind = 'body';
+    if (!kind) continue;
+    const slot = { id: b.id, kind, x: b.x, y: b.y, w: b.w, h: b.h };
+    if (kind === 'headline' || kind === 'deck' || kind === 'caption' || kind === 'teaser') slot.chars = Math.max(20, Math.floor(c.chars * 0.92));
+    if (kind === 'body' || kind === 'briefs') slot.words = Math.max(25, Math.floor(c.chars * 0.86 / 6.2));
+    texts.push(slot);
+  }
+  return { texts, imgs };
+}
+function applyAI(p, data) {
+  const byId = new Map(p.blocks.map((b) => [b.id, b]));
+  const kinds = new Map(aiSlots(p).texts.map((s) => [s.id, s.kind]));
+  let n = 0;
+  for (const s of data.slots || []) {
+    const b = byId.get(s.id), kind = kinds.get(s.id); if (!b || !kind) continue;
+    const ps = (s.paragraphs || []).map((x) => String(x).trim()).filter(Boolean); if (!ps.length) continue;
+    if (kind === 'headline' || kind === 'deck' || kind === 'caption') b.html = esc(ps[0]);
+    else if (kind === 'teaser') b.html = `<b>${esc(ps[0])}</b>${ps[1] ? `<br>${esc(ps[1])}` : ''}`;
+    else if (kind === 'briefs') {
+      const label = (b.html.match(/^<p[^>]*>.*?(In brief|Think beyond).*?<\/p>/i) || [''])[0];
+      b.html = label + ps.map((x) => { const m = x.split(/\s+[—–-]\s+|:\s+/); return m.length > 1 ? `<p><b>${esc(m[0])}</b><br>${esc(m.slice(1).join(' — '))}</p>` : `<p>${esc(x)}</p>`; }).join('');
+    } else {
+      const src = (s.sources || []).filter(Boolean);
+      b.html = ps.map((x) => `<p>${esc(x)}</p>`).join('') + (src.length ? `<p><i>Sources: ${esc([...new Set(src)].join(', '))}.</i></p>` : '');
+    }
+    n++;
+  }
+  const imgTargets = [];
+  for (const im of data.images || []) { const b = byId.get(im.id); if (b && b.type === 'image' && !isAd(b) && im.query) { b.q = String(im.query).slice(0, 60); b.aiQ = true; b.src = ''; b.credit = ''; delete b.source; imgTargets.push(b); } }
+  p.ai = { topic: p.topic, at: Date.now(), feed: (data.feed || []).slice(0, 30) };
+  return { n, imgs: imgTargets.length };
+}
+async function aiFill(p = page()) {
+  if (aiBusy) return toast('AI is already working on a page…');
+  if (!aiEnabled) return toast('AI is not set up yet — add ANTHROPIC_API_KEY in Vercel, then redeploy.', 5000);
+  if (editing) stopEdit();
+  const i = ed.pages.indexOf(p); p.topic = p.topic || defaultTopic(p, i);
+  const { texts, imgs } = aiSlots(p);
+  if (!texts.length) return toast('No story boxes on this page for AI to fill.');
+  aiBusy = true; setAIStatus(`✨ Writing page ${i + 1} (${p.topic})…`);
+  try {
+    const r = await fetch('/api/weekend-ai', { method: 'POST', credentials: 'same-origin', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ slots: texts, images: imgs, topic: p.topic, q: p.aiQ || '', instructions: $('#aiInstr')?.value || '', pageName: p.name, pageNo: i + 1, date: longDate(ed.date), city: ed.city }) });
+    if (r.status === 401) { location.href = '/weekend/'; return; }
+    if (!r.ok || !r.body) { const d = await r.json().catch(() => ({})); throw new Error(d.error || `AI error ${r.status}`); }
+    const reader = r.body.getReader(), dec = new TextDecoder(); let buf = '', result = null;
+    for (;;) {
+      const { value, done } = await reader.read(); if (done) break;
+      buf += dec.decode(value, { stream: true }); let k;
+      while ((k = buf.indexOf('\n')) >= 0) {
+        const ln = buf.slice(0, k).trim(); buf = buf.slice(k + 1); if (!ln) continue;
+        const m = JSON.parse(ln);
+        if (m.type === 'progress') setAIStatus(`✨ Writing page ${i + 1}… ${m.chars ? Math.round(m.chars / 6) + ' words' : `reading ${m.items || ''} news items`}`);
+        if (m.type === 'error') throw new Error(m.error);
+        if (m.type === 'result') result = m.data;
+      }
+    }
+    if (!result) throw new Error('No answer from AI.');
+    const { n, imgs: ni } = applyAI(p, result);
+    commit(); if (ed.pages[cur] === p) renderStage();
+    setAIStatus(`✓ ${n} boxes written on page ${i + 1}. Loading ${ni} photos…`);
+    if (ni) await autoImages([p]);
+    setAIStatus(`✓ Page ${i + 1} filled by AI from ${p.topic} news. Check facts before printing.`);
+  } catch (e) { setAIStatus(''); toast(e.message || 'AI failed', 5000); }
+  finally { aiBusy = false; renderPages(); }
+}
+function setAIStatus(t) { const el = $('#aiStatus'); if (el) el.textContent = t; if (t) $('#saved').textContent = t.length > 40 ? t.slice(0, 40) + '…' : t; }
+function maybeAutoAI() {
+  const p = page();
+  if (ed.autoAI && aiEnabled && !p.ai && NEWS_TEMPLATES.has(p.template) && !aiBusy) aiFill(p);
+}
+function renderAIPanel() {
+  const box = $('#aiPanel'); if (!box) return; const p = page();
+  box.innerHTML = `<h3>✨ AI editor</h3>
+${aiEnabled ? '' : '<p class="note" style="margin:0">AI needs an Anthropic API key on the server (ANTHROPIC_API_KEY in Vercel). Until then, use the news list below.</p>'}
+<label>Page ${cur + 1} topic<select id="aiTopic">${['india', ...TOPIC_CYCLE].map((t) => `<option value="${t}" ${t === (p.topic || defaultTopic(p, cur)) ? 'selected' : ''}>${t[0].toUpperCase() + t.slice(1)}</option>`).join('')}</select></label>
+<label>Focus (optional)<input id="aiQ" placeholder="e.g. Hyderabad metro, IT jobs" value="${esc(p.aiQ || '')}"></label>
+<label>Instructions (optional)<input id="aiInstr" placeholder="e.g. positive local stories, avoid politics"></label>
+<button class="btn red" id="aiGo" ${aiEnabled ? '' : 'disabled'}>✨ Fill this page with AI</button>
+<label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="aiAuto" ${ed.autoAI ? 'checked' : ''} ${aiEnabled ? '' : 'disabled'} style="width:auto">Auto-fill news pages when I open them</label>
+<p class="muted" id="aiStatus">${p.ai ? `Filled by AI · ${esc(p.ai.topic || '')} · ${new Date(p.ai.at).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}` : ''}</p>
+<p class="muted">AI writes original copy using only facts from today’s free news feeds, credits sources, and finds free-licence photos. Always check facts before printing.</p>`;
+  $('#aiTopic').onchange = (e) => { p.topic = e.target.value; scheduleSave(); };
+  $('#aiQ').onchange = (e) => { p.aiQ = e.target.value.trim(); scheduleSave(); };
+  $('#aiGo').onclick = () => { p.topic = $('#aiTopic').value; p.aiQ = $('#aiQ').value.trim(); aiFill(p); };
+  $('#aiAuto').onchange = (e) => { ed.autoAI = e.target.checked; scheduleSave(); if (ed.autoAI) maybeAutoAI(); };
+}
+$('#aiTop').onclick = () => { tab('news'); aiFill(page()); };
+const _renderPages = renderPages;
+renderPages = function () { _renderPages(); renderAIPanel(); };
+
 renderAll(); updUndo();
-if (params.get('auto') === '1') { history.replaceState(null, '', `?id=${ed.id}`); autoImages(ed.pages); }
+api('/api/weekend-ai').then((d) => { aiEnabled = !!d.enabled; renderAIPanel(); start(); }).catch(() => start());
+function start() {
+  if (params.get('auto') !== '1') return maybeAutoAI();
+  history.replaceState(null, '', `?id=${ed.id}`);
+  if (ed.autoAI && aiEnabled) { autoImages(ed.pages.filter((p) => !NEWS_TEMPLATES.has(p.template))).then(() => maybeAutoAI()); }
+  else autoImages(ed.pages);
+}

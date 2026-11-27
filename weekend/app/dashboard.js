@@ -6,6 +6,7 @@ const $ = (s) => document.querySelector(s);
 const nf = $('#nf'); nf.date.value = nextSaturday();
 api('/api/weekend-me').then((d) => { $('#who').textContent = d.email || ''; }).catch(() => {});
 $('#out').onclick = signOut;
+api('/api/weekend-ai').then((d) => { const c = nf.ai; if (d.enabled) c.checked = true; else { c.disabled = true; $('#aiOptWrap').title = 'Add ANTHROPIC_API_KEY in Vercel to enable AI'; $('#aiOptWrap').style.opacity = .5; } }).catch(() => {});
 
 function mini(page) { const w = document.createElement('div'); w.className = 'mini'; w.appendChild(pageEl(page)); return w; }
 const fmt = (t) => new Date(t).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
@@ -40,7 +41,7 @@ function renderTemplates() {
 
 async function create(plan) {
   const f = nf; const ed = newEdition({ masthead: f.masthead.value.trim() || 'Weekend', date: f.date.value || nextSaturday(), city: f.city.value.trim().toUpperCase() || 'HYDERABAD', issue: +f.issue.value || 1, plan });
-  await putEdition(ed); location.href = `/weekend/app/editor.html?id=${ed.id}&auto=1`;
+  ed.autoAI = !!f.ai?.checked; await putEdition(ed); location.href = `/weekend/app/editor.html?id=${ed.id}&auto=1`;
 }
 nf.onsubmit = (e) => { e.preventDefault(); const p = nf.plan.value; create(p === 'front' ? ['front'] : p === '4' ? ['front', 'news', 'fullad', 'back'] : undefined); };
 

@@ -1,0 +1,8 @@
+{
+  "name": "team3-website",
+  "private": true,
+  "description": "TEAM3 Solutions static site + Weekend News Studio edge functions",
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.8.0"
+  }
+}
