@@ -780,22 +780,23 @@ def page_about():
               ('Integrity', 'Building transparent and trustworthy relationships'), ('Collaboration', 'Growing together with clients and partners'),
               ('Excellence', 'Delivering quality across every engagement'), ('Intelligence', 'Using data and AI to create better outcomes'),
               ('Responsibility', 'Developing sustainable and ethical solutions')]
-    journey = [('2004', 'The beginning', 'TEAM3 is established with a focus on creative services and technology.'),
-               ('Growth', 'Creative expansion', 'Advertising, graphic design, corporate branding, multimedia and communication services.'),
-               ('Scale', 'Technology expansion', 'Web applications, business portals, enterprise software and ERP solutions.'),
-               ('Digital', 'Digital evolution', 'Digital marketing, internet technologies, interactive media and smart systems.'),
-               ('2026', 'TEAM3 Reimagined', 'A relaunch combining branding, software engineering, artificial intelligence, AI learning and business automation.'),
-               ('Next', 'The future', 'Building intelligent digital products and globally scalable business solutions.')]
+    journey = [('2004', 'The first step', 'TEAM3 opens its doors in Hyderabad with a bold idea: creative communication and information technology under one roof.'),
+               ('Create', 'Brands come to life', 'Identities, advertising, print, exhibitions and corporate films — the creative studio finds its voice.'),
+               ('Build', 'Technology takes shape', 'Websites, business portals, enterprise software and ERP give clients the systems to grow.'),
+               ('Trust', 'Landmark moments', 'Publications and launches for national institutions, and a client list that grows past 300 organisations.'),
+               ('2026', 'TEAM3 reimagined', 'Branding, technology and artificial intelligence come together — with our own platforms, AI agents and TEAM3 Academy.'),
+               ('Next', 'Beyond imagination', 'Intelligent products and global partnerships — the next footprints are still being written.')]
     body = f'''
 {page_hero("About Us", "About TEAM3", "Imagination is where <span class='grad'>everything begins.</span>", "Founded in 2004, TEAM3 began with a vision to bring creative communication and information technology together under one roof.")}
 {subnav([("story","Our story"),("meaning","The meaning of 3"),("vision","Vision & mission"),("values","Values"),("founder","Founder"),("journey","Journey")])}
 <section class="section" id="story"><div class="wrap"><div class="cap" style="border:0;padding:0">
-<div class="rv"><span class="eyebrow">Our story</span><h2 style="margin-top:16px">Two decades of creativity and code.</h2>{foot("whiteboard", "#F5A06B", "md")}</div>
-<div class="stack rv d1" style="gap:22px;font-size:19px;line-height:1.6">
-<p>Over the years, TEAM3 developed capabilities across advertising, branding, software development, web technologies, corporate communication, digital marketing and smart systems.</p>
-<p class="muted">Our earlier corporate office was at 6-3-569, Khairatabad Road, Hyderabad. Today TEAM3 Solutions works from Ashoka Capitol, Banjara Hills, Hyderabad.</p>
-<p class="muted">Today, TEAM3 is being reimagined for a new generation of businesses, where artificial intelligence, human creativity, data and technology work together to create meaningful impact.</p>
-<p style="font:700 24px/1.35 var(--h);letter-spacing:-.025em">We believe technology should simplify complexity, creativity should create value, and innovation should deliver measurable business outcomes.</p>
+<div class="rv"><span class="eyebrow">Our story</span><h2 style="margin-top:16px">It started with <span class="grad">a single step.</span></h2>{foot("whiteboard", "#F5A06B", "md")}</div>
+<div class="stack rv d1 story" style="gap:22px;font-size:19px;line-height:1.65">
+<p class="story-lead">In 2004, in Hyderabad, a small team asked a simple question: why should a business need one company to imagine its brand and another to build its technology?</p>
+<p>So TEAM3 did both. Designers sat next to developers. Copywriters worked beside engineers. Ideas were sketched in the morning and coded by evening. That footprint — creativity and technology walking together — became our logo, our method and our promise.</p>
+<p>The years that followed left their own footprints: brand identities and print campaigns, corporate films, publications for national institutions launched by Presidents of India, business portals and enterprise software, and the trust of more than 300 clients across India and beyond.</p>
+<p>Today the world has changed, and so have we. Artificial intelligence now sits alongside human imagination at TEAM3 — in the agents we build, the platforms we launch and the way we work every day. The tools are new. The idea is the same.</p>
+<blockquote class="story-quote">Imagine it. Design it. Build it. Make it intelligent. <span>That is the TEAM3 way — and every project is another step beyond imagination.</span></blockquote>
 </div></div></div></section>
 
 <section class="section bg-black" id="meaning"><div class="wrap">
