@@ -204,9 +204,9 @@ def cta_band(title, lead, buttons):
 
 
 HERO_PHOTOS = {'About Us': 'team_office', 'Branding': 'palette', 'Technology': 'code_laptop', 'Artificial Intelligence': 'ai_letters',
-               'Products': 'laptop_dark', 'Digital Marketing': 'dm_creative', 'Academy': 'students_laptop', 'Our Work': 'flatlay',
-               'Clients': 'handshake', 'Industries': 'engineer_factory', 'Careers': 'friends_laptops', 'Partners': 'hands_stack',
-               'Insights': 'open_office', 'Contact': 'office_glass', 'Consulting': 'boardroom', 'Our Team': 'team_laptops', 'Advisory Board': 'boardroom'}
+               'Products': 'laptop_dark', 'Digital Marketing': 'dm_creative', 'Academy': 'love_learn', 'Our Work': 'flatlay',
+               'Clients': 'handshake', 'Industries': 'welding', 'Careers': 'friends_laptops', 'Partners': 'hands_stack',
+               'Insights': 'open_office', 'Contact': 'office_glass', 'Consulting': 'boardroom', 'Our Team': 'team_laptops', 'Advisory Board': 'advisory_table'}
 
 
 def page_hero(crumb, eyebrow, title, lead, buttons='', photo=None, parent=None):
@@ -475,8 +475,8 @@ AGENTS = [('Research Agent', 'Market and competitor research'), ('Lead Generatio
           ('Branding Agent', 'Brand concepts and campaign creation'), ('Executive Agent', 'Management reporting and decision support')]
 
 
-SVC_PHOTOS = ['palette', 'sketch_tablet', 'code_laptop', 'phone_app', 'ai_letters', 'robot_pepper', 'dm_creative', 'students_laptop',
-              'clapper', 'planning', 'servers', 'ux_sketch']
+SVC_PHOTOS = ['palette', 'sketch_tablet', 'it_laptop', 'phone_app', 'ai_network', 'robot_pepper', 'marketing_laptop', 'online_class',
+              'clapper', 'planning', 'servers', 'innovation_lab']
 
 
 def svc_cards(items, dark=False):
@@ -1128,7 +1128,7 @@ def page_careers():
     body = f'''
 {page_hero("Careers", "Careers", "Come imagine <span class='grad'>the future with us.</span>", "At TEAM3, creativity and technology come together to solve meaningful challenges. We are building a culture where designers, developers, AI engineers, strategists and entrepreneurs can collaborate, learn and create.", btn("Submit Your Profile", "#apply", "red") + btn("Partner with us", "partners.html", "ghost", False))}
 <section class="section" id="talent"><div class="wrap">
-<div class="head split"><div class="rv"><span class="eyebrow">Talent communities</span><h2 style="margin-top:16px">Two communities. One team.</h2><p class="lead" style="margin-top:16px">Meet the <a class="red" href="team.html">people behind TEAM3</a> and the <a class="red" href="advisory.html">advisory board</a>.</p></div><div class="rv d1 foot-row">{foot("friends_laptops", "#8FCFDD", "sm")}{foot("coders_pair", "#F5A06B", "sm")}{foot("highfive", "#E6DAB0", "sm")}</div></div>
+<div class="head split"><div class="rv"><span class="eyebrow">Talent communities</span><h2 style="margin-top:16px">Two communities. One team.</h2><p class="lead" style="margin-top:16px">Meet the <a class="red" href="team.html">people behind TEAM3</a> and the <a class="red" href="advisory.html">advisory board</a>.</p></div><div class="rv d1 foot-row">{foot("young_team", "#8FCFDD", "sm")}{foot("devs_pair2", "#F5A06B", "sm")}{foot("highfive2", "#E6DAB0", "sm")}</div></div>
 <div class="grid g2">
 <div class="card rv"><span class="ic">{ic("pen")}</span><h3>Creative &amp; marketing</h3><ul class="bullets" style="margin-top:18px">{"".join(f"<li>{E(r)}</li>" for r in creative)}</ul></div>
 <div class="card rv d1"><span class="ic">{ic("code")}</span><h3>Technology &amp; AI</h3><ul class="bullets" style="margin-top:18px">{"".join(f"<li>{E(r)}</li>" for r in tech)}</ul></div>
@@ -1224,7 +1224,7 @@ def product_visual(pr, n):
 
 
 def page_products():
-    idx = ''.join(f'<a class="pidx" href="{product_href(p[0])}"><img src="assets/img/products/{p[0]}-t.webp" alt="" width="480" height="288" loading="lazy"><b>{E(p[1])} {status_badge(p[0])}</b><span>{E(p[3])}</span></a>' for p in PRODUCTS)
+    idx = ''.join(f'<a class="pidx" href="{product_href(p[0])}"><span class="pic">{ic(p[4])}</span><b>{E(p[1])} {status_badge(p[0])}</b><span>{E(p[3])}</span></a>' for p in PRODUCTS)
     blocks = ''
     for n, pr in enumerate(PRODUCTS):
         slug, name, tag, cat, icon, desc, feats, aud = pr
@@ -1345,7 +1345,7 @@ def steps_mini(items):
 def page_consulting():
     feat_slugs = ['business-strategy', 'campaign-design', 'interior-design']
     by = {c[0]: c for c in CONSULTING}
-    idx = ''.join(f'<a class="pidx" href="{consulting_href(c[0])}"><img src="assets/img/photos/{c[4]}-t.webp" alt="" width="480" height="300" loading="lazy"><b>{E(c[2])}</b><span>{E(c[1])}</span></a>' for c in CONSULTING)
+    idx = ''.join(f'<a class="pidx" href="{consulting_href(c[0])}"><span class="pic">{ic(c[3])}</span><b>{E(c[2])}</b><span>{E(c[1])}</span></a>' for c in CONSULTING)
     feats = ''
     for n, sl in enumerate(feat_slugs):
         slug, grp, title, icon, photo, intro, offers = by[sl]
@@ -1359,7 +1359,7 @@ def page_consulting():
     if True:
         # extra imagery for interior design
         feats = feats.replace('<div class="actions" style="margin-top:28px">{0}'.format(btn("Talk to a consultant", "contact.html?service=Interior#enquiry", "red")),
-                              '<div class="mini-gal">' + ''.join(f'<img src="assets/img/photos/{k}-t.webp" alt="" loading="lazy">' for k in ['interior_lounge', 'interior_living', 'boardroom', 'interior_home']) +
+                              '<div class="mini-gal">' + ''.join(f'<img src="assets/img/photos/{k}-t.webp" alt="" loading="lazy">' for k in ['interior_lounge', 'interior_living', 'office_bright', 'interior_home']) +
                               '</div><div class="actions" style="margin-top:28px">' + btn("Talk to a consultant", "contact.html?service=Interior#enquiry", "red"))
     groups = ''
     for g in CONSULTING_GROUPS:
@@ -1483,7 +1483,7 @@ def page_consult(c):
     inds = [n for n, d in INDUSTRY_DETAIL.items() if slug in d[5]][:4] or list(INDUSTRY_DETAIL)[:4]
     gal = ''
     if slug == 'interior-design':
-        gal = '<div class="mini-gal wide rv">' + ''.join(f'<img src="assets/img/photos/{k}.webp" alt="" loading="lazy">' for k in ['interior_lounge', 'interior_living', 'boardroom', 'interior_home', 'open_plan', 'office_glass']) + '</div>'
+        gal = '<div class="mini-gal wide rv">' + ''.join(f'<img src="assets/img/photos/{k}.webp" alt="" loading="lazy">' for k in ['interior_lounge', 'interior_living', 'office_bright', 'interior_home', 'open_plan', 'office_glass']) + '</div>'
     body = f"""
 {page_hero(title, grp, E(title) + '.', E(intro), btn("Talk to a consultant", f"contact.html?service={svc}&msg={quote('Consulting enquiry: ' + title)}#enquiry", "red") + btn("All consulting", "consulting.html", "ghost", False), photo=photo, parent=('consulting.html', 'Consulting'))}
 <section class="section"><div class="wrap">
@@ -1748,7 +1748,7 @@ def page_advisory():
 
 SOCIAL_PAGES = [
     ('linkedin', 'LinkedIn', '#0A66C2', 'Company updates, case studies, careers and thought leadership on branding, technology and AI.', ['team_office', 'presentation', 'highfive'], 'Professionals, partners and job seekers'),
-    ('instagram', 'Instagram', '#B02A6B', 'Behind-the-scenes from the studio, brand launches, campaign creatives and life at TEAM3.', ['palette', 'dm_creative', 'interior_office'], 'Creative work, culture and campaigns'),
+    ('instagram', 'Instagram', '#B02A6B', 'Behind-the-scenes from the studio, brand launches, campaign creatives and life at TEAM3.', ['brand_screen', 'young_team', 'interior_office'], 'Creative work, culture and campaigns'),
     ('facebook', 'Facebook', '#0B5FCC', 'News, events, TEAM3 Academy workshops and community stories.', ['classroom', 'conference', 'people_group'], 'Events, Academy and community'),
     ('x', 'X (Twitter)', '#111111', 'Quick takes on AI, digital marketing and technology — plus product announcements.', ['ai_letters', 'analytics_laptop', 'robot_pepper'], 'News, AI and product updates'),
     ('youtube', 'YouTube', '#C40000', 'Corporate films, product demos, AI explainers and TEAM3 Academy lessons.', ['clapper', 'video_edit', 'photographer'], 'Films, demos and tutorials'),
