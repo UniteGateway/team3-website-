@@ -17,7 +17,7 @@ async function renderEditions() {
   for (const ed of eds) {
     const c = document.createElement('article'); c.className = 'tcard';
     c.innerHTML = `<div class="pv"></div><div class="meta"><b>${esc(ed.title)}</b><span>${esc(longDate(ed.date))} · ${ed.pages.length} page${ed.pages.length > 1 ? 's' : ''}<br>Edited ${fmt(ed.updated)}</span>
-<div class="acts"><a class="btn sm red" href="editor.html?id=${ed.id}">Open</a><button class="btn sm" data-a="dup">Duplicate</button><button class="btn sm" data-a="exp">Export</button><button class="btn sm" data-a="del">Delete</button></div></div>`;
+<div class="acts"><a class="btn sm red" href="/weekend/app/editor.html?id=${ed.id}">Open</a><button class="btn sm" data-a="dup">Duplicate</button><button class="btn sm" data-a="exp">Export</button><button class="btn sm" data-a="del">Delete</button></div></div>`;
     c.querySelector('.pv').appendChild(mini(ed.pages[0]));
     c.querySelector('[data-a=dup]').onclick = async () => { const x = structuredClone(ed); x.id = uid(); x.title += ' (copy)'; x.created = Date.now(); await putEdition(x); renderEditions(); };
     c.querySelector('[data-a=exp]').onclick = async () => download(`${ed.title.replace(/[^\w-]+/g, '-')}.json`, JSON.stringify(await getEdition(ed.id)));
@@ -40,7 +40,7 @@ function renderTemplates() {
 
 async function create(plan) {
   const f = nf; const ed = newEdition({ masthead: f.masthead.value.trim() || 'Weekend', date: f.date.value || nextSaturday(), city: f.city.value.trim().toUpperCase() || 'HYDERABAD', issue: +f.issue.value || 1, plan });
-  await putEdition(ed); location.href = `editor.html?id=${ed.id}&auto=1`;
+  await putEdition(ed); location.href = `/weekend/app/editor.html?id=${ed.id}&auto=1`;
 }
 nf.onsubmit = (e) => { e.preventDefault(); const p = nf.plan.value; create(p === 'front' ? ['front'] : p === '4' ? ['front', 'news', 'fullad', 'back'] : undefined); };
 

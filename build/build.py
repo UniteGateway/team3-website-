@@ -1945,7 +1945,10 @@ def write_extras(names):
         'cleanUrls': False,
         'trailingSlash': False,
         'headers': [
-            {'source': '/(.*)', 'headers': hdrs},
+            {'source': '/((?!weekend/).*)', 'headers': hdrs},
+            {'source': '/weekend/(.*)', 'headers': [h if h['key'] != 'Content-Security-Policy' else {'key': h['key'], 'value': h['value'].replace("img-src 'self' data:", "img-src 'self' data: blob: https:")} for h in hdrs]
+             + [{'key': 'X-Robots-Tag', 'value': 'noindex, nofollow'}, {'key': 'Cache-Control', 'value': 'no-store'}]},
+            {'source': '/api/(.*)', 'headers': [{'key': 'X-Robots-Tag', 'value': 'noindex'}, {'key': 'Cache-Control', 'value': 'no-store'}]},
             {'source': '/assets/(css|js|fonts)/(.*)', 'headers': [{'key': 'Cache-Control', 'value': 'public, max-age=31536000, immutable'}]},
             {'source': '/assets/img/(.*)', 'headers': [{'key': 'Cache-Control', 'value': 'public, max-age=2592000'}]},
         ],
