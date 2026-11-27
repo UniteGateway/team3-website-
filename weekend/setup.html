@@ -12,9 +12,9 @@
 <div class="err" id="err" role="alert"></div>
 <div id="out" hidden>
 <p style="margin:18px 0 6px"><b>Add these in Vercel</b> → Project → Settings → Environment Variables (Production), then redeploy:</p>
-<label>WEEKEND_ADMIN_EMAIL<input id="o1" value="info@team3solutions.in"></label>
-<label>WEEKEND_ADMIN_HASH<input id="o2" readonly></label>
-<label>WEEKEND_SESSION_SECRET<input id="o3" readonly></label>
-<small>Keep the session secret private. To change the password later, repeat this and replace WEEKEND_ADMIN_HASH.</small>
+<label>WEEKEND_ADMIN_EMAIL<span style="display:flex;gap:6px"><input id="o1" value="info@team3solutions.in"><button type="button" class="btn sm" data-copy="o1">Copy</button></span></label>
+<label>WEEKEND_ADMIN_HASH<span style="display:flex;gap:6px"><input id="o2" readonly><button type="button" class="btn sm" data-copy="o2">Copy</button></span></label>
+<label>WEEKEND_SESSION_SECRET<span style="display:flex;gap:6px"><input id="o3" readonly><button type="button" class="btn sm" data-copy="o3">Copy</button></span></label>
+<small><b>Do not share or screenshot these codes.</b> Keep the session secret private. To change the password later, repeat this and replace WEEKEND_ADMIN_HASH.</small>
 </div></form></main>
 <script type="module" src="/weekend/setup.js"></script></body></html>

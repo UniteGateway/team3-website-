@@ -12,3 +12,8 @@ f.addEventListener('submit', async (e) => {
   document.getElementById('o3').value = b64(crypto.getRandomValues(new Uint8Array(36))).replace(/[+/=]/g, '');
   document.getElementById('out').hidden = false; f.p1.value = ''; f.p2.value = '';
 });
+document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+  const i = document.getElementById(b.dataset.copy);
+  try { await navigator.clipboard.writeText(i.value); } catch { i.select(); document.execCommand('copy'); }
+  b.textContent = 'Copied ✓'; setTimeout(() => { b.textContent = 'Copy'; }, 1800);
+}));
