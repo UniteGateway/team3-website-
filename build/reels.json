@@ -1,0 +1,153 @@
+{
+ "values": {
+  "captions": [
+   {
+    "t": 0.0,
+    "title": "Strategy",
+    "sub": "Every engagement starts with a plan"
+   },
+   {
+    "t": 3.0,
+    "title": "Creative edge",
+    "sub": "Ideas that stand out"
+   },
+   {
+    "t": 6.0,
+    "title": "Vision",
+    "sub": "Seeing what\u2019s next"
+   },
+   {
+    "t": 9.0,
+    "title": "Dedication",
+    "sub": "Focused on your outcomes"
+   },
+   {
+    "t": 12.0,
+    "title": "Quality",
+    "sub": "Precision in every detail"
+   },
+   {
+    "t": 15.0,
+    "title": "Teamwork",
+    "sub": "One team. One partner."
+   }
+  ],
+  "duration": 18.8,
+  "clips": [
+   "101536",
+   "101547",
+   "23006",
+   "2378",
+   "921"
+  ]
+ },
+ "services": {
+  "captions": [
+   {
+    "t": 0.0,
+    "title": "Branding",
+    "sub": "Strategy, identity & campaigns"
+   },
+   {
+    "t": 3.0,
+    "title": "Technology",
+    "sub": "Software, apps & cloud"
+   },
+   {
+    "t": 6.0,
+    "title": "Artificial Intelligence",
+    "sub": "AI agents & automation"
+   },
+   {
+    "t": 9.0,
+    "title": "Digital Marketing",
+    "sub": "SEO, performance & social"
+   },
+   {
+    "t": 12.0,
+    "title": "Consulting",
+    "sub": "Strategy to execution"
+   },
+   {
+    "t": 15.0,
+    "title": "Media & Film",
+    "sub": "Corporate films & content"
+   }
+  ],
+  "duration": 18.8,
+  "clips": [
+   "101547",
+   "23006",
+   "41278",
+   "46353",
+   "47051",
+   "921"
+  ]
+ },
+ "products": {
+  "captions": [
+   {
+    "t": 0.0,
+    "title": "COLLABIZ",
+    "sub": "Business collaboration platform",
+    "href": "product-collabiz.html"
+   },
+   {
+    "t": 3.0,
+    "title": "BIZO",
+    "sub": "AI-powered business intelligence",
+    "href": "product-bizo.html"
+   },
+   {
+    "t": 6.0,
+    "title": "SOLBID",
+    "sub": "Solar bidding marketplace",
+    "href": "product-solbid.html"
+   },
+   {
+    "t": 9.0,
+    "title": "LeadDNA",
+    "sub": "Lead intelligence",
+    "href": "product-leaddna.html"
+   },
+   {
+    "t": 12.0,
+    "title": "PRIZO",
+    "sub": "Buyer-side AI deal assistant",
+    "href": "product-prizo.html"
+   },
+   {
+    "t": 15.0,
+    "title": "SUNGATE",
+    "sub": "Community solar energy",
+    "href": "product-sungate.html"
+   },
+   {
+    "t": 18.0,
+    "title": "HNW",
+    "sub": "Health & wealth membership",
+    "href": "product-hnw.html"
+   },
+   {
+    "t": 21.0,
+    "title": "ADBUZ",
+    "sub": "Creator & advertising marketplace",
+    "href": "product-adbuz.html"
+   },
+   {
+    "t": 24.0,
+    "title": "UNITE EXIM",
+    "sub": "Global trade platform",
+    "href": "product-unite-exim.html"
+   },
+   {
+    "t": 27.0,
+    "title": "BEYOU",
+    "sub": "Inclusive community",
+    "href": "product-beyou.html"
+   }
+  ],
+  "duration": 30.8,
+  "clips": []
+ }
+}

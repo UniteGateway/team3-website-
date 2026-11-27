@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Editor · Weekend News Studio</title>
+<link rel="icon" href="/assets/img/symbol.webp"><link rel="stylesheet" href="/weekend/weekend.css"></head>
+<body>
+<div class="ed" id="ed">
+<header class="top">
+<a class="brand" href="/weekend/app/" title="Back to dashboard">Weekend<small>Studio</small></a>
+<input class="title" id="title" aria-label="Edition title">
+<input type="date" id="date" aria-label="Edition date">
+<button class="btn sm" id="undo" title="Undo (Ctrl+Z)">↶ Undo</button><button class="btn sm" id="redo" title="Redo (Ctrl+Y)">↷ Redo</button>
+<select id="zoom" aria-label="Zoom"><option value="fit">Fit width</option><option value="page">Whole page</option><option value=".5">50%</option><option value=".75">75%</option><option value="1">100%</option></select>
+<button class="btn sm" id="gridBtn" aria-pressed="false" title="Show grid and snap">Grid</button>
+<button class="btn sm" id="aiTop" title="Write this page with AI from today’s news">✨ AI fill page</button>
+<button class="btn sm" id="autoImg" title="Fill empty photo boxes with free-licence images">✨ Auto images</button>
+<span class="grow"></span><span class="saved" id="saved">Saved</span>
+<button class="btn sm" id="exportBtn">Export</button>
+<button class="btn sm red" id="printBtn" title="Print or save as PDF at 13.5 × 21 in">🖨 Print / PDF</button>
+</header>
+<aside class="side" aria-label="Pages, insert, news and images">
+<div class="tabs" role="tablist"><button role="tab" data-t="pages" aria-selected="true">Pages</button><button role="tab" data-t="insert" aria-selected="false">Insert</button><button role="tab" data-t="news" aria-selected="false">✨ AI &amp; News</button><button role="tab" data-t="images" aria-selected="false">Images</button></div>
+<div class="pane" data-p="pages">
+<div class="row"><select id="addTpl" aria-label="Template for new page"></select><button class="btn sm red" id="addPage">+ Add page</button></div>
+<div class="pages" id="pages"></div></div>
+<div class="pane" data-p="insert" hidden>
+<p class="muted">Adds to the current page. Drag to place, handles to resize, double-click text to type.</p>
+<div class="grid2">
+<button class="btn" data-ins="headline">Headline</button><button class="btn" data-ins="text">Story text</button>
+<button class="btn" data-ins="text3">3-column story</button><button class="btn" data-ins="brief">Briefs box</button>
+<button class="btn" data-ins="image">Photo</button><button class="btn" data-ins="ad">Ad slot</button>
+<button class="btn" data-ins="caption">Caption</button><button class="btn" data-ins="label">Section label</button>
+<button class="btn" data-ins="box">Colour box</button><button class="btn" data-ins="rule">Line</button>
+</div>
+<h3>Upload</h3>
+<label class="btn" for="upNew">⬆ Upload photo / ad artwork</label><input id="upNew" class="sr" type="file" accept="image/*" multiple>
+<p class="muted">Tip: drag image files from your computer straight onto a photo box or onto the page.</p>
+</div>
+<div class="pane" data-p="news" hidden>
+<div id="aiPanel" style="display:grid;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--line)"></div>
+<h3>Today’s headlines</h3>
+<label>Topic<select id="topic"><option value="india">India</option><option value="hyderabad">Hyderabad & Telangana</option><option value="world">World</option><option value="business">Business</option><option value="technology">Technology</option><option value="sport">Sport</option><option value="entertainment">Entertainment</option><option value="science">Science</option><option value="health">Health</option></select></label>
+<div class="row"><input id="nq" placeholder="Or search news…" aria-label="Search news"><button class="btn sm dark" id="nGo">Load</button></div>
+<p class="muted">Free feeds (BBC, Google News). Select a headline or story box on the page, then use the buttons. Always rewrite and credit the source.</p>
+<div class="news-list" id="news"></div></div>
+<div class="pane" data-p="images" hidden>
+<div class="row"><input id="iq" placeholder="Search free photos…" aria-label="Search photos"><button class="btn sm dark" id="iGo">Search</button></div>
+<p class="muted">Openverse — free licences that allow commercial use. Click to place in the selected photo box (or add a new one). The credit is added automatically.</p>
+<label class="btn sm" for="upNew">⬆ Upload instead</label>
+<div class="row"><input id="iurl" placeholder="Or paste an image URL (https://…)" aria-label="Image URL"><button class="btn sm" id="iUrlGo">Use</button></div>
+<div class="img-list" id="imgs"></div></div>
+</aside>
+<main class="stage" id="stage" aria-label="Page canvas"><div class="sheet-wrap" id="wrap"></div></main>
+<aside class="side r" aria-label="Properties"><div class="pane" id="props"></div></aside>
+</div>
+<input id="upRep" class="sr" type="file" accept="image/*">
+<div id="print-root"></div>
+<script type="module" src="/weekend/app/editor.js"></script></body></html>

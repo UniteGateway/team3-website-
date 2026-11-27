@@ -1,0 +1,4 @@
+Video reels built by build/reels.py from Mixkit free stock videos (Mixkit License, free commercial use).
+values: 23006, 921, 101536, 101547, 2378
+services: 921, 101547, 47051, 41278, 23006, 46353
+products: TEAM3 product home-page images

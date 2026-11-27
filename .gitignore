@@ -1,0 +1,4 @@
+build/.mockups/
+.vercel/
+build/__pycache__/
+node_modules/

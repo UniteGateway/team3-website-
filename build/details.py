@@ -1,0 +1,173 @@
+"""Content for TEAM3 Solutions inner (detail) pages: industries, Academy programmes and AI agents.
+
+Products and consulting practices live in content.py. Edit text here and run
+`python3 build/build.py` to regenerate every detail page.
+"""
+
+# name -> (photo, intro, challenges[4], solutions[6], product slugs, consulting slugs)
+INDUSTRY_DETAIL = {
+    'Manufacturing': ('engineer_factory', 'Connected plants, efficient supply chains and B2B brands that win distributors and buyers.',
+        ['Disconnected production, inventory and finance data', 'Manual planning and paper-based quality records', 'Long B2B sales cycles and weak digital presence', 'Rising costs and pressure on margins'],
+        ['ERP for production planning, inventory and quality', 'Industrial IoT dashboards for machines and energy', 'Dealer and distributor portals', 'B2B branding, catalogues and exhibition design', 'Procurement automation and supplier comparison', 'AI forecasting for demand and maintenance'],
+        ['prizo', 'bizo', 'leaddna'], ['operations', 'digital-transformation', 'events-exhibitions']),
+    'Renewable Energy': ('solar', 'Platforms, monitoring and marketing that help solar and clean-energy businesses grow.',
+        ['Fragmented procurement and opaque pricing', 'Limited visibility of generation and performance', 'High customer-acquisition costs', 'Complex project documentation'],
+        ['Solar procurement and bidding marketplaces', 'Generation and consumption monitoring dashboards', 'Lead generation and nurturing campaigns', 'Project and document management systems', 'Customer apps for installation and service', 'ESG and sustainability communication'],
+        ['solbid', 'sungate', 'leaddna'], ['sustainability', 'marketing-growth', 'digital-transformation']),
+    'Healthcare': ('doctor_phone', 'Patient-friendly digital experiences and efficient operations for hospitals, clinics and health brands.',
+        ['Long waiting times and manual appointment handling', 'Patient data spread across systems', 'Low digital engagement after visits', 'Strict privacy and compliance needs'],
+        ['Appointment booking and patient apps', 'Hospital and clinic management systems', 'Patient education content and campaigns', 'AI assistants for front-desk queries', 'Data privacy and security reviews', 'Health and wellness membership platforms'],
+        ['hnw', 'bizo'], ['brand-cx', 'risk-cyber', 'ai-data']),
+    'Education': ('classroom', 'Learning platforms, institutional brands and AI skills for schools, colleges and training providers.',
+        ['Admissions competition and weak brand differentiation', 'Outdated learning and administration systems', 'Students needing industry-ready AI skills', 'Low engagement with alumni and parents'],
+        ['Institutional branding and admissions campaigns', 'Learning management systems and portals', 'TEAM3 Academy AI and digital programmes', 'Faculty development workshops', 'Student and parent mobile apps', 'Alumni and community platforms'],
+        ['beyou', 'collabiz'], ['people-organisation', 'campaign-design', 'digital-transformation']),
+    'Real Estate': ('towers', 'Project branding, property portals and CRM that turn enquiries into bookings.',
+        ['Many projects competing for the same buyers', 'Leads lost between marketing and sales', 'Long decision cycles needing nurturing', 'Showrooms and sites that under-sell the project'],
+        ['Project branding, naming and brochures', 'Property listing portals and microsites', 'Real-estate CRM and lead management', 'Walkthrough films and 3D visualisation', 'Experience-centre and showroom interior design', 'Performance campaigns and WhatsApp nurturing'],
+        ['leaddna', 'bizo'], ['interior-design', 'campaign-design', 'marketing-growth']),
+    'Retail & FMCG': ('retail', 'Packaging, commerce and retail technology that move products off shelves and online.',
+        ['Crowded shelves and look-alike packaging', 'Disconnected online and offline sales', 'Inventory and distribution blind spots', 'Fast-changing consumer trends'],
+        ['Product naming, packaging and label design', 'E-commerce stores and marketplaces', 'Retail POS, inventory and distribution apps', 'Store and display interior design', 'Influencer and social campaigns', 'AI demand forecasting and pricing'],
+        ['adbuz', 'bizo', 'prizo'], ['brand-cx', 'campaign-design', 'interior-design']),
+    'Government': ('meeting_hands', 'Citizen-friendly digital services and clear public communication.',
+        ['Complex services that are hard for citizens to use', 'Paper-based processes and slow approvals', 'Need for transparent, accessible information', 'High standards for security and accessibility'],
+        ['Accessible public information portals', 'Online service and application systems', 'Public awareness campaigns and films', 'Publications, reports and souvenirs', 'Workflow automation and dashboards', 'Training programmes for staff'],
+        ['bizo'], ['digital-transformation', 'campaign-design', 'risk-cyber']),
+    'Banking & Finance': ('finance_docs', 'Secure financial platforms, workflow automation and trusted brands.',
+        ['Legacy systems and manual back-office work', 'Customer expectations for instant digital service', 'Regulatory and security requirements', 'Trust and brand differentiation'],
+        ['Customer onboarding and service portals', 'Workflow and document automation', 'AI assistants for customer queries', 'Analytics and reporting dashboards', 'Security assessments and privacy readiness', 'Brand and communication programmes'],
+        ['bizo', 'leaddna'], ['risk-cyber', 'finance-investor', 'ai-data']),
+    'Logistics': ('warehouse', 'Tracking, warehouse and supply-chain applications that keep goods moving.',
+        ['Limited real-time visibility of shipments', 'Manual warehouse and dispatch processes', 'Fragmented communication with customers', 'Rising fuel and operating costs'],
+        ['Shipment tracking apps and customer portals', 'Warehouse management systems', 'Route and fleet dashboards', 'Automated customer notifications', 'Procurement and vendor platforms', 'AI forecasting for capacity planning'],
+        ['unite-exim', 'bizo', 'prizo'], ['operations', 'digital-transformation', 'ai-data']),
+    'Hospitality': ('hotel', 'Booking systems, guest experiences and hospitality brands people remember.',
+        ['Dependence on third-party booking platforms', 'Inconsistent guest experience across channels', 'Seasonal demand swings', 'Spaces that need to tell a brand story'],
+        ['Direct booking websites and apps', 'Guest experience and loyalty programmes', 'Hospitality branding and menus', 'Restaurant, café and hotel interior design', 'Social and influencer campaigns', 'Revenue and occupancy dashboards'],
+        ['adbuz', 'bizo'], ['interior-design', 'brand-cx', 'campaign-design']),
+    'Import & Export': ('port', 'Trade platforms and international marketing that open new markets.',
+        ['Finding reliable buyers and suppliers abroad', 'Limited market intelligence', 'Complex documentation and compliance', 'Brands not adapted to international audiences'],
+        ['UNITE EXIM trade and sourcing platform', 'Export market research', 'Multilingual websites and catalogues', 'Trade-show and exhibition design', 'Lead generation for international buyers', 'Enquiry and RFQ management systems'],
+        ['unite-exim', 'leaddna', 'collabiz'], ['international', 'marketing-growth', 'events-exhibitions']),
+    'Startups': ('startup_office', 'From idea to market — brand, product, technology and investor readiness in one partner.',
+        ['Limited time and budget to test ideas', 'Building a brand and product at the same time', 'Finding product–market fit', 'Preparing for investors'],
+        ['Idea validation and MVP definition', 'Brand naming and identity', 'Web, mobile and SaaS product development', 'Go-to-market and growth marketing', 'Pitch decks and financial models', 'Fractional CTO, CMO and Chief AI Officer'],
+        ['collabiz', 'leaddna', 'bizo'], ['startup-innovation', 'finance-investor', 'business-strategy']),
+    'Agriculture': ('wheat', 'Agritech and procurement platforms connecting farmers, buyers and institutions.',
+        ['Fragmented supply chains and price opacity', 'Limited access to market information', 'Manual procurement and record-keeping', 'Need for farmer-friendly digital tools'],
+        ['Agri procurement and marketplace platforms', 'Farmer advisory apps in local languages', 'Institutional and research communication', 'Training films and documentaries', 'Supply-chain dashboards', 'Export and trade support'],
+        ['unite-exim', 'prizo'], ['international', 'operations', 'sustainability']),
+    'Automotive & EV': ('ev', 'Mobility platforms, dealer experiences and connected solutions for automotive and EV brands.',
+        ['Shift to electric vehicles and new buyer journeys', 'Dealer networks needing digital tools', 'Charging and service experience', 'Brand differentiation in a crowded market'],
+        ['Dealer management and lead systems', 'EV charging and service apps', 'Showroom and experience-centre interiors', 'Launch campaigns and product films', 'Connected-vehicle and IoT dashboards', 'Customer journey and CX design'],
+        ['leaddna', 'sungate', 'bizo'], ['brand-cx', 'interior-design', 'campaign-design']),
+}
+
+# name -> (photo, audience, modules[6], outcome)
+PROGRAMME_DETAIL = {
+    'AI Foundation': ('students_laptop', 'Students, professionals and business owners starting with AI.',
+        ['What AI is — and what it is not', 'Everyday AI productivity tools', 'Writing, research and analysis with AI', 'Data, privacy and responsible use', 'AI in your industry', 'Personal AI workflow project'], 'Confidently use AI tools every day, safely and productively.'),
+    'Prompt Engineering': ('prompt_typing', 'Anyone who works with AI assistants and wants better results.',
+        ['How language models respond to prompts', 'Prompt patterns and templates', 'Context, examples and constraints', 'Prompting for analysis, writing and code', 'Evaluating and improving outputs', 'Building a prompt library'], 'Get reliable, high-quality output from AI models.'),
+    'Generative AI': ('genai_abstract', 'Creators, marketers and teams producing content.',
+        ['Text generation for business content', 'Image generation and editing', 'Video and audio generation', 'Brand consistency with AI', 'Copyright and ethical considerations', 'End-to-end content project'], 'Produce on-brand text, image and video content with AI.'),
+    'AI Agent Development': ('robot_hand', 'Developers and technical teams.',
+        ['Agent architectures and tool use', 'Connecting agents to APIs and data', 'Retrieval-augmented generation (RAG)', 'Multi-agent orchestration', 'Guardrails, approvals and monitoring', 'Build and deploy a business agent'], 'Design and build safe, useful AI agents for real workflows.'),
+    'No-Code AI': ('nocode_laptop', 'Business users and entrepreneurs without a coding background.',
+        ['No-code AI platforms overview', 'Building chatbots and assistants', 'Automating workflows', 'Forms, databases and integrations', 'Testing and launching', 'Your own no-code AI app'], 'Launch AI-powered tools without writing code.'),
+    'AI for Business': ('biz_laptop', 'Founders, managers and leadership teams.',
+        ['AI strategy and opportunity mapping', 'Use-case prioritisation and ROI', 'AI in sales, operations and finance', 'Data readiness', 'Governance and responsible AI', 'Your AI adoption roadmap'], 'A practical AI roadmap for your organisation.'),
+    'AI for Marketing': ('ai_marketing', 'Marketers, agencies and content teams.',
+        ['AI for research and audience insights', 'Content and creative generation', 'Campaign planning and personalisation', 'SEO and search in the AI era', 'Marketing automation', 'Analytics and optimisation'], 'Plan and run faster, smarter campaigns with AI.'),
+    'Full-Stack Development': ('fullstack_code', 'Aspiring and junior developers.',
+        ['Front-end with modern frameworks', 'Back-end APIs and services', 'Databases and data modelling', 'Authentication and security', 'Deployment and cloud basics', 'Full-stack capstone project'], 'Build and deploy complete web applications.'),
+    'Mobile App Development': ('app_design_screen', 'Developers moving into mobile.',
+        ['Cross-platform app fundamentals', 'UI components and navigation', 'APIs, storage and offline use', 'Device features and notifications', 'Testing and app-store release', 'Mobile app capstone project'], 'Build and publish a cross-platform mobile app.'),
+    'UI/UX Design': ('ux_sketch', 'Designers, developers and product managers.',
+        ['User research and personas', 'Journey mapping and information architecture', 'Wireframes and prototypes', 'Visual design and design systems', 'Usability testing', 'Portfolio case study'], 'Design intuitive digital products backed by research.'),
+    'Digital Marketing': ('analytics_laptop', 'Business owners, students and marketing teams.',
+        ['Digital marketing strategy', 'SEO and content marketing', 'Search and social advertising', 'Email and WhatsApp marketing (consent-based)', 'Analytics and reporting', 'Live campaign project'], 'Plan, run and measure digital campaigns.'),
+    'Entrepreneurship': ('pitch_talk', 'Aspiring founders and early-stage entrepreneurs.',
+        ['Finding and validating ideas', 'Business models and pricing', 'Building an MVP', 'Branding and go-to-market', 'Finance and investor basics', 'Pitch day'], 'Turn an idea into a validated, pitch-ready business.'),
+}
+
+# name -> (photo, tasks[5], connects to[4], example)
+AGENT_DETAIL = {
+    'Research Agent': ('research_books', ['Monitors competitors, markets and news', 'Summarises reports and long documents', 'Builds briefing notes before meetings', 'Tracks topics and sends digests', 'Cites sources for every finding'], ['Web sources', 'Documents and PDFs', 'Email', 'Knowledge base'], 'A weekly competitor briefing delivered every Monday morning.'),
+    'Lead Generation Agent': ('lead_review', ['Finds companies matching your ideal customer', 'Enriches contacts and firmographics', 'Scores leads on fit and intent', 'Pushes qualified leads to the CRM', 'Flags buying signals in real time'], ['LeadDNA', 'CRM', 'LinkedIn data sources', 'Email'], 'Fifty fresh, scored leads in the CRM every week.'),
+    'Sales Agent': ('highfive', ['Qualifies inbound enquiries', 'Drafts personalised follow-ups for approval', 'Schedules meetings', 'Updates deal stages', 'Prepares proposal drafts'], ['CRM', 'Email', 'Calendar', 'WhatsApp Business'], 'Every new enquiry answered and qualified within minutes.'),
+    'Marketing Agent': ('mkt_desk', ['Plans content calendars', 'Drafts posts, emails and ad copy', 'Repurposes content across channels', 'Reports on campaign performance', 'Suggests optimisations'], ['Social platforms', 'Email tools', 'Analytics', 'Brand guidelines'], 'A month of on-brand social content drafted for review.'),
+    'Customer Support Agent': ('consult_meeting', ['Answers routine questions from an approved knowledge base', 'Tracks orders and requests', 'Hands complex cases to people with full context', 'Collects feedback', 'Works across web chat, email and WhatsApp'], ['Help desk', 'Knowledge base', 'WhatsApp Business', 'Order systems'], 'Instant answers to common questions, around the clock.'),
+    'Procurement Agent': ('parcel', ['Discovers and shortlists suppliers', 'Sends RFQs and collects quotations', 'Compares quotes side by side', 'Benchmarks prices', 'Prepares purchase approvals'], ['PRIZO', 'ERP', 'Email', 'Supplier databases'], 'Three comparable quotes for every purchase request.'),
+    'Finance Agent': ('trading_chart', ['Reconciles invoices and payments', 'Flags overdue receivables', 'Prepares management reports', 'Analyses spend and margins', 'Answers questions about the numbers'], ['Accounting software', 'BIZO', 'Spreadsheets', 'Banking exports'], 'A month-end pack ready on the first working day.'),
+    'HR Agent': ('hr_clipboard', ['Screens CVs against role criteria', 'Schedules interviews', 'Answers employee policy questions', 'Supports onboarding checklists', 'Collects engagement feedback'], ['HR system', 'Email', 'Calendar', 'Policy documents'], 'A shortlist of best-fit candidates within a day.'),
+    'Legal Assistant': ('justice', ['Reviews contracts against checklists', 'Highlights unusual clauses', 'Drafts standard documents', 'Summarises long agreements', 'Tracks renewal dates'], ['Document storage', 'Templates', 'Email', 'Calendar'], 'Key risks in a contract highlighted in minutes — for a lawyer to review.'),
+    'Export Agent': ('container_ship', ['Researches international markets', 'Finds buyers and distributors', 'Prepares trade enquiry responses', 'Tracks documentation requirements', 'Monitors trade news'], ['UNITE EXIM', 'Web sources', 'Email', 'CRM'], 'A shortlist of potential buyers in a new country.'),
+    'Project Agent': ('project_floor', ['Tracks tasks and deadlines', 'Sends reminders and status updates', 'Summarises meetings into actions', 'Flags risks and delays', 'Prepares progress reports'], ['Project tools', 'Calendar', 'Chat', 'Email'], 'A weekly status report written automatically from your project board.'),
+    'Innovation Agent': ('research_lab', ['Researches product ideas and trends', 'Analyses competitor products', 'Generates concept options', 'Collects customer feedback themes', 'Drafts product briefs'], ['Web sources', 'Feedback tools', 'Documents', 'Collaboration tools'], 'Ten researched product concepts for your next workshop.'),
+    'Branding Agent': ('brand_screen', ['Generates naming and tagline options', 'Drafts brand messaging', 'Checks content against brand guidelines', 'Creates campaign concepts', 'Builds mood boards'], ['Brand guidelines', 'Design tools', 'Documents', 'Image generation'], 'Brand-consistent campaign concepts in hours, refined by our designers.'),
+    'Executive Agent': ('exec_meeting', ['Orchestrates the other agents', 'Prepares management dashboards', 'Answers leadership questions with data', 'Summarises the week across teams', 'Escalates decisions for approval'], ['BIZO', 'All connected agents', 'Email', 'Calendar'], 'A one-page leadership briefing every Monday.'),
+}
+
+AGENT_PHOTO = {k: v[0] for k, v in AGENT_DETAIL.items()}
+
+# Team & Advisory Board. Names marked PLACEHOLDER are dummy profiles: replace name, role, bio,
+# photo (assets/img/team/...) and social URLs with real details before promoting these pages.
+# (name, role, bio, photo, dot colour, {social: url})
+TEAM = [
+    ('Dr. Ravi Chandra', 'Founder & Managing Director', 'Founded TEAM3 in 2004 to bring creative communication and information technology together under one roof. Two decades of building brands, platforms and partnerships — now leading TEAM3’s relaunch as a branding, technology and AI company.', 'team/p-founder.webp', '#F0606A', {'linkedin': '#', 'x': '#', 'email': 'mailto:info@team3solutions.in'}),
+    ('Nanda Gopal', 'Director – Global Operations', 'Leads TEAM3’s global delivery and operations — bringing projects, partners and teams together across India and international markets.', 'team/p-tech.webp', '#8FCFDD', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Madhuri Kiranmai', 'Director – Corporate Affairs', 'Oversees corporate affairs, governance and stakeholder relations for TEAM3 and its partner businesses.', 'team/p-brand.webp', '#F5A06B', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Surya Vidiyala', 'Director – International (USA)', 'Leads TEAM3’s international business from the United States — partnerships, clients and expansion across North America.', 'team/p-consult.webp', '#D2D2D6', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Akhil Ponnada', 'Director – Information Technology', 'Leads technology for TEAM3 and the Unite Group platforms — engineering, cloud infrastructure and the digital products behind COLLABIZ, BIZO, LeadDNA and more.', 'team/p-product.webp', '#E6DAB0', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Daniel Brooks', 'Head of AI & Data', 'Designs AI agents, data platforms and analytics for enterprises in India, the US and the UK — with responsible-AI governance built in from day one.', 'team/team-4.webp', '#A9B8E6', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Sarah Thompson', 'Head of Digital Marketing', 'Performance marketer with 12 years in SEO, paid media and marketing automation. Measures every campaign against leads and revenue, not likes.', 'team/team-6.webp', '#F2C25A', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Meera Iyer', 'Head of TEAM3 Academy', 'Educator and learning designer who has trained 5,000+ students and professionals in AI and digital skills through workshops, colleges and corporate programmes.', 'team/team-8.webp', '#A9D2AE', {'linkedin': '#', 'x': '#', 'email': '#'}),
+]
+
+ADVISORS = [
+    ('Richard Hale', 'Technology & AI Advisor', 'Former CTO of a global software company. Advises on technology strategy, AI adoption and scaling engineering teams.', 'team/adv-1.webp', '#8FCFDD', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Karthik Subramanian', 'Branding & Marketing Advisor', '25 years in advertising and brand building across India and Southeast Asia, including leadership roles at leading agencies.', 'team/adv-2.webp', '#F5A06B', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Elena Novak', 'Finance & Investment Advisor', 'Investment professional who guides financial planning, fundraising readiness and investor relations for growth companies.', 'team/adv-3.webp', '#F2C25A', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('James Carter', 'International Business Advisor', 'Built and led businesses in the US and UK. Supports TEAM3’s international expansion, partnerships and trade initiatives.', 'team/adv-4.webp', '#A9B8E6', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Dr. Lakshmi Prasad', 'Education & Skills Advisor', 'Academic leader and former dean who shapes TEAM3 Academy programmes and partnerships with universities and colleges.', 'team/adv-5.webp', '#A9D2AE', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Sanjay Kapoor', 'Sustainability & Energy Advisor', 'Renewable-energy entrepreneur advising on ESG strategy and the SOLBID and SUNGATE energy platforms.', 'team/adv-6.webp', '#E6DAB0', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Dr. Nisha Reddy', 'Healthcare Advisor', 'Physician and healthcare administrator bringing clinical and hospital-management insight to TEAM3’s digital health work.', 'team/adv-7.webp', '#F0606A', {'linkedin': '#', 'x': '#', 'email': '#'}),
+    ('Michael Fernandes', 'Legal & Governance Advisor', 'Corporate lawyer advising on governance, contracts, data privacy and TEAM3’s Responsible AI policy.', 'team/adv-8.webp', '#D2D2D6', {'linkedin': '#', 'x': '#', 'email': '#'}),
+]
+
+# Client logo wall. (name, sector, market). To show a real logo, add a file named after the
+# client's slug to assets/img/clients/ (e.g. yashoda-hospitals.svg / .png / .webp) and rebuild.
+CLIENT_SECTORS = ['Government & Institutions', 'Healthcare & Life Sciences', 'Infrastructure & Engineering',
+                  'Corporate & Technology', 'Agriculture & Education', 'Collabiz & Unite Group']
+CLIENT_LOGOS = [
+    ('Government of Andhra Pradesh', 'Government & Institutions', 'India'),
+    ('Beti Bachao Beti Padhao', 'Government & Institutions', 'India'),
+    ('NIRD', 'Government & Institutions', 'National Institute of Rural Development'),
+    ('Asian Development Bank (ADB)', 'Government & Institutions', 'International'),
+    ('ICRISAT', 'Government & Institutions', 'International'),
+    ('CRIDA, Hyderabad', 'Government & Institutions', 'ICAR'),
+    ('Air India', 'Government & Institutions', 'India'),
+    ('Yashoda Hospitals', 'Healthcare & Life Sciences', 'India'),
+    ('Maxivision Hospitals', 'Healthcare & Life Sciences', 'India'),
+    ('Mythri Hospitals', 'Healthcare & Life Sciences', 'India'),
+    ('Indian Immunologicals Limited', 'Healthcare & Life Sciences', 'India'),
+    ('Dr. Reddy’s', 'Healthcare & Life Sciences', 'India'),
+    ('Hetero Drugs', 'Healthcare & Life Sciences', 'India'),
+    ('Voris Life Sciences', 'Healthcare & Life Sciences', 'India'),
+    ('Rachem Pharma', 'Healthcare & Life Sciences', 'India'),
+    ('GMR Airports', 'Infrastructure & Engineering', 'India'),
+    ('GVK', 'Infrastructure & Engineering', 'India'),
+    ('Madhucon Projects Limited', 'Infrastructure & Engineering', 'India'),
+    ('Ahlada Engineers', 'Infrastructure & Engineering', 'India'),
+    ('Sanjay Technicals', 'Infrastructure & Engineering', 'India'),
+    ('CAMP Systems', 'Infrastructure & Engineering', 'India'),
+    ('Accenture', 'Corporate & Technology', 'USA'),
+    ('Pi Metrics Inc.', 'Corporate & Technology', 'USA'),
+    ('Impress International LLC', 'Corporate & Technology', 'Canada'),
+    ('Vanguard', 'Corporate & Technology', 'India'),
+    ('JNTU Hyderabad', 'Agriculture & Education', 'India'),
+    ('Vibha Seeds', 'Agriculture & Education', 'India'),
+    ('Ethames Graduate School', 'Agriculture & Education', 'India'),
+]

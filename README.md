@@ -1,2 +1,82 @@
-# team3-website-
-Website in-house 
+# TEAM3 Solutions — Website (Relaunch 2026)
+
+Branding. Advertising. Technology. Artificial Intelligence. · *Step beyond imagination.*
+
+A static, multi-page corporate website: no framework, no build server. Open `index.html` in a browser,
+or deploy the repository root to any static host (GitHub Pages, Netlify, Vercel, cPanel).
+
+## Pages
+| File | Content |
+|---|---|
+| `index.html` | Hero, heritage stats, 12 services, three pillars, AI workforce, Why TEAM3, industries, clientele, insights |
+| `about.html` | Story, meaning of TEAM3, vision & mission, values, founder, journey timeline |
+| `branding.html` | Brand strategy & identity, product & corporate branding, advertising, creative studio, media & film |
+| `technology.html` | Enterprise software, IT consulting, stack, web, apps & SaaS, cloud & security, smart tech & IoT |
+| `ai.html` | AI consulting, BI, ecosystem, 14 AI agents, multi-agent orchestration, governance, service recommender |
+| `marketing.html` | SEO, SEM, social, performance, influencer and AI-powered marketing |
+| `academy.html` | TEAM3 Academy programmes and formats |
+| `work.html` | Filterable portfolio with heritage project images and group businesses |
+| `product-*.html`, `consulting-*.html`, `industry-*.html`, `programme-*.html`, `agent-*.html` | 65 inner pages generated from `build/content.py` and `build/details.py` |
+| `team.html`, `advisory.html` | Team and Advisory Board (placeholder profiles in `build/details.py` → `TEAM`, `ADVISORS`; kept out of search results via `NOINDEX_PAGES` until real details are added) |
+| `consulting.html` | TEAM3 Consulting: 15 practices in 5 groups (data in `build/content.py` → `CONSULTING`) |
+| `products.html` | Our Products: COLLABIZ, LeadDNA, SOLBID, ADBUZ, UNITE EXIM, BIZO, SUNGATE, PRIZO, HNW, BEYOU (data in `build/content.py` → `PRODUCTS`) |
+| `gallery.html` | Archive gallery (events, publications, print, films, campaigns) with lightbox |
+| `clients.html` | Collabiz & Unite Group businesses, NIRD, heritage clientele, film clients |
+| `partners.html` | Partner Network, benefits and partner registration (header “Partners” button) |
+| `industries.html` | 14 industries, business consulting, innovation as a service |
+| `careers.html` | Talent communities and careers profile form |
+| `insights.html` + `insight-*.html` | Knowledge centre and four full articles |
+| `contact.html` | Enquiry form, appointment booking, project scope estimator, engagement models |
+| `legal.html` | Privacy, terms, cookies, responsible AI policies |
+| `404.html` | Not-found page (configure your host to serve it) |
+
+## Editing
+All page HTML is generated from `build/build.py` (content + shared header/footer).
+Edit content there, then run:
+
+```bash
+python3 build/build.py
+```
+
+Gallery images (from the TEAM3 company presentation): `assets/img/gallery/`; captions in the `GALLERY` list. Group clients: `GROUP` list.
+
+Styles: `assets/css/site.css` · Interactions: `assets/js/site.js` · Logo assets: `assets/img/`.
+
+## International standards
+| Area | What's in place |
+|---|---|
+| Accessibility | WCAG 2.2 AA — 0 axe-core violations on all pages (desktop + mobile); accessible red `#DA1220` for small text/buttons, brand red `#ED1726` for display type and graphics; logical heading order; keyboard and screen-reader support; reduced-motion and forced-colours support |
+| Privacy (GDPR / DPDP) | Self-hosted fonts and assets — zero third-party requests, no cookies or trackers, so no cookie banner needed; consent checkbox on every form |
+| Performance | WebP images, variable fonts (preloaded), lazy loading, content-hashed CSS/JS, ~230 KB home page before compression, CLS 0 |
+| Security | `_headers` (Netlify / Cloudflare Pages) and `.htaccess` (Apache / cPanel) with CSP, HSTS, X-Frame-Options, nosniff, Referrer- and Permissions-Policy; HTTPS redirect |
+| International SEO | `lang="en-IN"`, hreflang, canonical URLs, Open Graph, Organization schema (address, phone, founder, areas served), sitemap, robots |
+| Global UX | Global presence section, live Hyderabad (IST) clock and visitor time-zone difference, international phone format, print stylesheet |
+
+## Imagery
+- `assets/img/photos/` — royalty-free photography from Unsplash (Unsplash License: free commercial use, no attribution required). Source IDs in `CREDITS-unsplash.txt`. Each photo has a full size (`name.webp`) and a menu/card thumbnail (`name-t.webp`).
+- `assets/img/products/` — product home pages: real screenshots of the COLLABIZ and SOLBID apps; home-page designs for the others rendered by `node build/homepages.js <logoDir> <outDir>` using logos, colours and features from the COLLABIZ app-brand data. (`build/mockups.js` holds the older dashboard designs.)
+- `assets/img/gallery/` — TEAM3 archive images from the company presentation.
+- Partner logos: Nurolabs and Partner Group are shown as text wordmarks until official logo files are supplied.
+
+## Site-wide features
+- **Mega menus**: every top-level item opens a full-width panel (≥ 340 px) with an intro and thumbnail cards; thumbnails load only when a menu opens. Edit `MENUS` in `build/build.py`.
+- **TEAM3 Assistant** (bottom-right on every page): guided, rule-based enquiry helper that recommends services and pre-fills the enquiry form. It is not an LLM and stores nothing.
+- **Forms** (enquiry, meeting request, careers profile, partner registration) with consent checkbox and spam honeypot.
+- SEO: canonical URLs, Open Graph, Organization schema, `sitemap.xml`, `robots.txt`, web manifest.
+
+## Go-live configuration
+Edit the `SITE` block at the top of `build/build.py`, then run `python3 build/build.py`:
+
+| Key | Effect |
+|---|---|
+| `email`, `phone`, `whatsapp` | Shown on the contact page and footer when filled in |
+| `form_endpoint` | All forms POST here (e.g. a Formspree/Getform form URL or a CRM webhook) |
+
+Without `form_endpoint`, forms open the visitor's email app addressed to `email`; with neither set, the details are copied to the clipboard.
+
+## Before going live
+- Fill in the `SITE` contact details and form endpoint (above).
+- Confirm client permissions for the historical clientele list.
+- Classify each product initiative (live / prototype / in development) on `work.html`.
+- Have the policies on `legal.html` reviewed by your legal advisor.
+- Add real photography (founder portrait, work thumbnails, article covers).

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Dashboard · Weekend News Studio</title>
+<link rel="icon" href="/assets/img/symbol.webp"><link rel="stylesheet" href="/weekend/weekend.css"></head>
+<body>
+<header class="top"><a class="brand" href="/weekend/app/">Weekend<small>News Studio</small></a><span class="grow"></span>
+<span class="who" id="who"></span>
+<label class="btn sm" for="imp">Import edition (.json)</label><input id="imp" class="sr" type="file" accept="application/json,.json">
+<button class="btn sm" id="out" type="button">Sign out</button></header>
+<main class="dash">
+<h2 style="margin-top:6px">New edition</h2>
+<p class="m">Full broadsheet size — 13.5 × 21 in (972 × 1512 pt). Every page is fully editable: drag, resize, double-click to type.</p>
+<form class="new" id="nf">
+<label>Masthead<input name="masthead" value="Weekend" required></label>
+<label>Edition date<input name="date" type="date" required></label>
+<label>City / edition<input name="city" value="HYDERABAD"></label>
+<label>Issue no.<input name="issue" type="number" min="1" value="1"></label>
+<label>Pages<select name="plan"><option value="full">Full edition — 8 pages</option><option value="4">Compact — 4 pages</option><option value="front">Front page only</option></select></label>
+<label style="display:flex;gap:8px;align-items:center;font-weight:600;color:var(--ink)" id="aiOptWrap"><input type="checkbox" name="ai" style="width:auto;margin:0"> ✨ AI fills news pages as I open them</label>
+<button class="btn red" type="submit">Create edition</button>
+</form>
+<h2>Your editions</h2>
+<p class="m">Saved automatically in this browser. Use <b>Export</b> to back up an edition or move it to another computer.</p>
+<div class="tgrid" id="eds"></div>
+<h2>Page templates</h2>
+<p class="m">Start a single-page edition from any template — or add these pages to an edition from the editor.</p>
+<div class="tgrid" id="tpls"></div>
+<div class="note"><b>Copyright reminder:</b> news imported from free feeds gives you headlines and links only — rewrite stories in your own words and credit the source. Auto images come from Openverse under free licences that allow commercial use; keep the photo credit shown on each image.</div>
+</main>
+<script type="module" src="/weekend/app/dashboard.js"></script></body></html>
