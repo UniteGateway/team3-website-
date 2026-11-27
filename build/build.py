@@ -288,7 +288,7 @@ MENUS = [
         ('work.html', 'Portfolio', 'Branding, software, films, AI', _ph('flatlay')),
         ('gallery.html', 'Gallery', 'Events, publications, print, films', 'gallery/nird-technology-bank-2008.webp'),
         ('clients.html', 'Our clients', 'National to international', _ph('handshake')),
-        ('clients.html#group', 'Collabiz & Unite Group', 'Group businesses we build for', _ph('laptop_dark')),
+        ('unite-group-brands.html', 'Unite Group identities', '50+ logos designed by TEAM3', 'unite/collage-t.webp'),
         ('work.html#heritage', 'Heritage projects', 'Since 2004', 'gallery/print-works.webp'),
         ('insights.html', 'Insights', 'Ideas worth exploring', _ph('open_office')),
     ]),
@@ -856,7 +856,7 @@ def page_branding():
 <section class="section"><div class="wrap">
 {head("Branding", "Distinctive identities. Lasting market value.", "TEAM3 helps businesses establish distinctive identities, communicate their purpose and build lasting market value.")}
 <div id="strategy">{cap("Brand strategy", "Clarity before creativity — research, positioning and narrative.", checks_links(["Market research and competitor analysis","Brand positioning and differentiation","Brand architecture","Target audience identification","Brand naming and nomenclature","Brand storytelling","Tagline development","Brand communication strategy","Rebranding and brand transformation"], "brand-strategy", True))}</div>
-<div id="identity">{cap("Brand identity design", "Visual systems that are consistent, recognisable and built to last.", checks_links(["Corporate logo design","Brand symbols and typography","Colour systems","Corporate stationery","Brand guidelines and identity manuals","Business cards and letterheads","Corporate presentations","Brand merchandise","Digital brand identity"], "brand-identity", True))}</div>
+<div id="identity">{cap("Brand identity design", "Visual systems that are consistent, recognisable and built to last.", checks_links(["Corporate logo design","Brand symbols and typography","Colour systems","Corporate stationery","Brand guidelines and identity manuals","Business cards and letterheads","Corporate presentations","Brand merchandise","Digital brand identity"], "brand-identity", True) + '<p style="margin-top:22px">' + link("See 50+ identities we designed for Unite Group", "unite-group-brands.html") + '</p>')}</div>
 <div id="product">{cap("Product branding", "From concept and name to the shelf and the launch.", checks_links(["New product conceptualisation","Product naming","Packaging design","Label design","Consumer research","Product positioning","Product launch strategy","Retail display design","Private-label and OEM brand development"], "product-branding", True))}</div>
 <div id="corporate">{cap("Corporate branding", "Programmes that align people, spaces and stakeholders.", checks_links(["Corporate identity programmes","Employer branding","Investor presentations","Annual reports","Corporate profiles","Environmental branding","Office and showroom branding","Signage and wayfinding"], "corporate-branding", True))}</div>
 </div></section>
@@ -1099,6 +1099,12 @@ def page_work():
 <div class="filters rv" role="group" aria-label="Filter projects">{"".join(f'<button type="button" data-f="{k}" aria-pressed="{str(k=="all").lower()}">{E(v)}</button>' for k, v in filters)}</div>
 <div class="works">{cards}</div>
 </div></section>
+<section class="section" id="unite-identities"><div class="wrap"><div class="ub-band">
+<div class="rv"><span class="eyebrow">Featured · Brand identity</span><h2 style="margin-top:16px">50+ brand identities for <span class="grad">Unite Group.</span></h2>
+<p class="lead" style="margin-top:18px">Logos and identity systems designed by TEAM3 for the Unite Group and Collabiz businesses — energy, commerce, finance, property, media, education, industry and AI.</p>
+<div class="actions">{btn("View all identities", "unite-group-brands.html", "red")}{btn("Brand identity services", "branding.html#identity", "ghost", False)}</div></div>
+<a class="rv d1" href="unite-group-brands.html" aria-label="View Unite Group brand identities"><img src="assets/img/unite/collage.webp" alt="Collage of Unite Group logos designed by TEAM3" width="960" height="600" loading="lazy"></a>
+</div></div></section>
 <section class="section bg-grey" id="heritage"><div class="wrap">
 <div class="head split"><div class="rv"><span class="eyebrow">Heritage &amp; clientele</span><h2 style="margin-top:16px">More than 300 clients across India and international markets.</h2></div>
 <div class="rv d1"><p class="lead">From the Collabiz and Unite Group businesses to national institutions and global companies.</p><div class="actions" style="margin-top:22px">{btn("Meet our clients", "clients.html", "red")}{btn("Open the gallery", "gallery.html", "ghost", False)}</div></div></div>
@@ -1274,7 +1280,7 @@ def page_clients():
 </div></section>
 <section class="section" id="group"><div class="wrap">
 {head("Collabiz & Unite Group", "Group businesses <span class='grad'>we build for.</span>", "TEAM3 is the branding, technology and AI partner to the Collabiz and Unite Group businesses — from strategy and identity to platforms, apps and intelligent automation.")}
-<p class="rv" style="margin:-36px 0 36px">{link("Explore these products", "products.html")}</p>
+<p class="rv" style="margin:-36px 0 36px">{link("Explore these products", "products.html")} &nbsp; {link("See the 50+ logos we designed for the group", "unite-group-brands.html")}</p>
 <div class="gclients">{group}</div>
 </div></section>
 <section class="section bg-black" id="institutions"><div class="wrap">
@@ -2159,6 +2165,64 @@ def page_service(group, n):
 for _g, _items in SVC_ITEMS.items():
     for _n in range(len(_items)):
         PAGES[svc_href(_g, _items[_n][0])] = (lambda g=_g, n=_n: page_service(g, n))
+
+
+# --------------------------------------------------------------------------- Unite Group brand identities (logo artwork by TEAM3)
+from unite_brands import UNITE_BRANDS  # noqa: E402
+
+UB_SECTORS = [('energy', 'Energy & Solar', {'Energy'}), ('commerce', 'Commerce & Services', {'Commerce', 'Local Commerce', 'Offers', 'Local Services', 'Services', 'Earning'}),
+              ('finance', 'Finance & Property', {'Finance', 'Payments', 'Property', 'Digital Asset', 'Investment'}),
+              ('software', 'Software & AI', {'Business Intelligence', 'Sales', 'Marketing', 'Productivity', 'Platform', 'Communications'}),
+              ('media', 'Media & Community', {'Entertainment', 'Media', 'Content', 'Community', 'Social Impact', 'Social', 'Membership'}),
+              ('people', 'Education & Careers', {'Education', 'Employment', 'Entrepreneurship'}),
+              ('industry', 'Industry & Mobility', {'Mobility', 'Manufacturing', 'Industry', 'Aquaculture', 'Eco-Living'}), ('group', 'Group brands', {'Group'})]
+
+
+def ub_sector(cat):
+    head = cat.split(' · ')[0]
+    return next((k for k, _, s in UB_SECTORS if head in s), 'software')
+
+
+def ub_tile(b, n, big=False):
+    slug, name, cat, tag = b
+    return (f'<figure class="gtile ltile{" big" if big else ""} rv d{n % 4}" data-cat="{ub_sector(cat)}"><button type="button" class="gopen" data-full="assets/img/unite/{slug}-full.webp" '
+            f'data-title="{E(name)}" data-cap="{E(cat)} — logo design by TEAM3" aria-label="View {E(name)} logo larger">'
+            f'<img src="assets/img/unite/{slug}.webp" alt="{E(name)} logo" loading="lazy"></button>'
+            f'<figcaption><small>{E(cat)}</small><b>{E(name)}</b><span>{E(tag)}</span></figcaption></figure>')
+
+
+def page_unite_brands():
+    master, rest = UNITE_BRANDS[:3], UNITE_BRANDS[3:]
+    used = [k for k, _, _ in UB_SECTORS if any(ub_sector(b[2]) == k for b in rest)]
+    filt = '<button type="button" data-f="all" data-target=".ltile.f" aria-pressed="true">All brands</button>' + ''.join(
+        f'<button type="button" data-f="{k}" data-target=".ltile.f" aria-pressed="false">{E(v)}</button>' for k, v, _ in UB_SECTORS if k in used)
+    grid = ''.join(ub_tile(b, n).replace('class="gtile ltile', 'class="gtile ltile f', 1) for n, b in enumerate(rest))
+    body = f"""
+{page_hero("Unite Group identities", "Our Work · Brand identity", f"{len(UNITE_BRANDS)} brands. <span class='grad'>One creative partner.</span>", "Logo and identity artwork designed by TEAM3 for the Unite Group and the Collabiz family of businesses — across energy, commerce, finance, property, media, education, industry and AI.", btn("Design your brand identity", "contact.html?service=Branding&msg=" + quote("Logo / brand identity enquiry") + "#enquiry", "red") + btn("Brand identity services", "branding.html#identity", "ghost", False), photo='designer_desk', parent=('work.html', 'Our Work'))}
+<section class="section"><div class="wrap">
+<div class="head split"><div class="rv"><span class="eyebrow">Group master brands</span><h2 style="margin-top:16px">The brands that hold <span class="grad">the group together.</span></h2></div>
+<p class="lead rv d1">For the Unite Group we designed a family of identities — distinctive enough for each business to stand on its own, and connected enough to be recognised as one group. COLLABIZ, the group’s collaboration platform, brings them together.</p></div>
+<div class="lgrid three">{"".join(ub_tile(b, n, True) for n, b in enumerate(master))}</div>
+<div class="stats4 rv">{"".join(f'<div><b>{v}</b><span>{t}</span></div>' for v, t in [(str(len(UNITE_BRANDS)), 'logos & identities'), (str(len(used)), 'sectors'), ('1', 'creative partner'), ('2004', 'TEAM3 since')])}</div>
+</div></section>
+<section class="section bg-grey" id="all"><div class="wrap">
+{head("The portfolio", "Every Unite Group brand, <span class='grad'>designed by TEAM3.</span>", "Tap any logo to view it larger. Filter by sector to explore each part of the group.")}
+<div class="filters rv" role="group" aria-label="Filter brands by sector">{filt}</div>
+<div class="lgrid">{grid}</div>
+<p class="muted rv" style="margin-top:32px;font-size:14px">Logo artwork created by TEAM3 for Unite Group and Collabiz businesses. All trademarks belong to their respective Unite Group companies. Some brands are platforms in development or concept stage.</p>
+</div></section>
+<section class="section"><div class="wrap"><div class="cap" style="border:0;padding:0">
+<div class="rv"><span class="eyebrow">How we build identities</span><h2 style="margin-top:16px">From a name to a complete brand system.</h2></div>
+<div class="rv d1">{checks(["Brand strategy and naming", "Logo and symbol design", "Colour and typography systems", "App icons and digital identity", "Brand guidelines and templates", "Launch creatives and campaigns"])}
+<div class="actions">{btn("Start your identity project", "contact.html?service=Branding#enquiry", "red")}{btn("See logo design service", svc_href("brand-identity", "Corporate logo design"), "ghost", False)}</div></div>
+</div></div></section>
+{cta_band("Your brand could be next.", "From one logo to a family of fifty — TEAM3 designs identities that grow with your business.", btn("Design your brand identity", "contact.html?service=Branding#enquiry", "red") + btn("Our clients", "clients.html", "ghost", False))}
+{LIGHTBOX}
+"""
+    return layout('unite-group-brands.html', 'Unite Group Brand Identities', f'Logo and brand identity artwork designed by TEAM3 for {len(UNITE_BRANDS)} Unite Group and Collabiz businesses — energy, commerce, finance, property, media, education, industry and AI.', body)
+
+
+PAGES['unite-group-brands.html'] = page_unite_brands
 
 
 if __name__ == '__main__':
