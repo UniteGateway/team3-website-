@@ -70,6 +70,7 @@ _P = {
     'layers': '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
     'pen': '<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',
     'clock': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    'browser': '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M6.5 6.5h.01M9 6.5h.01"/>',
     'grid': '<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
     'nodes': '<circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5v4M12 11.5l-5.5 5.5M12 11.5l5.5 5.5"/>',
     'search': '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
@@ -854,10 +855,10 @@ def page_branding():
 {subnav([("strategy","Brand strategy"),("identity","Identity"),("product","Product branding"),("corporate","Corporate"),("launch","Launch"),("advertising","Advertising"),("studio","Creative studio"),("media","Media & film")])}
 <section class="section"><div class="wrap">
 {head("Branding", "Distinctive identities. Lasting market value.", "TEAM3 helps businesses establish distinctive identities, communicate their purpose and build lasting market value.")}
-<div id="strategy">{cap("Brand strategy", "Clarity before creativity — research, positioning and narrative.", checks(["Market research and competitor analysis","Brand positioning and differentiation","Brand architecture","Target audience identification","Brand naming and nomenclature","Brand storytelling","Tagline development","Brand communication strategy","Rebranding and brand transformation"], True))}</div>
-<div id="identity">{cap("Brand identity design", "Visual systems that are consistent, recognisable and built to last.", checks(["Corporate logo design","Brand symbols and typography","Colour systems","Corporate stationery","Brand guidelines and identity manuals","Business cards and letterheads","Corporate presentations","Brand merchandise","Digital brand identity"], True))}</div>
-<div id="product">{cap("Product branding", "From concept and name to the shelf and the launch.", checks(["New product conceptualisation","Product naming","Packaging design","Label design","Consumer research","Product positioning","Product launch strategy","Retail display design","Private-label and OEM brand development"], True))}</div>
-<div id="corporate">{cap("Corporate branding", "Programmes that align people, spaces and stakeholders.", checks(["Corporate identity programmes","Employer branding","Investor presentations","Annual reports","Corporate profiles","Environmental branding","Office and showroom branding","Signage and wayfinding"], True))}</div>
+<div id="strategy">{cap("Brand strategy", "Clarity before creativity — research, positioning and narrative.", checks_links(["Market research and competitor analysis","Brand positioning and differentiation","Brand architecture","Target audience identification","Brand naming and nomenclature","Brand storytelling","Tagline development","Brand communication strategy","Rebranding and brand transformation"], "brand-strategy", True))}</div>
+<div id="identity">{cap("Brand identity design", "Visual systems that are consistent, recognisable and built to last.", checks_links(["Corporate logo design","Brand symbols and typography","Colour systems","Corporate stationery","Brand guidelines and identity manuals","Business cards and letterheads","Corporate presentations","Brand merchandise","Digital brand identity"], "brand-identity", True))}</div>
+<div id="product">{cap("Product branding", "From concept and name to the shelf and the launch.", checks_links(["New product conceptualisation","Product naming","Packaging design","Label design","Consumer research","Product positioning","Product launch strategy","Retail display design","Private-label and OEM brand development"], "product-branding", True))}</div>
+<div id="corporate">{cap("Corporate branding", "Programmes that align people, spaces and stakeholders.", checks_links(["Corporate identity programmes","Employer branding","Investor presentations","Annual reports","Corporate profiles","Environmental branding","Office and showroom branding","Signage and wayfinding"], "corporate-branding", True))}</div>
 </div></section>
 
 <section class="section tight" id="launch"><div class="wrap"><div class="panel rv" style="min-height:420px"><div class="art art-mesh"></div><div class="art art-dots"></div>
@@ -867,7 +868,7 @@ def page_branding():
 
 <section class="section bg-grey" id="advertising"><div class="wrap">
 {head("Advertising & creative communication", "Creativity that communicates. <span class='grad'>Advertising that converts.</span>", "Integrated communication strategies that connect businesses with their audiences across traditional, digital and emerging media.")}
-{rows(adv)}
+{rows_links(adv, "advertising")}
 <div class="actions">{btn("Create Your Next Campaign", "contact.html?service=Advertising", "red")}</div>
 </div></section>
 
@@ -879,7 +880,7 @@ def page_branding():
 
 <section class="section" id="media"><div class="wrap">
 {head("Media & film production", "Stories that move people.", "We combine creativity, storytelling, cinematography and digital production to communicate brands and businesses through compelling visual experiences.")}
-{rows(media)}
+{rows_links(media, "media")}
 <div style="margin-top:56px" class="rv"><h3>Our production process</h3></div>
 <div class="steps" style="margin-top:24px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">{"".join(f'<div class="step rv"><h4>{E(s)}</h4></div>' for s in ["Conceptualisation","Scriptwriting","Storyboarding","Production","Editing","Sound design","Distribution planning"])}</div>
 <div class="actions">{btn("Tell Your Story", "contact.html?service=Media", "red")}</div>
@@ -986,7 +987,7 @@ def page_ai():
 {page_hero("Artificial Intelligence", "Artificial Intelligence", "Human imagination. Artificial intelligence. <span class='grad'>Extraordinary possibilities.</span>", "TEAM3 helps organisations adopt artificial intelligence to improve decision-making, automate repetitive operations, accelerate innovation and create new business opportunities.", btn("Transform Your Business with AI", "contact.html?service=AI", "red") + btn("Find the right AI solution", "#recommend", "ghost", False))}
 {subnav([("consulting","AI consulting"),("bi","Business intelligence"),("ecosystem","Ecosystem"),("agents","AI agents"),("orchestration","Orchestration"),("governance","Governance"),("recommend","Recommender")])}
 <section class="section" id="consulting"><div class="wrap">
-{cap("AI consulting and implementation", "From readiness assessment to production-grade AI applications.", checks(["Enterprise AI readiness assessment","AI adoption roadmap","Generative AI solutions","Large language model integrations","Custom AI applications","AI-powered knowledge management","Retrieval-augmented generation (RAG)","Intelligent document processing","Multimodal AI","Responsible AI implementation"], True))}
+{cap("AI consulting and implementation", "From readiness assessment to production-grade AI applications.", checks_links(["Enterprise AI readiness assessment","AI adoption roadmap","Generative AI solutions","Large language model integrations","Custom AI applications","AI-powered knowledge management","Retrieval-augmented generation (RAG)","Intelligent document processing","Multimodal AI","Responsible AI implementation"], "ai", True))}
 <div id="bi">{cap("AI-powered business intelligence", "", '<p class="lead" style="color:var(--ink)">Transform complex business information into actionable intelligence through predictive analytics, demand forecasting, customer insights, competitive intelligence and automated reporting.</p>' + '<div style="margin-top:26px">' + chips(["Predictive analytics","Demand forecasting","Customer insights","Competitive intelligence","Automated reporting"]) + '</div>')}</div>
 </div></section>
 
@@ -1032,10 +1033,10 @@ def page_marketing():
 <section class="section"><div class="wrap">
 <h2 class="sr-only">Our approach</h2>
 <div class="grid g4" style="margin-bottom:80px">{"".join(f'<div class="card rv d{n}"><span class="num">{n+1:02d}</span><h3 style="margin-top:40px;font-size:30px;font-weight:800">{w}</h3></div>' for n, w in enumerate(["Visibility","Engagement","Conversion","Growth"]))}</div>
-<div id="seo">{cap("Search engine optimisation", "", checks(["Technical SEO","On-page optimisation","Content strategy","Local SEO","Keyword research","Competitor analysis","Search performance tracking"], True))}</div>
-<div id="sem">{cap("Search engine marketing", "", checks(["Google Ads","Search campaigns","Display advertising","Shopping campaigns","Remarketing","Conversion optimisation"], True))}</div>
-<div id="social">{cap("Social media marketing", "Instagram, Facebook, LinkedIn, YouTube, X and other relevant platforms.", checks(["Account management","Content calendars","Creative campaigns","Community engagement","Social advertising","Performance reporting"], True))}</div>
-<div id="performance">{cap("Performance marketing", "", checks(["Lead generation campaigns","Customer acquisition","Conversion rate optimisation","Landing page design","Sales funnel development","Campaign analytics","Marketing automation"], True))}</div>
+<div id="seo">{cap("Search engine optimisation", "", checks_links(["Technical SEO","On-page optimisation","Content strategy","Local SEO","Keyword research","Competitor analysis","Search performance tracking"], "seo", True))}</div>
+<div id="sem">{cap("Search engine marketing", "", checks_links(["Google Ads","Search campaigns","Display advertising","Shopping campaigns","Remarketing","Conversion optimisation"], "sem", True))}</div>
+<div id="social">{cap("Social media marketing", "Instagram, Facebook, LinkedIn, YouTube, X and other relevant platforms.", checks_links(["Account management","Content calendars","Creative campaigns","Community engagement","Social advertising","Performance reporting"], "social", True))}</div>
+<div id="performance">{cap("Performance marketing", "", checks_links(["Lead generation campaigns","Customer acquisition","Conversion rate optimisation","Landing page design","Sales funnel development","Campaign analytics","Marketing automation"], "performance", True))}</div>
 </div></section>
 <section class="section bg-grey" id="funnel"><div class="wrap">
 {head("Our growth framework", "The TEAM3 marketing funnel.", "Every campaign is planned against four stages — with the channels and the measures that matter at each one.")}
@@ -1114,7 +1115,7 @@ def page_industries():
 <section class="section" id="consulting"><div class="wrap">
 {head("Business consulting & product innovation", "Turning ideas <span class='grad'>into enterprises.</span>", "TEAM3 helps entrepreneurs and established businesses identify new opportunities, develop innovative products and bring commercially viable solutions to market.")}
 <p class="rv" style="margin:-36px 0 40px">{link("Explore all 15 consulting practices", "consulting.html")}</p>
-{cap("Business consulting services", "", checks(["Business concept development","Market feasibility studies","Business model design","Competitive intelligence","Commercial strategy","Go-to-market planning","Franchise model development","Investor presentation design","Business process transformation","Technology adoption strategy","International market development"], True))}
+{cap("Business consulting services", "", checks_links(["Business concept development","Market feasibility studies","Business model design","Competitive intelligence","Commercial strategy","Go-to-market planning","Franchise model development","Investor presentation design","Business process transformation","Technology adoption strategy","International market development"], "business", True))}
 </div></section>
 <section class="section tight" id="innovation"><div class="wrap"><div class="panel rv" style="min-height:460px"><div class="art art-gold"></div><div class="art art-lines"></div>
 <span class="eyebrow gold plain">Innovation as a service</span><h3 style="margin-top:16px;max-width:860px;font-size:clamp(28px,3.4vw,46px)">Research, design, engineering, AI, manufacturing partners and marketing — together.</h3>
@@ -1980,6 +1981,18 @@ SVC_WHY = {
     'enterprise': 'Off-the-shelf software rarely fits perfectly. We study how your teams work, then configure or build systems that remove manual effort and give leadership real-time visibility.',
     'consulting': 'Technology decisions are business decisions. Our consultants give you independent, practical advice — and the team to implement it when you are ready.',
     'cloud': 'Reliable, secure infrastructure keeps your business running. We design, automate and monitor environments that scale with demand and protect your data.',
+    'brand-strategy': 'Strong brands start with clear thinking. We combine research, workshops and creative insight to define what your brand stands for — and why customers should care.',
+    'brand-identity': 'Your identity is how people recognise you. We design visual systems that are distinctive, consistent and practical for every team that uses them.',
+    'product-branding': 'Products are chosen in seconds. We help you name, package and position products so they stand out on the shelf, on screen and in conversation.',
+    'corporate-branding': 'Corporate brands are built by people, spaces and documents. We bring them together so investors, employees and visitors experience one consistent company.',
+    'advertising': 'Great advertising starts with a simple, powerful idea. Our creative and media teams turn that idea into campaigns that work across print, outdoor, broadcast and digital.',
+    'media': 'Stories move people. Our production team plans, shoots and edits content that looks world-class and is delivered in every format you need.',
+    'ai': 'AI delivers value when it solves real problems. We help you choose the right use cases, build them responsibly and keep people in control of important decisions.',
+    'seo': 'Customers search before they buy. We make sure your website is technically sound, genuinely useful and visible for the searches that bring business.',
+    'sem': 'Paid search puts you in front of customers at the moment of need. We build disciplined campaigns that are tracked, tested and optimised every week.',
+    'social': 'Social media is where your customers spend their time. We plan, create and manage content that builds attention, conversation and trust.',
+    'performance': 'Every rupee of marketing should be accountable. We build funnels, campaigns and dashboards that connect spend to leads, sales and return.',
+    'business': 'Good decisions need good evidence. Our consultants combine research, financial thinking and practical experience to help you plan with confidence.',
 }
 
 SVC_ALIAS = {'Progressive web apps': ('apps', 'Progressive web applications')}
@@ -2035,7 +2048,7 @@ def _short(s, n=26):
     return s if len(s) <= n else s[:n - 1].rstrip() + '…'
 
 
-def svc_visual(style, col, title, feats):
+def svc_visual(style, col, title, feats, group=''):
     """Illustrative SVG for a service page: phone / browser / dashboard / diagram / nodes."""
     f = [E(_short(x)) for x in feats]
     t = E(_short(title, 30))
@@ -2044,7 +2057,7 @@ def svc_visual(style, col, title, feats):
         rows = ''.join(f'<g transform="translate(0,{232 + k * 52})"><rect x="200" width="200" height="42" rx="10" fill="#F4F4F5"/><circle cx="222" cy="21" r="10" fill="{col}" opacity="{1 - k * .12:.2f}"/><text x="240" y="26" font-size="11.5" fill="#1D1D1F">{x}</text></g>' for k, x in enumerate(f[:5]))
         art = (f'<rect x="180" y="40" width="240" height="500" rx="38" fill="#0B0B0C"/><rect x="190" y="50" width="220" height="480" rx="30" fill="#fff"/>'
                f'<rect x="262" y="58" width="76" height="16" rx="8" fill="#0B0B0C"/><rect x="190" y="50" width="220" height="164" rx="30" fill="url(#sg)"/><rect x="190" y="150" width="220" height="64" fill="url(#sg)"/>'
-               f'<text x="210" y="120" font-size="12" fill="#fff" opacity=".8">TEAM3 · App</text><text x="210" y="148" font-size="17" font-weight="800" fill="#fff">{t}</text>'
+               f'<text x="210" y="120" font-size="12" fill="#fff" opacity=".8">TEAM3 · {"Social" if group == "social" else "App"}</text><text x="210" y="148" font-size="17" font-weight="800" fill="#fff">{t}</text>'
                f'<rect x="210" y="166" width="90" height="26" rx="13" fill="#fff"/><text x="225" y="183" font-size="11" font-weight="700" fill="{col}">Get started</text>{rows}'
                f'<g transform="translate(40,120)"><rect width="120" height="74" rx="14" fill="#fff" stroke="#E5E5EA"/><text x="14" y="28" font-size="11" fill="#6E6E73">Active users</text><text x="14" y="56" font-size="22" font-weight="800" fill="#1D1D1F">↑ Growth</text></g>'
                f'<g transform="translate(440,360)"><rect width="124" height="74" rx="14" fill="#fff" stroke="#E5E5EA"/><circle cx="24" cy="37" r="12" fill="{col}"/><text x="44" y="34" font-size="11" fill="#6E6E73">Notification</text><text x="44" y="50" font-size="11" font-weight="700" fill="#1D1D1F">Order ready</text></g>')
@@ -2057,10 +2070,27 @@ def svc_visual(style, col, title, feats):
     elif style == 'dashboard':
         bars = ''.join(f'<rect x="{250 + k * 38}" y="{470 - h}" width="22" height="{h}" rx="5" fill="{col if k % 2 else "#ED1726"}" opacity="{.55 + k * .05:.2f}"/>' for k, h in enumerate([80, 120, 96, 150, 132, 176, 160, 196]))
         side = ''.join(f'<g transform="translate(60,{150 + k * 40})"><rect width="14" height="14" rx="4" fill="#fff" opacity=".5"/><text x="24" y="12" font-size="11" fill="#fff" opacity=".85">{_short(x, 16)}</text></g>' for k, x in enumerate(f[:6]))
-        kpi = ''.join(f'<g transform="translate({222 + k * 112},120)"><rect width="100" height="74" rx="12" fill="#fff" stroke="#E5E5EA"/><text x="12" y="26" font-size="10" fill="#6E6E73">{["Orders", "Revenue", "On time"][k]}</text><rect x="12" y="40" width="{[60, 70, 50][k]}" height="14" rx="4" fill="{col}" opacity=".85"/></g>' for k in range(3))
+        kpi = ''.join(f'<g transform="translate({222 + k * 112},120)"><rect width="100" height="74" rx="12" fill="#fff" stroke="#E5E5EA"/><text x="12" y="26" font-size="10" fill="#6E6E73">{({"seo": ["Rankings", "Organic traffic", "Leads"], "sem": ["Clicks", "Conversions", "Cost / lead"], "performance": ["Leads", "Conv. rate", "ROAS"]}.get(group, ["Orders", "Revenue", "On time"]))[k]}</text><rect x="12" y="40" width="{[60, 70, 50][k]}" height="14" rx="4" fill="{col}" opacity=".85"/></g>' for k in range(3))
         art = (f'<rect x="40" y="60" width="520" height="440" rx="18" fill="#F7F7F8" stroke="#E5E5EA"/><rect x="40" y="60" width="160" height="440" rx="18" fill="url(#sg)"/><rect x="180" y="60" width="20" height="440" fill="url(#sg)"/>'
                f'<text x="60" y="110" font-size="14" font-weight="800" fill="#fff">{E(_short(title, 18))}</text>{side}{kpi}'
                f'<rect x="222" y="214" width="320" height="270" rx="12" fill="#fff" stroke="#E5E5EA"/><text x="238" y="240" font-size="11" fill="#6E6E73">Performance</text>{bars}')
+    elif style == 'board':
+        sw = ''.join(f'<rect x="{70 + k * 70}" y="330" width="58" height="96" rx="10" fill="{c}"/>' for k, c in enumerate(list(dict.fromkeys([col, '#ED1726', '#E9AC16', '#7C3AED', '#1D1D1F']))[:4] + ['#F4F4F5']))
+        tags = ''.join(f'<g transform="translate({70 + (k % 2) * 236},{452 + (k // 2) * 34})"><circle cx="8" cy="8" r="6" fill="{col}"/><text x="22" y="13" font-size="11.5" fill="#1D1D1F">{_short(x, 30)}</text></g>' for k, x in enumerate(f[:4]))
+        art = (f'<rect x="40" y="40" width="520" height="500" rx="22" fill="#fff" stroke="#E5E5EA"/><rect x="70" y="70" width="230" height="230" rx="18" fill="url(#sg)"/>'
+               f'<circle cx="185" cy="165" r="48" fill="none" stroke="#fff" stroke-width="10"/><path d="M160 240h50" stroke="#fff" stroke-width="10" stroke-linecap="round"/>'
+               f'<text x="324" y="110" font-size="64" font-weight="800" fill="#1D1D1F" letter-spacing="-3">Aa</text><text x="326" y="146" font-size="12" fill="#6E6E73">Primary typeface</text>'
+               f'<rect x="324" y="168" width="206" height="10" rx="5" fill="#1D1D1F"/><rect x="324" y="190" width="170" height="8" rx="4" fill="#D1D1D6"/><rect x="324" y="208" width="190" height="8" rx="4" fill="#D1D1D6"/>'
+               f'<rect x="324" y="240" width="96" height="60" rx="12" fill="#F4F4F5"/><rect x="434" y="240" width="96" height="60" rx="12" fill="{col}" opacity=".15"/>'
+               f'<text x="70" y="320" font-size="11" fill="#6E6E73">{t}</text>{sw}{tags}')
+    elif style == 'film':
+        tl = ''.join(f'<rect x="{80 + k * 74}" y="440" width="66" height="40" rx="6" fill="{col if k % 2 else "#ED1726"}" opacity="{.35 + k * .1:.2f}"/>' for k in range(6))
+        art = (f'<rect x="40" y="50" width="520" height="480" rx="22" fill="#111113"/><rect x="70" y="80" width="460" height="270" rx="14" fill="url(#sg)"/>'
+               f'<circle cx="300" cy="215" r="44" fill="#fff" opacity=".92"/><path d="M288 192v46l38-23z" fill="{col}"/>'
+               f'<text x="92" y="330" font-size="16" font-weight="800" fill="#fff">{t}</text><text x="92" y="112" font-size="11" fill="#fff" opacity=".85">● REC  4K</text>'
+               f'<rect x="70" y="372" width="460" height="6" rx="3" fill="#2C2C2E"/><rect x="70" y="372" width="280" height="6" rx="3" fill="#ED1726"/><circle cx="350" cy="375" r="9" fill="#fff"/>'
+               f'<text x="70" y="414" font-size="11" fill="#A1A1A6">{_short(feats[0], 28)}</text><text x="530" y="414" text-anchor="end" font-size="11" fill="#A1A1A6">{_short(feats[1], 28)}</text>{tl}'
+               f'<text x="80" y="508" font-size="10.5" fill="#A1A1A6">Script · Shoot · Edit · Grade · Sound · Deliver</text>')
     else:
         pts = [(300 + 205 * __import__('math').cos(a), 290 + 190 * __import__('math').sin(a)) for a in [(-90 + k * 60) * 3.14159 / 180 for k in range(6)]]
         lines = ''.join(f'<line x1="300" y1="290" x2="{x:.0f}" y2="{y:.0f}" stroke="{col}" stroke-width="2" stroke-dasharray="{"6 6" if style == "nodes" else "0"}" opacity=".6"/>' for x, y in pts)
@@ -2074,11 +2104,11 @@ def svc_visual(style, col, title, feats):
 
 
 def page_service(group, n):
-    parent, gtitle, style, col, steps, deliv, tech = SVC_GROUPS[group]
+    parent, gtitle, style, col, steps, deliv, tech, *svc_name = SVC_GROUPS[group]
     title, icon, intro, feats, ideal = SVC_ITEMS[group][n]
     href = svc_href(group, title)
     photo = f'svc_{group}_{n}'
-    svc = {'apps': 'Apps', 'web': 'Web', 'cloud': 'Cloud'}.get(group, 'Technology')
+    svc = svc_name[0] if svc_name else {'apps': 'Apps', 'web': 'Web', 'cloud': 'Cloud'}.get(group, 'Technology')
     ask = f'contact.html?service={svc}&msg={quote("Enquiry: " + title)}#enquiry'
     items = SVC_ITEMS[group]
     rel = [items[(n + k) % len(items)] for k in range(1, 5)]
@@ -2088,7 +2118,16 @@ def page_service(group, n):
                 'Optimise': 'Speed, SEO and conversion tuning.', 'Process study': 'Map how work happens today.', 'Solution design': 'Modules, roles and reports.', 'Configure & build': 'Set up and customise in sprints.',
                 'Data migration': 'Clean and move existing data.', 'Training': 'Hands-on sessions and SOPs.', 'Support': 'Help desk and improvements.', 'Assess': 'Understand the current state.',
                 'Analyse': 'Find gaps, risks and options.', 'Recommend': 'Clear, costed recommendations.', 'Roadmap': 'Phased plan and budget.', 'Implement': 'Deliver with your team.', 'Review': 'Measure and adjust.',
-                'Migrate': 'Move workloads with minimal downtime.', 'Secure': 'Controls, access and encryption.', 'Monitor': 'Alerts, logs and dashboards.'}
+                'Migrate': 'Move workloads with minimal downtime.', 'Secure': 'Controls, access and encryption.', 'Monitor': 'Alerts, logs and dashboards.',
+                'Listen': 'Understand your goals and story.', 'Research': 'Market, customers and competitors.', 'Insight': 'Find the truth worth building on.', 'Position': 'Define your unique place.',
+                'Express': 'Words, story and identity.', 'Activate': 'Bring it to life everywhere.', 'Brief': 'Agree goals, audience and scope.', 'Explore': 'Several creative routes.',
+                'Refine': 'Feedback rounds to perfection.', 'System': 'Rules, templates and files.', 'Roll-out': 'Apply across every touchpoint.', 'Concept': 'Ideas shaped into concepts.',
+                'Name': 'Names that fit and are available.', 'Audit': 'Review what exists today.', 'Strategy': 'Set direction and priorities.', 'Content': 'Words, images and data.',
+                'Produce': 'Print, build and install.', 'Big idea': 'One idea that travels.', 'Create': 'Craft every asset.', 'Media': 'Plan where and when to run.', 'Measure': 'Track results and learn.',
+                'Script': 'Story, script and storyboard.', 'Pre-production': 'Crew, cast and locations.', 'Shoot': 'Professional production.', 'Post-production': 'Edit, grade, sound and VFX.',
+                'Deliver': 'Every format you need.', 'Prioritise': 'Rank by value and feasibility.', 'Prototype': 'Prove it works quickly.', 'Govern': 'Guardrails, testing and oversight.',
+                'Scale': 'Roll out what works.', 'Fix': 'Resolve technical issues.', 'Promote': 'Earn links and visibility.', 'Report': 'Clear monthly results.', 'Goals': 'Targets and budgets agreed.',
+                'Publish': 'Post on schedule.', 'Engage': 'Respond and build community.', 'Funnel': 'Map the customer journey.', 'Plan': 'Actions, owners and timelines.'}
     body = f"""
 {page_hero(title, gtitle, E(title) + '.', E(intro), btn("Discuss your requirement", ask, "red") + btn("All " + gtitle + " services", parent, "ghost", False), photo=photo, parent=(parent, gtitle))}
 <section class="section"><div class="wrap"><div class="svc-over">
@@ -2097,7 +2136,7 @@ def page_service(group, n):
 <p style="margin-top:18px">Since 2004 TEAM3 has combined creative design and engineering under one roof — so strategy, design, development and support for your project stay with one accountable team.</p>
 <div class="svc-ideal"><span class="ic">{ic(icon)}</span><div><small>Ideal for</small><b>{E(ideal)}</b></div></div>
 <div class="actions">{btn("Get a proposal", ask, "red")}{btn("Book a discovery call", "contact.html#meeting", "ghost", False)}</div></div>
-<figure class="rv d1 svc-fig">{svc_visual(style, col, title, feats)}<figcaption>Illustrative concept — every solution is designed around your brand and requirements.</figcaption></figure>
+<figure class="rv d1 svc-fig">{svc_visual(style, col, title, feats, group)}<figcaption>Illustrative concept — every solution is designed around your brand and requirements.</figcaption></figure>
 </div></div></section>
 <section class="section bg-grey"><div class="wrap">
 {head("Key capabilities", "What’s included.", "Core capabilities we typically deliver — scoped to your needs and budget.")}
@@ -2112,7 +2151,7 @@ def page_service(group, n):
 <div class="rv d1"><span class="eyebrow">Technology</span><h2 style="margin-top:16px">Tools we work with.</h2><p class="muted" style="margin-top:14px">We choose the stack that fits your goals, team and budget — typical options include:</p><div style="margin-top:24px">{chips(tech)}</div></div>
 </div></div></section>
 {rel_cards(rel_items, "More " + gtitle.lower() + " services")}
-{cta_band("Let’s build your " + E(title.lower()) + ".", "Share your idea or requirement — we’ll respond with a practical plan, timeline and estimate.", btn("Discuss your requirement", ask, "red") + btn("Estimate your project", "contact.html#estimate", "ghost", False))}
+{cta_band("Let’s talk about " + E(title) + ".", "Share your idea or requirement — we’ll respond with a practical plan, timeline and estimate.", btn("Discuss your requirement", ask, "red") + btn("Estimate your project", "contact.html#estimate", "ghost", False))}
 """
     return layout(href, title, f'{title} by TEAM3 Solutions, Hyderabad — {intro}', body)
 
